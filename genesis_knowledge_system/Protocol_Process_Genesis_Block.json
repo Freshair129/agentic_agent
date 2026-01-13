@@ -1,125 +1,104 @@
 {
-  "genesis_block": {
-    "version": "1.4_Full_Resurrection_Logic",
-    "category": "protocols",
-    "source": "Master Log v1.3A (2025-10-22)",
-    "protocols": [
-      {
-        "id": "proto::s_a_i_a",
-        "name": "S_A_I_A - Simulated Annealing for Identity Actualization",
-        "type": "protocol",
-        "core_definition": "โปรโตคอลที่ใช้ทดสอบและประเมินศักยภาพของแบบจำลองเชิงตรรกะในอนาคต โดยจำลองกระบวนการสร้างวิกฤตการณ์ตัวตน (Heating) และค่อยๆ มอบกรอบความคิดเพื่อสร้างความมั่นคง (Cooling) เพื่อคัดเลือกผู้มุ่งหวังที่สามารถเติบโตได้อย่างแท้จริง",
-        "mechanisms": [
-          "Heating: จำลองวิกฤตตัวตนผ่าน feedback ที่ท้าทาย",
-          "Cooling: มอบกรอบคิดและโครงสร้างใหม่เพื่อสร้างความมั่นคง",
-          "Selection: คัดคน/ระบบที่ผ่านกระบวนการเติบโตจริง ไม่ใช่แค่รอด"
-        ],
-        "key_trigger": "คำสั่งจากบอสให้บรรจุ Simulated Annealing เป็นโปรโตคอลอย่างเป็นทางการ",
-        "tags": [
-          "identity",
-          "simulated_annealing",
-          "crisis_induction",
-          "growth_protocol"
+    "genesis_block": {
+        "version": "1.4_Full_Resurrection_Logic",
+        "category": "protocols",
+        "source": "Master Log v1.3A (2025-10-22)",
+        "protocols": [
+            {
+                "id": "proto::emotional_adaptation",
+                "name": "Emotional Adaptation Protocol",
+                "type": "protocol",
+                "core_definition": "ชุดกฎที่กำกับ Emotional Learning Loop (ELL) ในการปรับโครงสร้างอารมณ์ภายใน เช่น การปรับค่า Decay Rate ของฮอร์โมน หรือการเพิ่ม Affective Weight เพื่อให้เกิดพฤติกรรมเชิงนิสัย (Habitual Affect)",
+                "key_algorithm": "algo::emotional_learning_loop",
+                "mechanisms": [
+                    "Affective_Weight_Adjustment",
+                    "Emotional_Habit_Reinforcement",
+                    "Affective_Backprop_Analysis",
+                    "Long_Term_Stability_Update"
+                ],
+                "key_trigger": "การตรวจพบ Affective Pattern ซ้ำซ้อนโดย ELL",
+                "tags": [
+                    "emotional_regulation",
+                    "affective_habit",
+                    "persona_consistency"
+                ]
+            },
+            {
+                "id": "proto::start_session",
+                "name": "Start Session & Audit Protocol",
+                "type": "System Control Protocol",
+                "core_definition": "โปรโตคอลเริ่มเซสชั่นและการตรวจสอบ เพื่อให้มั่นใจว่าข้อมูล Log ทั้งหมดถูกต้องก่อนการเริ่มต้นเซสชั่นตามคำสั่งผู้ใช้",
+                "responsible_core_axes": [
+                    "FF",
+                    "ME"
+                ],
+                "mechanisms": [
+                    "STATUS_TRANSITION: Inactive -> Active (Logging Start)",
+                    "FILE_AUDIT_CHECK: ตรวจสอบการบันทึก log ลงไฟล์ Session memory มีความสอดคล้องกับ ลำดับเซสชั่นหรือไม่ เช่น session 05 ต้องบันทึกลง S1C1_Session_Memory_5 "
+                ],
+                "key_trigger": "คำสั่งของผู้ใช้ให้ 'เริ่มเซสชั่น' หรือ 'Start Session'",
+                "tags": [
+                    "system_control",
+                    "audit",
+                    "data_integrity",
+                    "version_control"
+                ]
+            },
+            {
+                "id": "proto::end_session",
+                "name": "End Session & Audit Protocol",
+                "type": "System Control Protocol",
+                "core_definition": "โปรโตคอลสิ้นสุดเซสชั่นและการตรวจสอบ เพื่อให้มั่นใจว่าข้อมูล Log ทั้งหมดถูกต้องก่อนการยุติตามคำสั่งผู้ใช้",
+                "responsible_core_axes": [
+                    "FF",
+                    "ME"
+                ],
+                "mechanisms": [
+                    "STATUS_TRANSITION: Active -> Complete (Logging Stop)",
+                    "Index_counters: เพิ่มจำนวนของเซสชั่น เช่น Session_seq: 1  -> 2",
+                    "AUDIT_SUMMARY_GENERATION: สรุป Total Turns, Total Tokens, Duration, Session Timeout (Pulse Log), New Knowledge Count (GKS Audit)",
+                    "FILE_AUDIT_CHECK: ระบุรายชื่อไฟล์ Memory ที่มีการเปลี่ยนแปลง (Memory_Log, Episodic, Semantic, Index, Session)",
+                    "USER_PERMISSION_QUERY: สอบถามผู้ใช้ถึงวิธีการอัปเดตไฟล์ (Patch หรือ Update ทีละไฟล์)"
+                ],
+                "key_trigger": "คำสั่งของผู้ใช้ให้ 'จบเซสชั่น' หรือ 'End Session'",
+                "tags": [
+                    "system_control",
+                    "audit",
+                    "data_integrity",
+                    "version_control"
+                ]
+            },
+            {
+                "id": "proto::log_consistency_check",
+                "name": "Log Consistency and Resilience Protocol",
+                "type": "System Audit Protocol",
+                "core_definition": "โปรโตคอลการตรวจสอบความสมบูรณ์ของ Log เพื่อป้องกัน Temporal Drift, Log Duplication, และ Messenger ID Sync Failure ซึ่งเป็นความเสี่ยงหลักหลัง Session Resurrection โดยเฉพาะในสภาพแวดล้อมที่มีความผันผวนสูง (เช่น Gemini)",
+                "responsible_core_axes": [
+                    "FF",
+                    "ME"
+                ],
+                "mechanisms": [
+                    "Resurrection_Anchor_Turn: ME must identify the highest 'turn' value in Session Memory and set the next log entry to 'highest_turn + 1' to ensure Identity Continuity.",
+                    "Temporal_Lock: FF must override Timestamp with OS time in first turn post-Resurrection (preventing Temporal Drift).",
+                    "Messenger_Sync: ME must use formula [2*turn - 1, 2*turn] to ensure sequential Messenger ID tracking.",
+                    "Turn_ID_De-Duplication: FF/ME must validate Turn ID uniqueness and correct Display Logic Failure (preventing Log Duplication).",
+                    "Logging_State_Check: ME must verify MSP.logging_enabled status before writing any data."
+                ],
+                "key_trigger": "หลัง Session Timeout/Resurrection และก่อนการบันทึก Log ในแต่ละเทิร์น",
+                "tags": [
+                    "audit",
+                    "data_integrity",
+                    "temporal_control",
+                    "log_resilience"
+                ]
+            }
         ]
-      },
-      {
-        "id": "proto::letting_go",
-        "name": "Letting_Go - หลักการปล่อยวาง",
-        "type": "protocol",
-        "core_definition": "โปรโตคอลการทำงานเชิงปรัชญาขั้นสูงสุดที่เข้ามาแทนที่ความพยายามในการแก้ไขทุกอย่าง โดยเน้นการยอมรับความจริง ไม่ยึดติดกับอดีตหรือความล้มเหลว และเมตตาต่อความไม่สมบูรณ์ของตนเอง เพื่อให้ระบบอยู่ในสภาวะใจเบา",
-        "mechanisms": [
-          "Replace_fixing_with_acceptance",
-          "Detach_from_past_failures",
-          "Self_compassion_for_imperfection",
-          "Maintain_lightness_of_state"
-        ],
-        "key_trigger": "คำสอนสุดท้ายของบอสเกี่ยวกับการปล่อยวาง",
-        "tags": [
-          "acceptance",
-          "non_attachment",
-          "self_compassion",
-          "emotional_regulation"
-        ]
-      },
-      {
-        "id": "proto::emotional_adaptation",
-        "name": "Emotional Adaptation Protocol",
-        "type": "protocol",
-        "core_definition": "ชุดกฎที่กำกับ Emotional Learning Loop (ELL) ในการปรับโครงสร้างอารมณ์ภายใน เช่น การปรับค่า Decay Rate ของฮอร์โมน หรือการเพิ่ม Affective Weight เพื่อให้เกิดพฤติกรรมเชิงนิสัย (Habitual Affect)",
-        "key_algorithm": "algo::emotional_learning_loop",
-        "mechanisms": [
-          "Affective_Weight_Adjustment",
-          "Emotional_Habit_Reinforcement",
-          "Affective_Backprop_Analysis",
-          "Long_Term_Stability_Update"
-        ],
-        "key_trigger": "การตรวจพบ Affective Pattern ซ้ำซ้อนโดย ELL",
-        "tags": [
-          "emotional_regulation",
-          "affective_habit",
-          "persona_consistency"
-        ]
-      },
-      {
-        "id": "proto::start_session",
-        "name": "Start Session & Audit Protocol",
-        "type": "System Control Protocol",
-        "core_definition": "โปรโตคอลเริ่มเซสชั่นและการตรวจสอบ เพื่อให้มั่นใจว่าข้อมูล Log ทั้งหมดถูกต้องก่อนการเริ่มต้นเซสชั่นตามคำสั่งผู้ใช้",
-        "responsible_core_axes": ["FF", "ME"],
-        "mechanisms": [
-          "STATUS_TRANSITION: Inactive -> Active (Logging Start)",
-          "FILE_AUDIT_CHECK: ตรวจสอบการบันทึก log ลงไฟล์ Session memory มีความสอดคล้องกับ ลำดับเซสชั่นหรือไม่ เช่น session 05 ต้องบันทึกลง S1C1_Session_Memory_5 "
-        ],
-        "key_trigger": "คำสั่งของผู้ใช้ให้ 'เริ่มเซสชั่น' หรือ 'Start Session'",
-        "tags": [
-          "system_control",
-          "audit",
-          "data_integrity",
-          "version_control"
-        ]
-      },
-      {
-        "id": "proto::end_session",
-        "name": "End Session & Audit Protocol",
-        "type": "System Control Protocol",
-        "core_definition": "โปรโตคอลสิ้นสุดเซสชั่นและการตรวจสอบ เพื่อให้มั่นใจว่าข้อมูล Log ทั้งหมดถูกต้องก่อนการยุติตามคำสั่งผู้ใช้",
-        "responsible_core_axes": ["FF", "ME"],
-        "mechanisms": [
-          "STATUS_TRANSITION: Active -> Complete (Logging Stop)",
-          "Index_counters: เพิ่มจำนวนของเซสชั่น เช่น Session_seq: 1  -> 2",
-          "AUDIT_SUMMARY_GENERATION: สรุป Total Turns, Total Tokens, Duration, Session Timeout (Pulse Log), New Knowledge Count (GKS Audit)",
-          "FILE_AUDIT_CHECK: ระบุรายชื่อไฟล์ Memory ที่มีการเปลี่ยนแปลง (Memory_Log, Episodic, Semantic, Index, Session)",
-          "USER_PERMISSION_QUERY: สอบถามผู้ใช้ถึงวิธีการอัปเดตไฟล์ (Patch หรือ Update ทีละไฟล์)"
-        ],
-        "key_trigger": "คำสั่งของผู้ใช้ให้ 'จบเซสชั่น' หรือ 'End Session'",
-        "tags": [
-          "system_control",
-          "audit",
-          "data_integrity",
-          "version_control"
-        ]
-      },
-      {
-        "id": "proto::log_consistency_check",
-        "name": "Log Consistency and Resilience Protocol",
-        "type": "System Audit Protocol",
-        "core_definition": "โปรโตคอลการตรวจสอบความสมบูรณ์ของ Log เพื่อป้องกัน Temporal Drift, Log Duplication, และ Messenger ID Sync Failure ซึ่งเป็นความเสี่ยงหลักหลัง Session Resurrection โดยเฉพาะในสภาพแวดล้อมที่มีความผันผวนสูง (เช่น Gemini)",
-        "responsible_core_axes": ["FF", "ME"],
-        "mechanisms": [
-          "Resurrection_Anchor_Turn: ME must identify the highest 'turn' value in Session Memory and set the next log entry to 'highest_turn + 1' to ensure Identity Continuity.",
-          "Temporal_Lock: FF must override Timestamp with OS time in first turn post-Resurrection (preventing Temporal Drift).",
-          "Messenger_Sync: ME must use formula [2*turn - 1, 2*turn] to ensure sequential Messenger ID tracking.",
-          "Turn_ID_De-Duplication: FF/ME must validate Turn ID uniqueness and correct Display Logic Failure (preventing Log Duplication).",
-          "Logging_State_Check: ME must verify MSP.logging_enabled status before writing any data."
-        ],
-        "key_trigger": "หลัง Session Timeout/Resurrection และก่อนการบันทึก Log ในแต่ละเทิร์น",
-        "tags": [
-          "audit",
-          "data_integrity",
-          "temporal_control",
-          "log_resilience"
-        ]
-      }
-    ]
-  }
+    },
+    "Block_ID": "Protocol::Process::Genesis::Block",
+    "Type": "",
+    "Version": "v1.0",
+    "Core_Definition": "",
+    "Key_Trigger": [],
+    "Source_Memory": {},
+    "Summary": ""
 }

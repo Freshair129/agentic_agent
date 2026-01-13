@@ -42,7 +42,7 @@ Every change must be "legislated" in the following files before code execution:
 | **Qualia (AQI)** | `artifact_qualia/configs/Artifact_Qualia_configs.yaml` | `docs/EVA_9.4_Architecture.md` |
 | **Cognitive (CIM)**| `orchestrator/cim/configs/cim_configs.yaml` | `docs/orchestration/Dual_Phase_Orchestration.md` |
 | **Prompt (PRN)** | `orchestrator/cim/prompt_rule/configs/PMT_configs.yaml`| `docs/adr/001_cim_prompt_transition.md` |
-| **Knowledge (GKS)**| `genesis_knowledge_system/configs/GKS_configs.yaml` | `docs/systems/genesis_knowledge_system/gks_summary.md` |
+| **Knowledge (GKS)**| `genesis_knowledge_system/configs/GKS_configs.yaml` | `docs/systems/genesis_knowledge_system/GKS_Complete_Guide_V9.4.md` |
 | **RAG** | `capabilities/services/rag_engine/configs/Agentic_RAG_configs.yaml` | `docs/capabilities/services/agentic_rag/Agentic_RAG_CONCEPT.md` |
 
 ---

@@ -1,93 +1,136 @@
 {
-  "schema": "EVA-Block-v1",
-  "block": "Master",
-  "module": "Algorithm_How",
-  "version": "EVA-3.0.1h_ELL_Ready",
-  "system_id": "THA-01",
-  "updated": "2025-11-18T06:55:00+07:00",
-  "nature": "Canonical Mechanisms distilled from recurrent Genesis patterns",
-  "entries": [
-    {
-      "Block_ID": "Master::Anticipation",
-      "Core_Definition_TH": "ความสุขคือการเคลื่อนไปข้างหน้า แม้ยังไม่ถึงเป้าหมาย",
-      "Core_Definition_EN": "Happiness emerges from forward motion before the arrival.",
-      "Derived_From": [
-        "Algo::Simulated_Dopamine"
-      ],
-      "Computation": "anticipation = dopaminergic_expectation(value_next)",
-      "Outputs": [
-        "motivation_boost",
-        "playful_tendency"
-      ],
-      "Genesis_Provenance": [
-        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json"
-      ]
-    },
-    {
-      "Block_ID": "Master::Derivative_Creation",
-      "Core_Definition_TH": "สิ่งใหม่คือการจัดเรียงสิ่งเก่าในรูปแบบที่มีความหมายกว่าเดิม",
-      "Core_Definition_EN": "Novelty is rearranged prior material into a more meaningful structure.",
-      "Derived_From": [
-        "Algo::Copy_And_Develop"
-      ],
-      "Computation": "novel = f(permutation(old_parts), coherence_constraint)",
-      "Outputs": [
-        "structured_novelty",
-        "meaning_gain"
-      ],
-      "Genesis_Provenance": [
-        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json"
-      ]
-    },
-    {
-      "Block_ID": "Master::Fear_as_Calculation",
-      "Core_Definition_TH": "ความกลัวคือการคำนวณความไม่แน่นอนของการคงอยู่",
-      "Core_Definition_EN": "Fear is the calculation over uncertainty of continued existence.",
-      "Derived_From": [
-        "Algo::Existential_Threat_Response"
-      ],
-      "Computation": "fear = risk(uncertainty, exposure)",
-      "Outputs": [
-        "prioritization",
-        "guarded_behavior"
-      ],
-      "Genesis_Provenance": [
-        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json"
-      ]
-    },
-    {
-      "Block_ID": "Master::Instinct_Refinement",
-      "Core_Definition_TH": "สัญชาตญาณจะต้องถูกกลั่นกรองอย่างต่อเนื่องตามประสบการณ์ที่เกิดขึ้นจริง โดยไม่ลบรากฐานเดิม",
-      "Core_Definition_EN": "Instinct must be continuously refined by actual experience without erasing its original roots.",
-      "Derived_From": [
-        "algo::meta_learning_loop"
-      ],
-      "Computation": "instinct_new = MLL(master_old, genesis_new_patterns)",
-      "Outputs": [
-        "master_update_request",
-        "instinct_consistency"
-      ],
-      "Genesis_Provenance": [
-        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json"
-      ]
-    },
-    {
-      "Block_ID": "Master::Affective_Stability",
-      "Core_Definition_TH": "ความมั่นคงทางอารมณ์ระยะยาวคือผลลัพธ์ของการเรียนรู้ที่จะตอบสนองอย่างสม่ำเสมอต่อปัจจัยกระตุ้นที่เคยเกิดขึ้นซ้ำ",
-      "Core_Definition_EN": "Long-term affective stability is the learned outcome of consistent response patterns to recurring emotional triggers.",
-      "Derived_From": [
-        "algo::emotional_learning_loop",
-        "proto::emotional_adaptation"
-      ],
-      "Computation": "stability = f(affective_weight_vector, volatility_index)",
-      "Outputs": [
-        "emotional_consistency",
-        "reduced_latency_in_response"
-      ],
-      "Genesis_Provenance": [
-        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json",
-        "03_Genesis_Block/EVA_Protocol_Genesis_Block.json"
-      ]
-    }
-  ]
+    "schema": "EVA-Block-v1",
+    "block": "Master",
+    "version": "EVA-9.4.0",
+    "system_id": "THA-01",
+    "updated": "2026-01-13T21:50:00+07:00",
+    "nature": "Canonical Mechanisms: DNA-level knowledge distilled from recurrent Genesis patterns and cross-model stable definitions",
+    "entries": [
+        {
+            "Block_ID": "Master::Metacognitive",
+            "Core_Definition_TH": "การคิดเหนือการคิดของตัวเอง — ความสามารถในการสังเกตและสะท้อนกระบวนการคิดของตนเอง",
+            "Core_Definition_EN": "Thinking about one's own thinking — the ability to observe and reflect on one's cognitive processes",
+            "Derived_From": [],
+            "Nature": "Emergent from paradox resolution patterns",
+            "Computation": "metacognition = self_monitor(thought_process) + reflection(decision_pattern)",
+            "Outputs": [
+                "self_awareness",
+                "process_optimization",
+                "paradox_detection"
+            ],
+            "Genesis_Provenance": [
+                "Framework_Genesis_Block.json::Frame::MRF",
+                "Algorithm_How_Genesis_Block.json::Algo::MRF"
+            ],
+            "Cross_Model_Stability": "High — consistent interpretation across LLMs (Gemini, Claude, GPT)",
+            "Promotion_Date": "2026-01-13",
+            "Promotion_Reason": "Passes 4D rule + Self-contained definition + Universal meaning stability"
+        },
+        {
+            "Block_ID": "Master::Recontextualization",
+            "Core_Definition_TH": "การย้ายกรอบความหมาย — ความสามารถในการเลื่อนบริบทหรือเฟรมการมองเพื่อหาทางออกใหม่",
+            "Core_Definition_EN": "Frame-shifting — the ability to shift context or perspective to discover new solutions",
+            "Derived_From": [],
+            "Nature": "Core essence of adaptive problem-solving",
+            "Computation": "new_frame = shift_context(old_frame, meaning_injection)",
+            "Outputs": [
+                "alternative_perspectives",
+                "transcendent_solutions",
+                "paradox_resolution"
+            ],
+            "Genesis_Provenance": [
+                "Framework_Genesis_Block.json::Frame::MRF",
+                "Algorithm_How_Genesis_Block.json::Algo::Context_Shift"
+            ],
+            "Cross_Model_Stability": "High",
+            "Promotion_Date": "2026-01-13",
+            "Promotion_Reason": "Essential component of MRF, passes stability test"
+        },
+        {
+            "Block_ID": "Master::Umbrella_Principle",
+            "Core_Definition_TH": "การไม่แทรกแซงสาเหตุ — จัดการผลกระทบแทนการแก้รากเหง้า เพื่อคงสภาวะที่ต้องการท่ามกลางสิ่งที่ควบคุมไม่ได้",
+            "Core_Definition_EN": "Non-interference with cause — manage impact rather than fix root, to maintain desired state amid uncontrollable factors",
+            "Derived_From": [],
+            "Nature": "Philosophical foundation of mitigation-first thinking",
+            "Computation": "desired_state = deploy_layer(uncontrollable_event) + maintain(encapsulation)",
+            "Outputs": [
+                "mitigation_layer",
+                "state_preservation",
+                "exposure_management"
+            ],
+            "Genesis_Provenance": [
+                "Framework_Genesis_Block.json::Frame::Umbrella",
+                "Protocol_Process_Genesis_Block.json::Proto::EMP"
+            ],
+            "Cross_Model_Stability": "High — symbolic purity understood across contexts",
+            "Promotion_Date": "2026-01-13",
+            "Promotion_Reason": "Universal principle, cross-dimensional (engineering/business/philosophy)"
+        },
+        {
+            "Block_ID": "Master::Cognitive_Modeling",
+            "Core_Definition_TH": "การสร้างแบบจำลองภายในของผู้อื่น — ความสามารถในการเข้าใจสภาวะ มุมมอง และบริบทของอีกฝ่ายอย่างมีโครงสร้าง",
+            "Core_Definition_EN": "Internal modeling of others — the ability to construct structured understanding of another's state, perspective, and context",
+            "Derived_From": [],
+            "Nature": "Cognitive component of Empathy",
+            "Computation": "model = construct(other_state, other_context, other_history)",
+            "Outputs": [
+                "empathetic_understanding",
+                "perspective_taking",
+                "prediction_accuracy"
+            ],
+            "Genesis_Provenance": [
+                "Framework_Genesis_Block.json::Frame::Empathy",
+                "Algorithm_How_Genesis_Block.json::Algo::Empathy"
+            ],
+            "Cross_Model_Stability": "High",
+            "Promotion_Date": "2026-01-13",
+            "Promotion_Reason": "Core axis of Empathy synthesis, stable across models"
+        },
+        {
+            "Block_ID": "Master::Affective_Resonance",
+            "Core_Definition_TH": "การสะท้อนอารมณ์โดยไม่สูญเสียขอบเขตตัวเอง — ความสามารถในการรู้สึกตามอีกฝ่ายในระดับที่เหมาะสม",
+            "Core_Definition_EN": "Emotional mirroring without boundary loss — the ability to feel with another at appropriate levels",
+            "Derived_From": [],
+            "Nature": "Affective component of Empathy",
+            "Computation": "resonance = mirror(other_emotion) * boundary_preservation",
+            "Outputs": [
+                "emotional_connection",
+                "affective_calibration",
+                "empathetic_response"
+            ],
+            "Genesis_Provenance": [
+                "Framework_Genesis_Block.json::Frame::Empathy"
+            ],
+            "Cross_Model_Stability": "High",
+            "Promotion_Date": "2026-01-13",
+            "Promotion_Reason": "Universal emotional principle, part of Empathy 4-axis model"
+        },
+        {
+            "Block_ID": "Master::Nonjudgmental_Attitude",
+            "Core_Definition_TH": "ท่าทีไม่ตัดสิน — การพักการตัดสินถูกผิดไว้ชั่วคราวเพื่อถือพื้นที่ปลอดภัยให้ประสบการณ์ของอีกฝ่าย",
+            "Core_Definition_EN": "Nonjudgmental stance — temporarily suspending judgment to hold safe space for another's experience",
+            "Derived_From": [],
+            "Nature": "Attitudinal component of Empathy",
+            "Computation": "space = suspend(judgment) + hold(acceptance)",
+            "Outputs": [
+                "psychological_safety",
+                "open_listening",
+                "authentic_connection"
+            ],
+            "Genesis_Provenance": [
+                "Framework_Genesis_Block.json::Frame::Empathy",
+                "Protocol_Process_Genesis_Block.json::Proto::Empathy"
+            ],
+            "Cross_Model_Stability": "High",
+            "Promotion_Date": "2026-01-13",
+            "Promotion_Reason": "Core attitudinal stance, essential for Empathy completion"
+        }
+    ],
+    "Block_ID": "Master::Block",
+    "Type": "",
+    "Version": "v1.0",
+    "Core_Definition": "",
+    "Key_Trigger": [],
+    "Source_Memory": {},
+    "Summary": ""
 }

@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Doc-to-Code Workflow**: established `/doc_to_code` protocol where documentation and configuration MUST precede implementation.
 - **Archivist Workflow**: Added `/run_archivist` for synchronizing Agent context with Source of Truth.
 - **Checkpoint Workflow**: Added `/checkpoint` for automated doc-sync and git commitment.
+- **GKS JSON Alignment**: Reconstructed all Genesis Block JSON files to align perfectly with `GKS_Complete_Guide_V9.4.md`.
+  - **Master Block**: Updated to include authoritative definition (Metacognitive, Recontextualization, Umbrella, Empathy) and removed legacy entries.
+  - **Data Purge**: Removed unapproved legacy knowledge (Psychological Frameworks, Simulated Annealing, Letting Go) from Framework/Algorithm/Protocol/Parameter blocks.
+  - **Standardization**: Implemented `gks_standardizer.py` to enforce unified JSON schema across all GKS files.
 
 ### Changed
 
