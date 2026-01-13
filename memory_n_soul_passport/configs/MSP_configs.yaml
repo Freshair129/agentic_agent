@@ -1,85 +1,58 @@
 # ============================================================
 # EVA MODULE SPECIFICATION (SSOT)
 # Module: MSP (Memory & Soul Passport)
-# Version: 2.1.0 (Consolidated)
-# Updated: 2026-01-08
+# Version: 9.4.0 (Resonance Refactored)
+# Updated: 2026-01-13
 # Description: Single Source of Truth for Persistence, Interface, and Policy.
 # ============================================================
-schema: EVA-MSP-Configs-v2.1.0-SSOT
-version: 2.1.0
+schema: EVA-MSP-Configs-v9.4.0-SSOT
+version: 9.4.0
 # ============================================================
 # 1. GLOBAL SETTINGS & DATABASES
 # ============================================================
 global:
   module_name: "MSP"
-  role: "Memory & Soul Passport / Central State Registry"
-  storage_primary: "local" # options: local, mongodb
+  role: "Memory & Soul Passport / Central Subconscious Registry"
+  storage_primary: "local"
   json_indent: 4
   auto_backup: true
-  backup_interval_sessions: 50
-  compression_threshold_sessions: 8
-  keep_raw_episodes_days: 30
 databases:
-  mongodb:
-    enabled: false # Local Storage used (JSONL)
-    uri_env: "MONGODB_URI"
-    db_name: "eva_v8"
-    collection_prefix: "episodes_"
-  neo4j:
-    enabled: true 
-    uri: "bolt://localhost:7687" # Neo4j Desktop Local
-    auth: "basic" # user/pass typically loaded from env or secrets
-    uri_env: "NEO4J_URI"
   chromadb:
     enabled: true
-    path: "eva/memory/vector_store" # Local Persistence
+    path: "memory/vector_store" # Local Persistence (agent/memory/vector_store)
     collection_name: "eva_memories"
 # ============================================================
 # 2. RUNTIME HOOK (System Integration)
 # ============================================================
 runtime_hook:
   component: "MSP"
-  module_path: "eva/memory_n_soul_passport/memory_n_soul_passport_engine"
+  module_path: "memory_n_soul_passport/memory_n_soul_passport_engine"
   class_name: "MSP"
   initialization:
     args:
-      configs: "eva/memory_n_soul_passport/configs/MSP_configs.yaml"
-  resources:
-    configs: "eva/memory_n_soul_passport/configs/"
-    contract: "eva/memory_n_soul_passport/configs/MSP_configs.yaml"
-    docs: "eva/memory_n_soul_passport/docs/"
+      configs: "memory_n_soul_passport/configs/MSP_configs.yaml"
+  hierarchy:
+    modules:
+      EpisodicMemory: "memory_n_soul_passport.Module.EpisodicMemory.EpisodicMemoryModule"
+      SemanticMemory: "memory_n_soul_passport.Module.SemanticMemory.SemanticMemoryModule"
+      SensoryMemory:  "memory_n_soul_passport.Module.SensoryMemory.SensoryMemoryModule"
 # ============================================================
 # 3. INTERFACE (Bus & Subscriptions)
 # ============================================================
 interface:
   bus_id: "MSP_SUB_01"
   description: >
-    MSP serves as the Master Archivist and State Auditor.
+    MSP serves as the Master Archivist and Subconscious Consolidator.
     It listens to all major streams to latch state and commit memories.
   subscriptions:
-    # Latching Layer (State Updates)
     - stream: "bus:physical"
       action: "latch_state"
     - stream: "bus:psychological"
       action: "latch_state"
     - stream: "bus:phenomenological"
       action: "latch_state"
-    # Archival Layer (Memory Commits)
     - stream: "bus:knowledge"
       action: "audit_log"
-    # Operational Layer
-    - stream: "bus:operational"
-      action: "handle_signal"
-  publications:
-    - stream: "bus:audit"
-      contract: "eva/memory_n_soul_passport/contract/MSP_Payload_Contract.yaml"
-      description: "Broadcasts state updates and persistence acks."
-  execution_order:
-    - Intercept signal from Resonance Bus
-    - Scrub non-serializable data
-    - Validate against module-specific schemas (v2)
-    - Persist to high-frequency state (01-09)
-    - Execute archival compression (Layer 10) if threshold met
 # ============================================================
 # 4. WRITE POLICY & AUTHORITY
 # ============================================================
@@ -88,22 +61,13 @@ write_policy:
     Authoritative policy governing how MSP validates, writes, and promotes memories.
     MSP is the SOLE WRITER to the Persistence Layer.
   module_state_registration:
-    description: "Policy for modules registering their operational state."
-    storage_pattern: "eva/consciousness/state_memory/{module_name}_state.json"
-    schema: "eva/memory_n_soul_passport/schema/State_Storage_Schema.json"
-    mandatory_modules:
-      - module: "eva_matrix"
-        content: "9D axes, emotion_label"
-      - module: "physio_core"
-        content: "Endocrine, ANS"
-      - module: "artifact_qualia"
-        content: "Tone, Intensity"
-      - module: "cim"
-        content: "Context Injection Stats"
-  resonance_rules:
-    - "Memories with RIM < 0.2 (Low Impact) are discarded or compressed immediately."
-    - "Memories with RIM > 0.8 (Traumatic/Ecstatic) trigger immediate Backup."
-    - "All writes must include a valid 'Resonance Hash' matching the State Registry."
+    storage_pattern: "consciousness/state_memory/{module_name}_state.json"
+    schema: "memory_n_soul_passport/schema/State_Storage_Schema.json"
+    mandatory_systems:
+      - "PhysioCore"
+      - "EVAMatrix"
+      - "ArtifactQualia"
+      - "CIM"
 # ============================================================
 # 5. STORAGE ARCHITECTURE & DATA CONTRACTS
 # ============================================================
@@ -111,180 +75,133 @@ storage_structure:
   # 01: EPISODIC MEMORY (Interaction Logs)
   episodic:
     enabled: true
-    path: "eva/consciousness/episodic_memory"
-    proposal_contract: "eva/memory_n_soul_passport/contract/MSP_Proposal_Episodic.yaml"
-    data_source: "MSP"
-    write_authority:
-      narrative: "LLM (via Proposal)"
-      metrics: "System (Auto-calculated)"
+    path: "consciousness/episodic_memory"
     schema_config:
-      enabled: true
-      schema_file: "eva/memory_n_soul_passport/schema/Episodic_Memory_Schema_v2.json"
+      schema_file: "memory_n_soul_passport/schema/Episodic_Memory_Schema_v2.json"
       registry:
-        unified: "eva/memory_n_soul_passport/schema/Episodic_Memory_Schema_v2.json"
-        user: "eva/memory_n_soul_passport/schema/Episodic_User_Schema.json"
-        ai: "eva/memory_n_soul_passport/schema/Episodic_AI_Schema.json"
-        state: "eva/memory_n_soul_passport/schema/State_Snapshot_Schema.json"
-      validation: "strict"
+        unified: "memory_n_soul_passport/schema/Episodic_Memory_Schema_v2.json"
+        user: "memory_n_soul_passport/schema/Episodic_User_Schema.json"
+        ai: "memory_n_soul_passport/schema/Episodic_AI_Schema.json"
+        state: "memory_n_soul_passport/schema/State_Snapshot_Schema.json"
     formats:
       unified_file: { filename: "episodes/{id}.json", desc: "Full log" }
-      user_episodes: { path: "episodes_user/",filename: "{episodic_id}_{turn_id}.json", desc: "input" }
-      ai_episodes: { path: "episodes_ai/",filename: "{episodic_id}_{turn_id}.json", desc: "Full state turn (detailed)" }
-      stream_log: { filename: "episodic_log.jsonl", desc: "Append-only" }
+      user_episodes: { path: "episodes_user/",filename: "{episodic_id}_{turn_id}.json" }
+      ai_episodes: { path: "episodes_ai/",filename: "{episodic_id}_{turn_id}.json" }
+      stream_log: { filename: "episodic_log.jsonl" }
   # 02: SEMANTIC MEMORY (Knowledge & Concepts)
   semantic:
     enabled: true
-    path: "eva/consciousness/semantic_memory"
-    data_source: "CIM / Meta-Cognition"
-    write_authority:
-      concepts: "LLM (via Analysis)"
+    path: "consciousness/semantic_memory"
     schema_config:
-      enabled: true
-      schema_file: "eva/memory_n_soul_passport/schema/Semantic_Memory_Schema_v2.json"
+      schema_file: "memory_n_soul_passport/schema/Semantic_Memory_Schema_v2.json"
     formats:
-      main_storage: { filename: "semantic_concepts.json", desc: "Core KB" }
-      stream_log: { filename: "semantic_log.jsonl", desc: "Append-only" }
-      index: { filename: "Semantic_memory_index.json", desc: "Search index" }
+      main_storage: { filename: "semantic_concepts.json" }
+      stream_log: { filename: "semantic_log.jsonl" }
+      index: { filename: "Semantic_memory_index.json" }
   # 03: SENSORY MEMORY (Perception Data)
   sensory:
     enabled: true
-    path: "eva/consciousness/sensory_memory"
-    data_source: "Artifact_Qualia"
-    write_authority:
-      concepts: "LLM (via Analysis)"
-      structure: ""
+    path: "consciousness/sensory_memory"
     schema_config:
-      enabled: true
-      schema_file: "eva/memory_n_soul_passport/schema/Sensory_Memory_Schema_v2.json"
+      schema_file: "memory_n_soul_passport/schema/Sensory_Memory_Schema_v2.json"
     formats:
-      main_storage: { filename: "sensory_memory.json", desc: "Perception IDs" }
-      stream_log: { filename: "sensory_log.jsonl", desc: "Append-only" }
-      index: { filename: "Sensory_memory_index.json", desc: "Search index" }
+      main_storage: { filename: "sensory_memory.json" }
+      stream_log: { filename: "sensory_log.jsonl" }
+      index: { filename: "Sensory_memory_index.json" }
   # 04: SESSION MEMORY (Short-term context)
   session:
     enabled: true
-    path: "eva/consciousness/session_memory"
-    schema_config:
-      enabled: true
-      schema_file: "eva/memory_n_soul_passport/schema/Session_Memory_Schema.json"
+    path: "consciousness/session_memory"
     formats:
-      active_session: { filename: "session_active.json", desc: "Live state" }
+      active_session: { filename: "session_active.json" }
   # 05: CORE MEMORY (Long-term identity)
   core:
     enabled: true
-    path: "eva/consciousness/core_memory"
-    schema_config:
-      enabled: true
-      schema_file: "eva/memory_n_soul_passport/schema/Core_Memory_Schema.json"
-    formats:
-      core_memory: { filename: "{id}.json", desc: "Extracted landmarks" }
+    path: "consciousness/core_memory"
   # 06: SPHERE MEMORY (Social & Environmental)
   sphere:
     enabled: true
-    path: "eva/consciousness/sphere_memory"
-    schema_config:
-      enabled: true
-      schema_file: "eva/memory_n_soul_passport/schema/Sphere_Memory_Schema.json"
-    formats:
-      social: { filename: "social_sphere.json", desc: "Relationships" }
+    path: "consciousness/sphere_memory"
   # 07: USER PROFILE (Modeling)
   user_profile:
     enabled: true
-    path: "eva/consciousness/user_profile"
-    schema_config:
-      enabled: true
-      schema_file: "eva/memory_n_soul_passport/schema/User_Profile_Schema.json"
+    path: "consciousness/user_profile"
     formats:
-      profile: { filename: "user_profile.json", desc: "Persistent identity" }
+      profile: { filename: "user_profile.json" }
   # 08: STATE STORAGE (Active bio-cognitive)
   state:
     enabled: true
-    path: "eva/system_state"
-    schema_config:
-      enabled: true
-      schema_file: "eva/memory_n_soul_passport/schema/State_Storage_Schema.json"
+    path: "system_state"
     formats:
-      active_state: { filename: "active_state.json", desc: "Hormone/Matrix levels" }
-    note: "System-owned state files. LLM has read-only access."
+      active_state: { filename: "active_state.json" }
   # 09: CONTEXT STORAGE (Working buffers)
   context:
     enabled: true
-    context_storage: "eva/consciousness/context_storage"
-    schema_config:
-      enabled: true
-      schema_file: "eva/memory_n_soul_passport/schema/Context_Storage_Schema.json"
-    formats:
-      working_context: { filename: "working_context.json", desc: "Reasoning window" }
+    context_storage: "memory/context_storage"
   # 10: ARCHIVAL STORAGE (Cold/Backup)
   archival:
     enabled: true
-    path: "eva/consciousness/archival_memory"
-    hierarchy_rules:
-      sessions_to_core: 8
-      cores_to_sphere: 8
+    path: "memory/archival_memory"
+
 # ============================================================
-# 6. NAMING CONVENTIONS & HIERARCHY RULES
+# 6. NAMING CONVENTIONS
 # ============================================================
 naming_rules:
   episode_id:
     pattern: "{PERSONA}_EP{number}"
-    examples: ["EVA_EP01", "ALEX_EP123"]
-    persona_code: { max_length: 4, rule: "Consonants first" }
-    counter_file: "eva/consciousness/indexes/episode_counter.json"
+    counter_file: "consciousness/indexes/episode_counter.json"
   session_file:
     pattern: "SES{session}_{develop_id}_SP{sphere}C{core}.md"
-    examples: ["SES6_THA-01_SP1C1.md"]
-    components:
-      develop_id: "Project ID (e.g. THA-01)"
-      sphere: "SP{n} (1-indexed)"
-      core: "C{n} (1-indexed)"
-      session: "SES{n} (0-7)"
-compression_rules:
-  hierarchy:
-    sessions_to_core: 8      # 8 Sessions -> 1 Core
-    cores_to_sphere: 8       # 8 Cores -> 1 Sphere
-    max_spheres: 8           # Total Capacity: 512 Sessions
-  paths:
-    archive_template: "sphere_{sphere_seq}/core_{core_seq}/session_{session_seq}/{module}/"
-    counters_file: "eva/consciousness/indexes/compression_counters.json"
+
 # ============================================================
-# 7. FILESYSTEM STRUCTURE (Directory Tree)
+# 8. MODULE DEFINITIONS & INTERNAL ORGANS (Nodes)
 # ============================================================
-filesystem_structure:
-  root: "eva/consciousness/"
-  layers:
-    context: { path: "context_storage/", desc: "Working reasoning buffers" }
-    core: { path: "core_memory/", desc: "Deep identity markers" }
-    episodic: { path: "episodic_memory/", desc: "Narrative timeline" }
-    indexes: { path: "indexes/", desc: "Fast access indexes" }
-    semantic: { path: "semantic_memory/", desc: "Concepts and facts" }
-    sensory: { path: "sensory_memory/", desc: "Perceptual vectors" }
-    session: { path: "session_memory/", desc: "Active working context" }
-    sphere: { path: "sphere_memory/", desc: "Social & environmental maps" }
-    user_profile: { path: "user_profile/", desc: "User modeling data" }
-  system_state:
-    # Moved out of consciousness/ - System-owned state files
-    root: "eva/system_state/"
-    desc: "Real-time bio-cognitive state (System-owned, LLM read-only)"
-  state_files:
-    # State Registry Map (SSOT for state_storage/)
-    eva_matrix: "eva_matrix_state.json"
-    physio_core: "physio_core_state.json"
-    rms: "rms_state.json"
-    artifact_qualia: "artifact_qualia_state.json"
-    cim: "cim_state.json"
-  global_files:
-    memory_index: "memory_index.json"
+module_definitions:
+  # --- EPISODIC MEMORY MODULE ---
+  episodic_memory_module:
+    class_name: "EpisodicMemoryModule"
+    nodes:
+      journal_node:
+        class_path: "memory_n_soul_passport.Module.EpisodicMemory.Node.JournalNode.JournalNode"
+        parameters:
+          episodes_root: "consciousness/episodic_memory/episodes"
+          user_root: "consciousness/episodic_memory/episodes_user"
+          ai_root: "consciousness/episodic_memory/episodes_ai"
+          log_file: "episodic_log.jsonl"
+    parameters:
+      speaker_id_enabled: true
+      default_resonance: 0.5
+      hydration_logic: "verified_merge"
+
+  # --- SEMANTIC MEMORY MODULE ---
+  semantic_memory_module:
+    class_name: "SemanticMemoryModule"
+    nodes:
+      grounding_node:
+        class_path: "memory_n_soul_passport.Module.SemanticMemory.Node.GroundingNode.GroundingNode"
+        parameters:
+          storage_file: "semantic_concepts.json"
+          conflict_threshold: 0.7
+    parameters:
+      situation_grounding_buffer: 5
+      auto_resolve_conflicts: false
+
+  # --- SENSORY MEMORY MODULE ---
+  sensory_memory_module:
+    class_name: "SensoryMemoryModule"
+    nodes:
+      qualia_storage_node:
+        class_path: "memory_n_soul_passport.Module.SensoryMemory.Node.QualiaStorageNode.QualiaStorageNode"
+        parameters:
+          log_file: "sensory_log.jsonl"
+          vector_sync: true
+    parameters:
+      retention_period_days: 30
+
 # ============================================================
-# 8. DASHBOARD STREAMING
+# 9. PERFORMANCE & BOTTLENECKS
 # ============================================================
-dashboard:
-  streaming_metrics:
-    physio_stream:
-      buffer_size_samples: 900   # 30 seconds @ 30Hz
-      update_rate_ms: 33         # ~30Hz
-      source: "Physio Core (Blood Engine + Hemodynamics)"
-    cognitive_stream:
-      buffer_size_states: 20     # Last 20 turns
-      update_trigger: "per_turn"
-      display_mode: "timeline"
+performance:
+  cache_size: 50
+  batch_write_interval_ms: 500
+  compression_threshold_episodes: 8

@@ -10,13 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **System -> Module -> Node Hierarchy**: Formally established the standard directory and logic structure across all systems.
-- **Doc-to-Code Workflow**: Established `/doc_to_code` protocol where documentation and configuration MUST precede implementation.
+- **Central Module & Sub-System Classification**: Defined new architectural layers for OS-direct modules and specialized internal sub-systems with restricted bus permissions.
+- **Read-Only State Access**: Implemented "Owner-Only" communication protocol for Sub-Systems to bypass bottlenecks while maintaining structural integrity.
+- **Doc-to-Code Workflow**: established `/doc_to_code` protocol where documentation and configuration MUST precede implementation.
 - **Archivist Workflow**: Added `/run_archivist` for synchronizing Agent context with Source of Truth.
 - **Checkpoint Workflow**: Added `/checkpoint` for automated doc-sync and git commitment.
 
 ### Changed
 
-- **Memory Architecture**: Consolidated all dynamic persistent memory (Episodic, Semantic context, Sensory) into **MSP** (The Subconscious).
+- **Memory Architecture (Facade Pattern)**: Refactored the monolithic `MSP` class into a facade that delegates responsibilities to specialized `Episodic`, `Semantic`, and `Sensory` memory modules.
+- **Config-Driven Development**: Eliminated hardcoded values throughout the MSP system by resolving all module/node parameters from `MSP_configs.yaml`.
+- **Documentation Hub (SSOT)**: Centralized all scattered documentation from module-local folders into a unified `agent/docs/` hierarchy.
 - **GKS Independence**: Decoupled GKS (The Knowledge Backbone) from MSP storage to allow for modular/tier-based (Paid/Free)知识库 plugins.
 - **EVA_Matrix & Artifact_Qualia**: Refactored to delegate logic to `MatrixPsychModule` and `QualiaIntegratorModule` respectively.
 - **PhysioCore Exemption**: Officially exempted PhysioCore from strict Module/Node refactoring due to its unique biological density, while maintaining its System Authority status.

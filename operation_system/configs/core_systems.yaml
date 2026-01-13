@@ -13,7 +13,7 @@ core_systems:
   - id: Resonance_Bus
     name: Resonance_Bus
     version: 9.4.0
-    role: transport_layer
+    role: central_module
     domain: communication
     id_registry: "IdentityManager.BUS_*"
     main_files:
@@ -22,7 +22,7 @@ core_systems:
   - id: Identity_Manager
     name: Identity_Manager
     version: 9.4.0
-    role: identity_authority
+    role: central_module
     domain: security
     description: "Central authority for ID generation and identity unification."
     main_files:
@@ -40,7 +40,7 @@ core_systems:
     description: "Unified Memory OS. Manages Episodic (JSON), Semantic (ChromaDB), and Sensory (JSONL) memory."
     main_files:
       - path: memory_n_soul_passport/memory_n_soul_passport_engine.py
-      - path: memory_n_soul_passport/configs/MSP_configs.yaml
+      - path: docs/systems/memory_n_soul_passport/MSP_CONCEPT.md
     id_registry: "IdentityManager.SYSTEM_MSP"
     owned_modules:
       - EpisodicMemoryModule (The Journal)
@@ -58,7 +58,8 @@ core_systems:
     description: "Full physiological pipeline. Orchestrates endocrine, blood, and vital signs."
     main_files:
       - path: physio_core/physio_core.py
-      - path: physio_core/configs/PhysioCore_configs.yaml
+      - path: docs/systems/physio_core/PhysioCore_Logic.md
+      - path: docs/systems/physio_core/hormone_spec_ml.md
     id_registry: "IdentityManager.SYSTEM_PHYSIO"
     owned_modules:
       - EndocrineEngine
@@ -76,7 +77,7 @@ core_systems:
     description: "9D Psychological State Engine (5 Core + 2 Meta + 2 Categorical axes)."
     main_files:
       - path: eva_matrix/eva_matrix.py
-      - path: eva_matrix/configs/EVA_Matrix_configs.yaml
+      - path: docs/systems/eva_matrix/matrix_logic_concept.md
     id_registry: "IdentityManager.SYSTEM_MATRIX"
     owned_modules:
       - MatrixPsychModule
@@ -115,7 +116,7 @@ core_systems:
     description: "7-dimensional affective memory retrieval system."
     main_files:
       - path: capabilities/services/rag_engine/agentic_rag_engine.py
-      - path: capabilities/services/rag_engine/configs/Agentic_RAG_configs.yaml
+      - path: docs/capabilities/services/agentic_rag/Agentic_RAG_CONCEPT.md
     id_registry: "IdentityManager.SYSTEM_RAG"
 
   - id: SLM_Bridge
@@ -210,9 +211,10 @@ core_systems:
   - id: RMS
     name: Resonance_Memory_System
     version: 9.4.0
-    role: core_system
+    role: sub_system
+    owned_by: MSP
     domain: memory_resonance
-    description: "Manages qualia thresholds and resonance smoothing."
+    description: "Sub-system for memory coloring and resonance smoothing. Communicates strictly with MSP."
     main_files:
       - path: resonance_memory_system/rms.py
     id_registry: "IdentityManager.SYSTEM_RMS"

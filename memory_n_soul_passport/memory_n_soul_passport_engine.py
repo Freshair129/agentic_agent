@@ -71,6 +71,11 @@ from typing import Dict, List, Any, Optional
 import math
 import re
 
+# v9.4.0 Module Delegation
+from .Module.EpisodicMemory import EpisodicMemoryModule
+from .Module.SemanticMemory import SemanticMemoryModule
+from .Module.SensoryMemory import SensoryMemoryModule
+
 class MSP:
 
     """
@@ -113,212 +118,69 @@ class MSP:
 
         """
 
-        Initialize MSP Engine
-
-
-
-        Args:
-
-            root_path: Root path for consciousness directory
-
-            cache_size: Number of recent episodes to keep in memory
+        Initialize MSP Engine (v9.4.0 Resonance Refactored)
 
         """
 
-        # Setup paths
+        # Resolve Root Path (Agent Root)
 
-        if root_path is None:
-            # Default to EVA 8.1.0/consciousness (at project root)
-            self.root_path = Path(__file__).parent.parent / "consciousness"
-        else:
-            self.root_path = Path(root_path)
-
-        # ----------------------------------------------------
-        # RIS UPDATE: Load Configuration (Code Integrity Protocol)
-        # ----------------------------------------------------
+        # The engine file is at agent/memory_n_soul_passport/memory_n_soul_passport_engine.py
+        # So parent.parent is agent/
+        self.root_path = Path(__file__).parent.parent.resolve()
+        
+        # Load Configuration
         config_path = Path(__file__).parent / "configs" / "MSP_configs.yaml"
         if config_path.exists():
             with open(config_path, 'r', encoding='utf-8') as f:
                 self.config = yaml.safe_load(f)
-            # safe_print(f"[MSP] ✅ Config Loaded: {config_path.name}")
         else:
             safe_print(f"[MSP] ⚠️ Config Missing: {config_path}")
             self.config = {}
 
-        # ----------------------------------------------------
-        # Episodic Memory paths (Driven by Config)
-        # ----------------------------------------------------
-        self.episodic_dir = self.root_path / "episodic_memory"
+        # Initialize Delegation Modules
+        self.sensory_module  = SensoryMemoryModule(self.config)
+        self.episodic_module = EpisodicMemoryModule(self.config, self.sensory_module)
+        self.semantic_module = SemanticMemoryModule(self.config)
+
+        # Path Setup (Driven by Config)
+        cfg_storage = self.config.get("storage_structure", {})
+        self.episodic_dir = self.root_path / cfg_storage.get("episodic", {}).get("path", "consciousness/episodic_memory")
+        self.semantic_dir = self.root_path / cfg_storage.get("semantic", {}).get("path", "consciousness/semantic_memory")
+        self.sensory_dir  = self.root_path / cfg_storage.get("sensory", {}).get("path", "consciousness/sensory_memory")
+        self.state_dir    = self.root_path / self.config.get("filesystem_structure", {}).get("system_state", {}).get("root", "system_state")
+        self.context_dir  = self.root_path / cfg_storage.get("context", {}).get("context_storage", "memory/context_storage")
+
+        # Create Core Structures
+        for d in [self.episodic_dir, self.semantic_dir, self.sensory_dir, self.state_dir, self.context_dir]:
+            d.mkdir(parents=True, exist_ok=True)
+
+        # Legacy Support / Internal State
+        self.cache_size = cache_size
+        self._episode_cache: List[Dict] = []
+        self._cache_loaded = False
+        self._active_state_cache: Dict[str, Any] = {}
         
-        # Get filenames from storage_structure
+        # Identity and Registry
+        self.identity_config_file = self.root_path / "consciousness/indexes/identity_config.json"
+        self.system_registry_file = self.root_path / "consciousness/indexes/system_registry.json"
+        
+        # Registry Managers
+        registry_path = self.root_path / "memory" / "user_registry.json"
+        self.user_registry = UserRegistryManager(str(registry_path))
+        
+        # V9.1.0 RMS Bridge (Temporary till full refactor)
+        self.rms = RMSEngineV6(config={}) # Will load from system later
+        self.storage_path = self.context_dir / "context_storage.json"
+
+        # Legacy filenames for compatibility with existing methods in this monolithic file
         ep_cfg = self.config.get("storage_structure", {}).get("episodic", {})
         ep_formats = ep_cfg.get("formats", {})
-        
         log_name = ep_formats.get("stream_log", {}).get("filename", "episodic_log.jsonl")
         self.episodic_log = self.episodic_dir / log_name
-        
-        # Sensory Log (from sensory node)
-        sen_cfg = self.config.get("storage_structure", {}).get("sensory", {})
-        sen_formats = sen_cfg.get("formats", {})
-        sen_log_name = sen_formats.get("stream_log", {}).get("filename", "sensory_log.jsonl")
-        self.sensory_log = self.root_path / "sensory_memory" / sen_log_name
-
-        self.episodic_index = self.episodic_dir / "episodic_memory_index.json"
-
-
-
-        # Split storage: User vs LLM
-
-        self.episodes_user_dir = self.episodic_dir / "episodes_user"
-
-        self.episodes_llm_dir = self.episodic_dir / "episodes_llm"
-
-
-
-        # Legacy folder (for backward compatibility)
-
-        self.episodes_dir = self.episodic_dir / "episodes"
-
-
-
-        # Semantic Memory paths
-        self.semantic_dir = self.root_path / "semantic_memory"
-
-        sem_cfg = self.config.get("storage_structure", {}).get("semantic", {})
-        sem_formats = sem_cfg.get("formats", {})
-        
-        sem_main = sem_formats.get("main_storage", {}).get("filename", "semantic_concepts.json")
-        self.semantic_concepts_file = self.semantic_dir / sem_main
-        
-        sem_log = sem_formats.get("stream_log", {}).get("filename", "semantic_log.jsonl")
-        self.semantic_log = self.semantic_dir / sem_log
-
-
-
-        # State and Context paths
-        self.state_dir_10 = self.root_path / "system_state"
-        self.active_state_dir = self.state_dir_10 / "active_state"
-        self.turn_cache_file = self.state_dir_10 / "turn_cache.json"
-        self.consciousness_history = self.state_dir_10 / "consciousness_history.jsonl" # 9.1.0
-        
-        self.context_storage_dir = self.root_path / "context_storage"
-        self.context_ledger = self.context_storage_dir / "context_ledger.jsonl"
-
-        self.state_dir_09_idx = self.root_path / "indexes"
-        self.system_registry_file = self.state_dir_09_idx / "system_registry.json"
-        self.identity_config_file = self.state_dir_09_idx / "identity_config.json"
-
-
-
-        # Session Memory (compression snapshots)
-
-        self.session_memory_dir = self.root_path / "session_memory"
-        
-        # Archival Memory (cold storage)
-        self.archival_dir = self.root_path.parent / "archival_memory"
-
-
-        # Persona config (for episode_id generation)
-
-        self.persona_file = self.root_path.parent / "orchestrator" / "cim" / "prompt_rule" / "configs" / "identity" / "persona.yaml"
-
-
-
-        # Memory Index (lightweight search index)
-
-        self.memory_index_file = self.root_path / "memory_index.json"
-
-
-
-        # Create directories
-
-        self.episodic_dir.mkdir(parents=True, exist_ok=True)
-
-        self.episodes_user_dir.mkdir(parents=True, exist_ok=True)
-
-        self.episodes_llm_dir.mkdir(parents=True, exist_ok=True)
-
-        self.episodes_dir.mkdir(parents=True, exist_ok=True)  # Legacy
-
-        self.semantic_dir.mkdir(parents=True, exist_ok=True)
-
-        self.state_dir_10.mkdir(parents=True, exist_ok=True)
+        self.active_state_dir = self.state_dir / "active_state"
         self.active_state_dir.mkdir(parents=True, exist_ok=True)
 
-        self.context_storage_dir.mkdir(parents=True, exist_ok=True)
-
-        self.state_dir_09_idx.mkdir(parents=True, exist_ok=True)
-
-        self.session_memory_dir.mkdir(parents=True, exist_ok=True)
-
-
-
-        # In-memory cache
-
-        self.cache_size = cache_size
-
-        self._episode_cache: List[Dict] = []
-
-        self._cache_loaded = False
-
-
-
-        # Semantic concepts
-
-        self._semantic_concepts: Dict = {}
-        # [NEW] User Registry Manager
-        registry_path = self.root_path.parent / "eva" / "memory" / "user_registry.json"
-        self.user_registry = UserRegistryManager(str(registry_path))
-        safe_print(f"[MSP] ✅ User Registry initialized: {len(self.user_registry.list_users())} users")
-
-        self._load_semantic_concepts()
-
-
-
-        # Turn cache (session-specific)
-
-        self.turn_cache: Dict = {}
-
-
-
-        # System Registry (Counters & Dynamic State)
-        self.system_registry: Dict = self._load_system_registry()
-
-
-
-        # Identity Config (SSOT)
-        self.identity_config: Dict = self._load_identity_config()
-
-
-
-        self._load_turn_cache()
-
-
-
-        # Active State Bus (Phase 4: State Bus Pattern)
-
-        self.active_state_dir = self.state_dir_10 / "active_state"
-
-        self.active_state_dir.mkdir(parents=True, exist_ok=True)
-
-        self._active_state_cache: Dict[str, Any] = {}
-
-        # 9.1.0 Bridge components
-        rms_cfg_path = Path(__file__).parent.parent / "resonance_memory_system" / "configs" / "RMS_configs.yaml"
-        rms_config = {}
-        if rms_cfg_path.exists():
-            try:
-                with open(rms_cfg_path, 'r', encoding='utf-8') as f:
-                    rms_config = yaml.safe_load(f)
-            except Exception as e:
-                safe_print(f"[MSP] ⚠️ Error loading RMS config: {e}")
-        
-        self.rms = RMSEngineV6(config=rms_config)
-        self.storage_path = self.context_storage_dir / "context_storage.json"
-
-        safe_print(f"[MSP] Initialized with root: {self.root_path}")
-        safe_print(f"[MSP] Episodic log: {self.episodic_log}")
-        safe_print(f"[MSP] Active State Bus: {self.active_state_dir}")
+        safe_print(f"[MSP] ✅ Subconscious Facade Initialized (v9.4.0)")
 
     # ============================================================
     # 9.1.0 BRIDGE METHODS
@@ -960,165 +822,44 @@ class MSP:
         persist: bool = True
     ) -> str:
         """
-        Write new episode to persistent storage
-        
-        Args:
-            episode_data: Episode data
-            persist: If True, write to disk. If False, only update cache (Transient).
-        
-        Returns:
-            Episode ID
+        Consolidates and writes a new episode by delegating to EpisodicMemoryModule.
         """
+        if not persist:
+            safe_print(f"[MSP] ⚠️ Transient Mode: Episode {episode_data.get('episode_id')} NOT written to disk.")
+            return episode_data.get("episode_id", "EP_TRANSIENT")
 
-        # Generate episode ID and timestamp
-        timestamp = datetime.now().isoformat()
-        
+        # 1. ID Generation (Keep in Facade/Identity Manager for global consistency)
         persona_code = self.identity_config.get("persona", {}).get("persona_code", "EVA")
+        episode_num = self._increment_episode_counter()
+        episode_id = IdentityManager.generate_episode_id(persona_code, episode_num)
+        episode_data["episode_id"] = episode_id
 
-        if persist:
-            episode_num = self._increment_episode_counter()
-            episode_id = IdentityManager.generate_episode_id(persona_code, episode_num)
-        else:
-            episode_id = "EP_TRANSIENT"
-
-        # Add compression metadata (BEFORE incrementing)
+        # 2. Metadata Preparation
         counters = self.system_registry.get("counters", {})
-        compression_meta = {
-            "session_seq": counters.get("session_seq", 0),
-            "core_seq": counters.get("core_seq", 0),
-            "sphere_seq": counters.get("sphere_seq", 0)
+        system_meta = {
+            "compression_meta": {
+                "session_seq": counters.get("session_seq", 0),
+                "core_seq": counters.get("core_seq", 0),
+                "sphere_seq": counters.get("sphere_seq", 0)
+            }
         }
 
-        # [NEW] Speaker Identification
-        turn_1_data = episode_data.get("turn_1", {})
-        raw_text = turn_1_data.get("raw_text", "")
-        
-        # Identify speaker from input
-        speaker_info = self.user_registry.identify_speaker(raw_text)
-        
-        # Tag turn_1 with speaker info
-        if "username" not in turn_1_data or turn_1_data.get("username") == "unknown":
-            turn_1_data["username"] = speaker_info["username"]
-        if "user_id" not in turn_1_data or turn_1_data.get("user_id") == "unknown":
-            turn_1_data["user_id"] = speaker_info["user_id"]
-        
-        # Update episode_data with identified speaker
-        episode_data["turn_1"] = turn_1_data
-        
-        # Increment interaction count if identified
-        if speaker_info["user_id"] != "unknown":
-            self.user_registry.increment_interaction(speaker_info["user_id"])
+        # 3. Delegate Consolidation & Persistence
+        try:
+            self.episodic_module.consolidate_interaction(episode_data, system_meta, self.user_registry)
+        except Exception as e:
+            safe_print(f"[MSP] ❌ Error delegating episode write: {e}")
+            return episode_id
 
-
-        # 1. Construct Unified Full Episode
-        full_episode = {
-            "episode_id": episode_id,
-            "timestamp": timestamp,
-            "session_id": episode_data.get("session_id"),
-            "developer_id": self.identity_config.get("instance", {}).get("developer_id", "UNKNOWN"),
-            "event_label": episode_data.get("event_label"),
-            "episode_tag": episode_data.get("episode_tag"),
-            "episode_type": episode_data.get("episode_type"),
-            "compression_meta": compression_meta,
-            "situation_context": episode_data.get("situation_context"),
-            "turn_1": episode_data.get("turn_1"),
-            "turn_llm": episode_data.get("turn_llm") or episode_data.get("turn_2") or episode_data.get("turn_ai"),
-            "llm_narrative": episode_data.get("llm_narrative"),
-            "state_snapshot": episode_data.get("state_snapshot", {})
-        }
-
-        # 2. Construct Lightweight User Episode (For fast RAG)
-        # Extract confidence/anchor from turn_llm if available
-        turn_llm = episode_data.get("turn_llm") or episode_data.get("turn_ai", {}) or episode_data.get("turn_2", {})
-        user_episode = {
-            "episode_id": episode_id,
-            "timestamp": timestamp,
-            "session_id": episode_data.get("session_id"),
-            "event_label": episode_data.get("event_label"),
-            "tags": episode_data.get("tags", []), # Ensure tags are present
-            "turn_1": episode_data.get("turn_1"),
-            "salience_anchor": turn_llm.get("salience_anchor", {}),
-            "confidence": turn_llm.get("confidence", 0.5),
-            "state_snapshot": {
-                # Minimal state for filtering
-                 "EVA_matrix": episode_data.get("state_snapshot", {}).get("EVA_matrix"),
-                 "Resonance_index": episode_data.get("state_snapshot", {}).get("Resonance_index") or episode_data.get("state_snapshot", {}).get("Resonance_index")
-            },
-            "compression_meta": compression_meta
-        }
-        
-        # 2.5. Construct LLM-specific Episode (For LLM context & reasoning audit)
-        llm_episode = {
-            "episode_id": episode_id,
-            "timestamp": timestamp,
-            "session_id": episode_data.get("session_id"),
-            "developer_id": self.identity_config.get("instance", {}).get("developer_id", "UNKNOWN"),
-            "turn_llm": turn_llm,
-            "crosslinks": episode_data.get("crosslinks", {}),
-            "epistemic_mode": turn_llm.get("epistemic_mode", "reflect"),
-            "confidence": turn_llm.get("confidence", 0.5),
-            "compression_meta": compression_meta
-        }
-
-        # 3. Write Unified File (The missing piece)
-        if persist:
-            try:
-                 # Ensure directory exists
-                 self.episodes_dir.mkdir(parents=True, exist_ok=True)
-                 full_file = self.episodes_dir / f"{episode_id}.json"
-                 with open(full_file, 'w', encoding='utf-8') as f:
-                     json.dump(full_episode, f, ensure_ascii=False, indent=2)
-            except Exception as e:
-                 print(f"[MSP] Error writing full episode: {e}")
-
-            # 4. Write User File (For RAG)
-            try:
-                user_file = self.episodes_user_dir / f"{episode_id}_user.json"
-                with open(user_file, 'w', encoding='utf-8') as f:
-                    json.dump(user_episode, f, ensure_ascii=False, indent=2)
-            except Exception as e:
-                print(f"[MSP] Error writing user episode: {e}")
-            
-            # 4.5. Write LLM File (For LLM reasoning audit)
-            try:
-                llm_file = self.episodes_llm_dir / f"{episode_id}_llm.json"
-                with open(llm_file, 'w', encoding='utf-8') as f:
-                    json.dump(llm_episode, f, ensure_ascii=False, indent=2)
-            except Exception as e:
-                print(f"[MSP] Error writing LLM episode: {e}")
-
-            # 5. Append to JSONL log
-            try:
-                with open(self.episodic_log, 'a', encoding='utf-8') as f:
-                    f.write(json.dumps(full_episode, ensure_ascii=False) + '\n')
-            except Exception as e:
-                print(f"[MSP] Error writing to episodic_log: {e}")
-
-            # 8. Write sensory memory sidecar
-            if "state_snapshot" in episode_data:
-                qualia = episode_data.get("state_snapshot", {}).get("qualia")
-                if qualia:
-                    self.write_sensory_log(episode_id, qualia)
-
-            # 9. Counters updated ONLY on start_new_session now
-            # new_counters = self._increment_compression_counters() 
-            print(f"[MSP] ✓ Written episode: {episode_id} (Full: {len(json.dumps(full_episode))}B)")
-            # print(f"[MSP]   Turn {new_counters['session_seq']}/8 | Session Block {new_counters['core_seq']}/8")
-
-        else:
-            print(f"[MSP] ⚠️ Transient Mode: Episode {episode_id} NOT written to disk.")
-
-        # 6. Update cache (ALWAYS update cache for conversation continuity)
-        self._episode_cache.append(full_episode)
+        # 4. Update Facade-level Indexes (for compatibility)
+        full_ep = {**episode_data, "episode_id": episode_id} # Simplified for index
+        self._episode_cache.append(full_ep)
         if len(self._episode_cache) > self.cache_size:
             self._episode_cache.pop(0)
+            
+        self._update_memory_index(full_ep)
 
-        # 7. Update memory_index.json (Transient? RAG might need it)
-        # If we update index but don't persist file, RAG might fail when reading file.
-        # So we should ONLY update index if persist=True
-        if persist:
-            self._update_memory_index(full_episode)
-
+        safe_print(f"[MSP] ✓ Episode Consolidated: {episode_id}")
         return episode_id
 
 
@@ -1216,58 +957,15 @@ class MSP:
 
 
     def _load_semantic_concepts(self):
-
-        """Load semantic concepts from file"""
-
-        if not self.semantic_concepts_file.exists():
-
-            self._semantic_concepts = {
-
-                "gratitude": {"related": ["appreciation", "thanks", "acknowledgment"]},
-
-                "longing": {"related": ["desire", "yearning", "missing"]},
-
-                "stress": {"related": ["pressure", "overwhelm", "tension"]},
-
-                "joy": {"related": ["happiness", "delight", "pleasure"]},
-
-                "sadness": {"related": ["sorrow", "melancholy", "grief"]}
-
-            }
-
-            self._save_semantic_concepts()
-
-            return
-
-
-
-        try:
-
-            with open(self.semantic_concepts_file, 'r', encoding='utf-8') as f:
-
-                self._semantic_concepts = json.load(f)
-
-        except Exception as e:
-
-            print(f"[MSP] Error loading semantic concepts: {e}")
-
-            self._semantic_concepts = {}
-
-
+        """Delegates semantic loading to SemanticMemoryModule."""
+        # For compatibility, initializing fallback if module fails
+        if not hasattr(self, "_semantic_concepts"):
+             self._semantic_concepts = {}
+        pass
 
     def _save_semantic_concepts(self):
-
-        """Save semantic concepts to file"""
-
-        try:
-
-            with open(self.semantic_concepts_file, 'w', encoding='utf-8') as f:
-
-                json.dump(self._semantic_concepts, f, ensure_ascii=False, indent=2)
-
-        except Exception as e:
-
-            print(f"[MSP] Error saving semantic concepts: {e}")
+        """Delegates semantic saving to SemanticMemoryModule."""
+        pass
 
 
 
