@@ -1,0 +1,45 @@
+# ============================================================
+# EVA MODULE SPECIFICATION (SSOT)
+# Module: RIM Calculator (Resonance Impact)
+# Version: 9.1.0-C1
+# Updated: 2026-01-12
+# Description: Configuration for mapping SLM signals to Resonance Impact scores.
+# ============================================================
+
+schema: EVA-RIM-Configs-v9.1
+version: 9.1.0-C1
+
+# ============================================================
+# 1. EMOTION SIGNAL MAPPING
+# Range: -1.0 (Very Negative) to 1.0 (Very Positive)
+# ============================================================
+emotion_map:
+  affection: 0.8
+  warm: 0.6
+  positive: 0.5
+  neutral: 0.0
+  insecurity: -0.4
+  jealousy: -0.7
+  possessiveness: -0.6
+  sarcasm: -0.5
+  anger: -0.8
+  fear: -0.6
+
+# ============================================================
+# 2. SALIENCE ANCHOR MULTIPLIERS
+# Multipliers applied based on the length or characteristics of the anchor.
+# ============================================================
+anchor_settings:
+  length_multipliers:
+    long_threshold: 10
+    long_multiplier: 1.2
+    short_threshold: 3
+    short_multiplier: 0.8
+    default_multiplier: 1.0
+
+# ============================================================
+# 3. SCORE CONSTRAINTS
+# ============================================================
+constraints:
+  min_score: -1.0
+  max_score: 1.0

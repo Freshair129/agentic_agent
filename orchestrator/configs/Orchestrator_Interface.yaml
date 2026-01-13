@@ -1,0 +1,41 @@
+# Orchestrator Interface
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0-S1
+updated: 2026-01-08
+bus_id: ORCH_MAIN_01
+
+component: EVA_Orchestrator
+role: "Central Decision Making & Flow Control"
+analogy: "Conductor of the Symphony"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  # The Orchestrator acts as the "Driver" rather than a passive subscriber.
+  # It orchestrates the flow and invokes other modules.
+  
+  - publish: "bus:operational"
+    action: "emit_state"
+    description: "Broadcasts operational status and turn boundaries."
+
+  - publish: "bus:knowledge"
+    action: "emit_knowledge"
+    description: "Broadcasts confirmed knowledge updates after Phase 3."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "Orchestrator"
+  module_path: "orchestrator.orchestrator"
+  class_name: "EVAOrchestrator"
+  
+  initialization:
+    args:
+      base_path: "ROOT"
+      mode: "main_loop"
+    
+  lifecycle:
+    on_startup: "initialize_systems()"
+    on_shutdown: "save_state()"

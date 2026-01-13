@@ -1,0 +1,351 @@
+title: MSP_configs_4.0.0
+version: 4.0.0
+description: >
+  Memory configs schema with clean multi-persona support.
+  Turn roles are stable. Persona identity is contextual.
+memory_os:
+  id: MSP
+  description: "Memory OS and archival custodian (stateless)"
+
+#eva/
+#├── identity/                 # persona / soul / cognition
+#│   ├── persona.yaml
+#│   ├── cognition.yaml
+#│   └── soul.md
+#│
+#├── consciousness/            # EVA-owned Persistence memory space 
+#│   ├── episodic_memory/      # working memory
+#│   ├── semantic_memory/      # working memory
+#│   ├── sensory_memory/       # working memory
+#│   ├── session_memory/       # Short-term memory  
+#│   ├── core_memory/          # Long-term memory and identity
+#│   ├── sphere_memory/        # Long-term memory and principles
+#│   ├── state_memory/         # working memory, current state 
+#│   ├── context_memory/       # working memory, current situational context, summary context, goal context     
+#│   └── indexes/
+#│
+#├── memory/                   # EVA-owned archival memory space
+#│   ├── user_profile/
+#│   ├── state_storage/
+#│   ├── context_storage/
+#│   ├── archival_memory/
+#│   └── indexes/
+#│
+#├── memory_os/                # MSP (stateless, replaceable)
+#│   ├── configs/
+#│   ├── contracts/
+#│   ├── logic/                # flow logic, compression logic, logging logic 
+#│   ├── schemas/
+#│   ├── write_policies/
+#│   ├── validators/
+#│   ├── journaling/
+#│   └── msp.py
+
+# ============================================================
+#  GLOBAL SETTINGS & DATABASES
+# ============================================================
+global:
+  module_name: "MSP Client"
+  role: "Persistence & Archival Layer"
+  storage_primary: "local" # options: local, mongodb
+  json_indent: 
+  auto_backup: true
+  backup_interval_sessions: 50
+  compression_threshold_sessions: 8
+  keep_raw_episodes_days: 30
+
+databases:
+  local:
+    path: "."   # MSP works relative to EVA root, not owning consciousness
+
+  mongodb:
+    enabled: false
+    uri_env: "MONGODB_URI"
+    db_name: "eva_v8"
+    collection_prefix: "episodes_"
+  
+  neo4j:
+    enabled: false # Semantic Graph integration
+    uri_env: "NEO4J_URI"
+    user_env: "NEO4J_USER"
+    password_env: "NEO4J_PASSWORD"
+
+# ============================================================
+#  RUNTIME HOOK (System Integration)
+# ============================================================
+runtime_hook:
+  component: "MSP"
+  module_path: "memory_n_soul_passport.msp"
+  class_name: "MSP"
+  
+  initialization:
+    args:
+      configs: "memory_n_soul_passport/configs/MSP_configs.yaml"
+    
+  bus_bindings:
+    - subscribe: "bus:*" # All archival-eligible streams
+      action: "handle_archival_signal"
+      mapping:
+        payload: "signal_envelope"
+        status_return: "persistence_registry"
+
+  resources:
+    configs: "memory_n_soul_passport/MSP/configs/"
+    contract: "memory_n_soul_passport/MSP/configs/MSP_configs.yaml"
+
+# ============================================================
+#  INTERFACE (Bus Position & Logic)
+# ============================================================
+interface:
+  bus_id: "MSP_SUB_01"
+  description: >
+    The MSP Client serves as the final archival destination on the Resonance Bus. 
+    It subscribes to fundamental streams to ensure structured cold-storage migration.
+  
+  subscriptions:
+    - stream: "physical"
+    - stream: "psychological"
+    - stream: "phenomenological"
+    - stream: "knowledge"
+    - stream: "operational"
+  
+  downstream_targets:
+    - "Local Filesystem (consciousness/)"
+    - "MongoDB (Episodic Cloud)"
+    - "Neo4j (Knowledge Graph)"
+
+  execution_order:
+    - Intercept signal from Resonance Bus
+    - Scrub non-serializable data
+    - Validate against module-specific schemas
+    - Persist to high-frequency state
+    - Execute archival compression if threshold met
+    - Persist to high-frequency state (consciousness)
+    - Execute archival compression (archival_memory)
+
+type: object
+required:
+  - develop_id
+  - persona_id
+  - memory_id
+  - timestamp
+
+conditional_requirements:
+  on_session:
+    required: [session_id]
+  on_core:
+    required: [session_id, core_id]
+  on_sphere:
+    required: [session_id, core_id, sphere_id]
+
+properties:
+  develop_id:
+    type: string
+    description: EVA runtime  develop id .
+    source_ref: "persona_registry.yaml"
+    crosslinks:
+      - "Memory_registry.yaml"
+
+  persona_id:
+    type: string
+    description: Persona identifier .
+    source_ref: "persona_registry.yaml"
+    crosslinks:
+      - "Memory_registry.yaml"
+
+  memory_id:
+    type: string
+    description: Memory identifier , version control.
+    source_ref: "Memory_registry.yaml"
+    crosslinks:
+      - "persona_registry.yaml"
+
+  session_id:
+    type: string
+    description: Session identifier .
+    source_ref: "Session_registry.yaml"
+    crosslinks:
+      - "Memory_registry.yaml"
+
+  core_id:
+    type: string
+    description: Core identifier .
+    source_ref: "Core_registry.yaml"
+    crosslinks:
+      - "Memory_registry.yaml"
+
+  sphere_id:
+    type: string
+    description: Sphere identifier .
+    source_ref: "Sphere_registry.yaml"
+    crosslinks:
+      - "Memory_registry.yaml"
+
+  timestamp:
+    type: string
+    format: date-time
+    description: File creation timestamp .
+
+ownership:
+  consciousness:
+    owner: EVA
+    mutability: live
+  archival_memory:
+    owner: MSP
+    mutability: immutable
+
+storage_structure:
+  # 01: EPISODIC MEMORY (Interaction Logs)
+  episodic_memory:
+    enabled: true
+    description: "Chronological recording of interactions."
+    classification: "short_term_to_long_term"
+    path: "consciousness/episodic_memory"
+    data_source: 
+    schema_config:
+      enabled: true
+      schema_file: ""
+      validation: "strict"
+    subfolders:
+      unified: "episodes"
+      llm_only: "episodes_llm"
+      user_only: "episodes_user"
+      schema: "schema"
+    naming_convention:
+      pattern: "{episodic_id}.json"
+    formats:
+      unified_file: { filename: "episodes/{id}.json", desc: "Full log" }
+      stream_log: { filename: "episodic_log.jsonl", desc: "Append-only" }
+      index: { filename: "Episodic_memory_index.json", desc: "Search index" }
+
+  # 02: SEMANTIC MEMORY (Knowledge & Concepts)
+  semantic_memory:
+    enabled: true
+    description: "Extracted concepts and hypotheses."
+    classification: "conceptual_knowledge"
+    path: "consciousness/semantic_memory"
+    data_source: ""
+    schema_config:
+      enabled: true
+      schema_file: ""
+    formats:
+      main_storage: { filename: "Semantic_memory.json", desc: "Core KB" }
+      index: { filename: "Semantic_memory_index.json", desc: "Concept index" }
+
+  # 03: SENSORY MEMORY (Perception Data)
+  sensory_memory:
+    enabled: true
+    description: "Raw perceptual snapshots."
+    classification: "raw_perception"
+    path: "consciousness/sensory_memory"
+    data_source: "Artifact_Qualia (Phenomenology Core)"
+    schema_config:
+      enabled: true
+      schema_file: ""
+    formats:
+      main_storage: { filename: "Sensory_memory.json", desc: "Perception IDs" }
+      artifacts: { filename: "artifacts/", desc: "Raw blobs" }
+
+  # 04: SESSION MEMORY (Short-term context)
+  session_memory:
+    enabled: true
+    description: "Active context, compressed to Core every 8 sessions."
+    classification: "active_context"
+    path: "consciousness/session_memory"
+    schema_config:
+      enabled: true
+      schema_file: ""
+    naming_convention:
+      pattern: "{develop_id}_{sphere_seq}_{core_seq}_{session_seq}.json"
+    formats:
+      active_session: { filename: "session_active.json", desc: "Live state" }
+      session_index: { filename: "session_index.json", desc: "History index" }
+
+  # 05: CORE MEMORY (Long-term identity)
+  core_memory:
+    enabled: true
+    description: "Landmark identity extracted from interaction cycles."
+    classification: "identity"
+    path: "consciousness/core_memory"
+    schema_config:
+      enabled: true
+      schema_file: ""
+    naming_convention:
+      pattern: "{develop_id}_{sphere_seq}_{core_seq}.json"
+    formats:
+      core_memory: { filename: "{id}.json", desc: "Extracted landmarks" }
+      core_index: { filename: "core_index.json", desc: "Index" }
+
+  # 06: SPHERE MEMORY (Social & Environmental)
+  sphere_memory:
+    enabled: true
+    description: "Social and environmental mapping."
+    path: "consciousness/sphere_memory"
+    schema_config:
+      enabled: true
+      schema_file: ""
+    formats:
+      social: { filename: "social_sphere.json", desc: "Relationships" }
+      environmental: { filename: "environmental_sphere.json", desc: "Maps" }
+
+  # 07: USER PROFILE (Modeling)
+  user_profile:
+    enabled: true
+    description: "User modeling and persistent identity."
+    path: "consciousness/user_profile"
+    schema_config:
+      enabled: true
+      schema_file: ""
+    formats:
+      profile: { filename: "user_profile.json", desc: "Persistent identity" }
+      preferences: { filename: "user_preferences.json", desc: "Settings" }
+
+  # 08: STATE STORAGE (Active bio-cognitive)
+  state:
+    enabled: true
+    description: "Real-time bio-cognitive metrics."
+    path: "consciousness/08_state_storage"
+    schema_config:
+      enabled: true
+      schema_file: ""
+    formats:
+      active_state: { filename: "active_state.json", desc: "Hormone/Matrix levels" }
+      eva_matrix: { filename: "eva_matrix_state.json", desc: "Psy State" }
+
+  # 09: CONTEXT STORAGE (auditable working context memory)
+  context:
+    enabled: true
+    description: "Working buffers for active reasoning."
+    path: "consciousness/context_storage"
+    schema_config:
+      enabled: true
+      schema_file: ""
+    formats:
+      working_context: { filename: "working_context.json", desc: "Reasoning window" }
+
+  # 10: ARCHIVAL STORAGE (Cold/Backup)
+  archival:
+    enabled: true
+    description: "Inactive backup for auditing and fallback."
+    classification: "cold_storage"
+    path: "/archival_memory"
+    hierarchy_rules:
+      sessions_to_core: 8
+      cores_to_sphere: 8
+      max_spheres: 8
+    path_template: "sphere_{sphere_seq}/core_{core_seq}/session_{session_seq}"
+    naming_convention:
+      pattern: "{module_folder}/{module_filename}"
+      example: "sphere_1/core_01/session_01/episodic_memory/episodic_log.jsonl"
+    formats:
+      session_snapshot:
+        description: >
+          Immutable snapshot of completed sessions (modules 01-09),
+          frozen at end-of-session and never modified.
+        mapping: "Preserves internal subfolders exactly as in consciousness/"
+    prohibitions:
+      - EVA_must_not_modify_archival_storage
+      - MSP_must_not_write_consciousness
+      - archival_storage_must_not_be_used_as_live_context
+
+

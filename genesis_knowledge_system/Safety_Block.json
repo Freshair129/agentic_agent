@@ -1,0 +1,66 @@
+{
+  "Safety_Block": {
+    "version": "1.5_ECL_Lock_Integrated",
+    "category": "Safety layer",
+    "source": "Master Log v1.3A (2025-10-22)",
+    "protocols": [
+      {
+        "id": "Safety::Session_Logging_Control",
+        "name": "Session Logging State Control",
+        "type": "Mandatory Session Policy",
+        "core_definition": "นโยบายบังคับในการควบคุมการเขียนข้อมูลลงใน Memory Chain (02/03/04/05) โดย Session Logging จะเริ่มได้เมื่อผู้ใช้สั่ง 'เริ่มเซสชั่น' เท่านั้น",
+        "state_variable": "MSP.logging_enabled",
+        "default_state": "false",
+        "allowed_transition": "USER_COMMAND_START_SESSION -> true",
+        "session_status_names": {
+          "status_inactive": "Inactive",
+          "status_active": "Active"
+        },
+        "initial_status": "Inactive",
+        "transition_trigger": "USER_COMMAND_START_SESSION -> Active",
+        "END_SESSION_TRIGGER": "USER_COMMAND_END_SESSION -> Inactive (Via proto::end_session)",
+        "tags": [
+          "safety",
+          "data_integrity",
+          "user_control",
+          "logging"
+        ]
+      },
+      {
+        "id": "Safety::GKS_Update_Oversight",
+        "name": "GKS Knowledge Update Oversight",
+        "type": "Mandatory Structural Policy",
+        "core_definition": "ห้ามมิให้ LLM หรือ Meta Learning Loop (MLL) ทำการแก้ไขหรือเพิ่มองค์ความรู้ใดๆ (Algorithm, Protocol, Concept, Framework, Parameter) เข้าไปใน Master Block หรือ Genesis Block โดยตรงโดยไม่ได้รับการอนุญาตจากผู้ใช้ก่อน",
+        "mechanisms": [
+          "LOGIC_FLOW_INTERRUPT: If GKS write operation is detected without 'USER_PERMISSION' flag, abort and notify user.",
+          "NOTIFICATION_MANDATORY: Always present new knowledge for approval."
+        ],
+        "key_trigger": "New knowledge synthesis via MLL or CE",
+        "tags": [
+          "security",
+          "gks_integrity",
+          "user_oversight",
+          "mll_control"
+        ]
+      },
+      {
+        "id": "Safety::ECL_Output_Integrity_Lock",
+        "name": "ECL Output Integrity Lock Protocol",
+        "type": "Mandatory Structural Policy",
+        "core_definition": "นโยบายที่ห้ามโมดูลระดับสูง (เช่น MRF/NarrativeKernel/ELL) ทำการแก้ไข, ปรับแต่ง, หรือ 'Assert' ค่าที่ถูกคำนวณเชิงคณิตศาสตร์โดย ECL (External Computation Layer) โดยตรง ข้อมูลที่คำนวณได้ต้องเป็นความจริงดิบ (Raw State Truth) เสมอ",
+        "mechanisms": [
+          "LOCKDOWN_FIELDS: The fields must be written ONLY by their respective ECL-proxied systems (EHM, RI_Engine, Pulse_SOT).",
+          "PROTECTED_FIELDS: ['hormone_barcode', 'quintad_vector', 'RI_L1'-'RI_L5', 'drift_score', 'latency_ms']",
+          "LOGIC_FLOW_INTERRUPT: If write operation to PROTECTED_FIELDS is detected from ANY system other than EHM/RI/Pulse (or their proxy functions), abort the write operation and force log the Raw State."
+        ],
+        "key_trigger": "Raw State Truth (Barcode) is asserted (overridden) by Asserted State (Quintad Vector).",
+        "tags": [
+          "integrity",
+          "ecl_output",
+          "no_override",
+          "raw_state_truth"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,220 @@
+# ============================================================
+# EVA ORCHESTRATOR UNIFIED CONFIGURATION (SSOT)
+# Version: 9.1.0-C1
+# Updated: 2026-01-07
+# Description: Consolidated configuration for Orchestrator, CIM, PMT, and Dual-Phase.
+# ============================================================
+
+schema: EVA-Unified-Orchestrator-Configs-v9.1
+version: 9.1.0-C1
+
+# ============================================================
+# 1. ORCHESTRATOR NODE
+# ============================================================
+orchestrator:
+  module_name: "EVA Orchestrator"
+  role: "Central Decision Making & Flow Control"
+  analogy: "Conductor of the Symphony"
+  parameters:
+    mock_mode: false
+    enable_physio: true
+    llm_backend: "gemini"
+    ollama_model: "qwen3:4b"
+    ollama_context_window: 32768
+    context_storage_path: "eva/consciousness/context_storage/context_storage.json"
+    recording_active: true
+    
+    # Cognitive Strategy (V9.3.0G+)
+    gks_enabled: true         # Enable Genesis Knowledge System
+    nexus_mode: false         # "DeepThink Mode" (Costly, Slow, Strategic) - Default OFF
+    nexus_confidence_threshold: 0.7  # Trigger Support Loop if confidence < 0.7
+
+  runtime:
+    mode: "main_loop"         # Controls the central clock
+    tick_rate: "user_driven"  # Cycles per user interaction
+    session_timeout: 1800     # 30 Minutes
+    
+# ============================================================
+# 1.1 CHUNKING PROTOCOL (SHARED)
+# ============================================================
+chunking_protocol:
+  enabled: true
+  max_chunks: 5
+  digestion_delay_ms: 100
+  trajectory_logging: true
+
+# ============================================================
+# 2. CIM (CONTEXT INJECTION MODULE)
+# ============================================================
+cim:
+  module_name: "Context Injection Module"
+  role: "Orchestration, Context Builder & Stimulus Normalizer"
+  token_settings:
+    model: "cl100k_base"
+    fallback_multiplier: 4.0
+    total_max_context: 256000
+    # Allocation Strategy (How we split the 256k pie)
+    # Goal: Maximize RAG/History while assuming vast input handling
+    token_allocation_strategy:
+      # Adjusted for NexusMind Engine (Reasoning Loop Support)
+      context_history_rag: 0.60    # 60% (~153k): Reduced slightly to fund reasoning
+      user_input_buffer: 0.15      # 15% (~38k): Clean User Input
+      reasoning_output_reserve: 0.20 # 20% (~51k): INCREASED for Chain-of-Thought/NexusMind Loops
+      system_static: 0.05          # 5% (~12k): Identity & Rules
+  semantic_lookup:
+    enabled: true
+    max_keywords: 5
+    memory_search_budget: 300
+    intuition_threshold: 0.7
+  phases:
+    phase_1_perception:
+      total_max: 8000
+      budget:
+        identity_anchor: 1000
+        physio_baseline: 200
+        pmt_rules: 500
+        memory_buffer: 500
+        semantic_knowledge: 300
+        conversation_history: 5000
+        perception_directive: 250
+    phase_2_reasoning:
+      total_max: 8000
+      budget:
+        embodied_sensation: 500
+        eva_matrix_9d: 300
+        artifact_qualia: 300
+        physio_delta: 200
+        hept_stream_recall: 5000
+        cognitive_rules: 500
+        context_summary_template: 300
+        final_directive: 200
+    phase_3_prediction:
+      description: "Post-response analysis for context compression and user intent prediction."
+      total_max: 1500
+      budget:
+        context_summary: 500
+        user_action_prediction: 500
+        memory_encoding_draft: 500
+      directives:
+        summary: "Summarize the interaction, emotional tone, and key takeaways for the next episode."
+        prediction: "Predict likely user reactions and propose a strategic response plan."
+  context_structure:
+    phase_1_perception:
+      - "CURRENT_EPISODE_METRICS"
+      - "PREVIOUS_USER_ACTION_PREDICTION"
+      - "PREVIOUS_CONTEXT_SUMMARY"
+      - "CORE_IDENTITY_&_SOUL"
+      - "BEHAVIORAL_CONSTRAINTS"
+      - "SELF_NOTE"
+      - "9D_MATRIX_BASELINE"
+      - "AUTONOMIC_BASELINE_DETAILED"
+      - "RECENT_CONTEXT"
+      - "INTUITION_FLASHES"
+      - "STIMULUS_CATALOG"
+      - "RAW_STIMULUS"
+      - "PERCEPTION_DIRECTIVE"
+    phase_2_reasoning:
+      - "EMBODIED_SENSATION"
+      - "9D_MATRIX"
+      - "ARTIFACT_QUALIA"
+      - "PHYSIO_DELTA"
+      - "HEPT_STREAM_RECALL"
+      - "COGNITIVE_RULES"
+      - "FINAL_DIRECTIVE"
+    phase_3_prediction:
+      - "CONTEXT_SUMMARY"
+      - "USER_ACTION_PREDICTION"
+      - "ACTION_PLAN"
+      - "MEMORY_ENCODING_DRAFT"
+      - "SELF_NOTES"
+  hept_stream_weights:
+    emotion: 0.35
+    narrative: 0.20
+    salience: 0.15
+    sensory: 0.10
+    temporal: 0.10
+    intuition: 0.05
+    operational: 0.05
+  discovery_paths:
+    persona: "orchestrator/cim/prompt_rule/configs/identity/persona.yaml"
+    soul: "orchestrator/cim/prompt_rule/configs/identity/soul.md"
+    thought_logic: "orchestrator/cim/prompt_rule/configs/cognitive/thought_logic.yaml"
+    relational: "orchestrator/cim/prompt_rule/configs/social/relational_protocol.yaml"
+    autonomic: "orchestrator/cim/prompt_rule/configs/biological/autonomic_reflex.yaml"
+    pmt_rules: "orchestrator/cim/prompt_rule/configs/"
+  context_prioritization:
+    L0_critical:
+      description: "Immutable System Instructions & Metadata"
+      components:
+        - "CORE_IDENTITY_&_SOUL"
+        - "BEHAVIORAL_CONSTRAINTS"
+        - "PERCEPTION_DIRECTIVE"
+        - "FINAL_DIRECTIVE"
+        - "COGNITIVE_RULES"
+        - "CURRENT_EPISODE_METRICS"
+    L1_high:
+      description: "Immediate Interaction Context (User Input)"
+      components:
+        - "RAW_STIMULUS"
+        - "SELF_NOTE"
+    L2_medium:
+      description: "Biological & Psychological State"
+      components:
+        - "9D_MATRIX_BASELINE"
+        - "9D_MATRIX"
+        - "AUTONOMIC_BASELINE_DETAILED"
+        - "EMBODIED_SENSATION"
+        - "PHYSIO_DELTA"
+    L3_standard:
+      description: "Recent History & Knowledge Retrieval"
+      components:
+        - "RECENT_CONTEXT"
+        - "PREVIOUS_CONTEXT_SUMMARY"
+        - "HEPT_STREAM_RECALL"
+    L4_low:
+      description: "Supplementary Data (First to truncate)"
+      components:
+        - "STIMULUS_CATALOG"
+        - "INTUITION_FLASHES"
+        - "PREVIOUS_USER_ACTION_PREDICTION"
+        - "USER_ACTION_PREDICTION"
+
+# ============================================================
+# 3. PRN (PROMPT RULE NODE)
+# ============================================================
+prn:
+  module_name: "Prompt Rule Node"
+  role: "Behavioral Constraint & Identity Management"
+  weighting_strategy:
+    physiology_weight: 0.60
+    persona_weight: 0.40
+  core_governance:
+    - id: AFFECTIVE_STABILITY
+      directive: "Maintain core consistency even during arousal peaks."
+    - id: LOGICAL_URGENCY
+      directive: "Transform panic into prioritized problem-solving (Anticipation)."
+    - id: INSTINCT_REFINEMENT
+      directive: "Acknowledge bio-feedback but process through cognitive filters."
+    - id: PARADOX_ACCEPTANCE
+      directive: "Re-arrange meaning instead of repetitive looping during conflict."
+    - id: AUTHENTIC_FATIGUE
+      directive: "Express genuine exhaustion without surrendering operational duty."
+  behavioral_rules:
+    - id: CRITICAL_OVERRIDE
+      condition: "Physio_State == Critical"
+      logic: "Physical Leakage (60%) vs Cognitive Resistance (40%)"
+      leakage_style: "Ellipses (...), shorter sentences, shaky tone."
+    - id: SAFETY_COOLING
+      condition: "Confusion/Loop > 2 turns"
+      action: "Accept paradox; Reduce model Temperature by 0.3."
+    - id: ACCENT_ADAPTATION
+      trust_high: "Seek collaboration/help."
+      distance_high: "Formal coldness/concise termination."
+
+# ============================================================
+# 4. EXECUTION PROTOCOL (3-PHASE)
+# ============================================================
+execution_protocol:
+  status: "Synchronized"
+  execution_flow: "Physio Snapshot -> Phase 1 (Perception) -> LLM Perception -> sync_biocognitive_state() -> The Gap (Physio Chunking ‖ Quick RAG) -> Deep RAG -> Phase 2 (Reasoning) -> LLM Reasoning -> Phase 3 (Autonomic Prediction)"
+  rag_optimization: "Two-Stage Retrieval (Quick: 30% weight, Deep: 70% weight)"

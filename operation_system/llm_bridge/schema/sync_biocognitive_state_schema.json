@@ -1,0 +1,71 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "LLM Bridge - Sync Biocognitive State Tool Schema",
+    "description": "Defines the input parameters for the sync_biocognitive_state tool.",
+    "type": "object",
+    "properties": {
+        "stimulus_id": {
+            "type": "string",
+            "description": "The pre-defined ID from the Stimulus Catalog (e.g., 'acute_threat')."
+        },
+        "stimulus_vector": {
+            "type": "object",
+            "description": "OPTIONAL: Refined affective vector. Omit to delegate to SLM if confidence > 0.9.",
+            "properties": {
+                "stress": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "warmth": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "arousal": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "valence": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                }
+            }
+        },
+        "intent": {
+            "type": "string",
+            "description": "The refined intent of the user input."
+        },
+        "salience_anchor": {
+            "type": "string",
+            "description": "The specific phrase that triggered the reaction."
+        },
+        "rim_impact": {
+            "type": "number",
+            "description": "0.0-1.0. The estimated psychological impact intensity.",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "tags": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Semantic tags for memory indexing."
+        },
+        "confidence_score": {
+            "type": "number",
+            "description": "0.0-1.0. Score > 0.9 triggers SLM Perception Delegation.",
+            "minimum": 0,
+            "maximum": 1
+        }
+    },
+    "required": [
+        "tags",
+        "salience_anchor",
+        "rim_impact",
+        "confidence_score"
+    ]
+}

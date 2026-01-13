@@ -1,0 +1,60 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Artifact Qualia Output Payload Schema",
+    "description": "Strict specification for phenomenological signals published to bus:phenomenological in EVA 8.2.0 Architecture.",
+    "type": "object",
+    "required": [
+        "qualia_snapshot",
+        "timestamp"
+    ],
+    "properties": {
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of the qualia integration."
+        },
+        "qualia_snapshot": {
+            "type": "object",
+            "required": [
+                "intensity",
+                "tone",
+                "coherence",
+                "depth",
+                "texture"
+            ],
+            "properties": {
+                "intensity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "tone": {
+                    "type": "string"
+                },
+                "coherence": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "depth": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "texture": {
+                    "type": "object",
+                    "patternProperties": {
+                        ".*": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

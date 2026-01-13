@@ -1,0 +1,129 @@
+schema: EVA-Episodic-AI-Proposal-Contract-v2
+version: 8.1.0-R1
+updated: 2026-01-10
+owner: MSP (Memory & Soul Passport)
+
+role: >
+  Defines the exact structure and epistemic limits of episodic proposals that an AI may submit to MSP.
+  The payload is split into User-side and AI-side fragments to match the decentralized storage model.
+
+principles:
+  - Episodic memory represents lived experience, not interpretation.
+  - AI proposals are narrative and inferential only.
+  - AI must never generate episodic identity, metrics, or bio-states.
+  - MSP decides admission, structure, and persistence.
+
+# ==========================================================
+# PROPOSAL PAYLOAD (TECHNICAL SPEC)
+# ==========================================================
+proposal_payload:
+  required_sections: [user_fragment_proposal, ai_fragment_proposal, context_proposal]
+
+  # ----------------------------------------------------------
+  # A. USER-SIDE FRAGMENT (Target: Episodic_User_Schema.json)
+  # ----------------------------------------------------------
+  user_fragment_proposal:
+    type: object
+    required: [turn_user]
+    properties:
+      turn_user:
+        type: object
+        required: [speaker, raw_text]
+        properties:
+          turn_id:             { type: string, description: "Suggested UUID for the turn" }
+          speaker:             { type: string, enum: [user, system, ai, eva, unknown] }
+          source_type:         { type: string, enum: [Primary_Information, Secondary_Information] }
+          raw_text:            { type: string, description: "The exact input text from the user" }
+          summary:             { type: string, description: "Narrative compression of the user's input" }
+          affective_inference: 
+            type: object
+            properties:
+              emotion_signal:  { type: string }
+              intensity:       { type: number, minimum: 0, maximum: 1 }
+              confidence:      { type: number, minimum: 0, maximum: 1 }
+          semantic_frames:     { type: array, items: { type: string } }
+          salience_anchor:    
+            type: object
+            properties:
+              phrase:          { type: string }
+              Resonance_impact: { type: number, minimum: 0, maximum: 1 }
+          crosslinks:
+            type: object
+            properties:
+              semantic_refs:   { type: array, items: { type: string } }
+              sensory_refs:    { type: array, items: { type: string } }
+              gks_refs:        { type: array, items: { type: string } }
+              AQI_refs:        { type: array, items: { type: string } }
+
+  # ----------------------------------------------------------
+  # B. AI-SIDE FRAGMENT (Target: Episodic_AI_Schema.json)
+  # ----------------------------------------------------------
+  llm_fragment_proposal:
+    type: object
+    required: [turn_llm]
+    properties:
+      turn_llm:
+        type: object
+        required: [speaker, text_excerpt]
+        properties:
+          turn_id:             { type: string, description: "Suggested UUID for the turn" }
+          speaker:             { type: string, enum: [ai, eva] }
+          text_excerpt:        { type: string, description: "Salient snippet of the AI response" }
+          summary:             { type: string, description: "Narrative goal/intent of the response" }
+          epistemic_mode:      { type: string, enum: [explore, hypothesize, assert, caution, reflect] }
+          confidence:          { type: number, minimum: 0, maximum: 1 }
+          salience_anchor:    
+            type: object
+            properties:
+              phrase:          { type: string }
+              Resonance_impact: { type: number, minimum: 0, maximum: 1 }
+          crosslinks:
+            type: object
+            properties:
+              semantic_refs:   { type: array, items: { type: string } }
+              sensory_refs:    { type: array, items: { type: string } }
+              gks_refs:        { type: array, items: { type: string } }
+              AQI_refs:        { type: array, items: { type: string } }
+
+  # ----------------------------------------------------------
+  # C. GLOBAL CONTEXT (Situation mapping)
+  # ----------------------------------------------------------
+  context_proposal:
+    type: object
+    required: [episode_type, situation_context]
+    properties:
+      episode_type:            { type: string, enum: [interaction, synthesis, meta_cognition, system_event] }
+      episode_tag:             { type: string, description: "Friendly label (e.g., 'First Meeting')" }
+      event_label:             { type: string, description: "Narrative arc label" }
+      situation_context:
+        type: object
+        required: [interaction_mode, stakes_level, time_pressure]
+        properties:
+          interaction_mode:    { type: string, enum: [small_talk, casual, deep_discussion, conflict, instruction, meta] }
+          stakes_level:        { type: string, enum: [low, medium, high] }
+          time_pressure:       { type: string, enum: [low, medium, high] }
+
+# ==========================================================
+# FORBIDDEN FIELDS (AUTHORITY PROTECTION)
+# ==========================================================
+forbidden_fields:
+  description: >
+    MSP is the SOLE WRITER for these categories. These fields are generated 
+    automatically from the Latching Loop or System metadata.
+
+  system_metadata: [persona_id, persona_name, user_id, memory_version, instance_id, session_id, timestamp, develop_id, context_id, episode_id,turn_id]
+  bio_cognitive_state: [EVA_matrix, Resonance_index, Resonance_impact, memory_encoding_level, memory_color, qualia, reflex, threat_level]
+  persistence_policy: [promotion_level, write_mode, admission_priority, backup_status]
+
+# ==========================================================
+# MSP HANDLING & AUTHORIZATION
+# ==========================================================
+msp_handling:
+  on_accept:
+    actions:
+      - split_proposal_into_fragments 
+      - latch_matrix_state                          
+      - write_unified_plus_fragments 
+
+  on_modify:
+    actions: [normalize_linguistics, trim_interpretive_bias, audit_forbidden_insertion]

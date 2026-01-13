@@ -1,0 +1,158 @@
+# ============================================================
+# EVA MODULE SPECIFICATION (SSOT)
+# Module: Agentic RAG (Hept-Stream Retrieval)
+# Version: 8.2.0-S1
+# Updated: 2026-01-04
+# Description: Unified configuration for 7-dimensional affective memory retrieval.
+# ============================================================
+
+schema: EVA-Agentic-RAG-Configs-v8.2-Standard
+version: 8.2.0-S1
+
+# ============================================================
+# 1. GLOBAL & SEARCH SETTINGS
+# ============================================================
+global:
+  module_name: "Agentic RAG"
+  role: "Memory Retrieval Service"
+  analogy: "Hippocampus Retrieval (Affective Memory Search)"
+  status: "Active"
+
+search_settings:
+  global_top_k: 10
+  vector_similarity_threshold: 0.75
+  temporal_decay_factor: 0.1
+  decay_halflife_days: 30.0
+  emotion_congruence_threshold: 0.70
+  max_episodes_per_turn: 20
+  max_tokens_injection: 1000
+
+# ============================================================
+# 2. HEPT-STREAM WEIGHTS & LOGIC
+# ============================================================
+streams:
+  emotion:
+    weight: 0.35
+    priority: "CRITICAL"
+    method: "Physio-congruent matching (ANS + hormones)"
+    desc: "Heart of embodied memory - felt-sense matching."
+  narrative:
+    weight: 0.20
+    method: "Sequential episode chains (links)"
+    desc: "Storyline continuity."
+  salience:
+    weight: 0.15
+    method: "High RI (Resonance Intelligence) score ranking"
+    desc: "High-impact event retrieval."
+  sensory:
+    weight: 0.10
+    method: "Qualia texture matching (5D vectors)"
+    desc: "Experiential texture matching."
+  temporal:
+    weight: 0.10
+    method: "Exponential decay (30d half-life)"
+    desc: "Recency and chronological flow."
+  intuition:
+    weight: 0.05
+    method: "Semantic graph pattern recognition (Neo4j)"
+    desc: "Concept relationship matching."
+  reflection:
+    weight: 0.05
+    method: "Meta-cognitive pattern matching"
+    desc: "Self-awareness and past insights."
+
+# ============================================================
+# 2.1 STREAM GROUPS (Two-Stage Retrieval)
+# ============================================================
+stream_groups:
+  quick_recall:
+    streams: ["narrative", "intuition", "reflection"]
+    total_weight: 0.30
+    dependencies: ["tags", "context_id"]
+    latency_target_ms: 200
+    description: "Fast semantic retrieval - no bio-state required"
+    
+  deep_recall:
+    streams: ["emotion", "salience", "sensory", "temporal"]
+    total_weight: 0.70
+    dependencies: ["tags", "ans_state", "blood_levels", "qualia_texture"]
+    latency_target_ms: 800
+    description: "Affective retrieval - requires biological state"
+
+# ============================================================
+# 3. VECTOR DB & INFRASTRUCTURE
+# ============================================================
+infrastructure:
+  vector_db:
+    type: "local_faiss"
+    path: "consciousness/02_Semantic_memory/faiss_index"
+    embedding_model: "text-embedding-3-small"
+    dimensions: 1536
+  graph_db:
+    provider: "neo4j"
+    uri: "bolt://localhost:7687"
+
+# ============================================================
+# 4. RUNTIME HOOK (System Integration)
+# ============================================================
+runtime_hook:
+  component: "AgenticRAG"
+  module_path: "services.agentic_rag.agentic_rag_engine"
+  class_name: "AgenticRAG"
+  
+  initialization:
+    args:
+      msp: "HOOK:MSP Client (Memory & Soul Passport)"
+      vector_db: "HOOK:VectorBridge"
+      graph_db: "HOOK:Neo4jBridge"
+    
+  bus_bindings:
+    - subscribe: "bus:operational" # Phase 2 signal
+      action: "retrieve"
+      mapping:
+        input: ["tags", "physio_state", "ans_state", "qualia_texture"]
+        output: "memory_matches"
+    - publish: "bus:operational"
+
+  resources:
+    configs: "services/agentic_rag/configs/Agentic_RAG_configs.yaml"
+    contract: "services/agentic_rag/configs/Agentic_RAG_configs.yaml"
+
+# ============================================================
+# 5. INTERFACE (Bus Position & Logic)
+# ============================================================
+interface:
+  bus_id: "MEM_SEARCH_01"
+  bus_role: "retrieval_service"
+  
+  methods:
+    - name: "retrieve"
+      input: { tags: list, physio: dict, ans: dict, qualia: vector }
+      output: "List[MemoryMatch]"
+
+  constraints:
+    latency_target: 800
+    timeout_ms: 1000
+    redundancy_filter: true
+    min_score_threshold: 0.3
+
+# ============================================================
+# 6. DATA CONTRACTS (Input/Output/Validation)
+# ============================================================
+contracts:
+  inputs:
+    query_context: { tags: { required: true }, semantic_vector: { optional: true } }
+    affective_anchors: { physio_vector: required, ans_state: required, qualia_texture: required }
+
+  outputs:
+    memory_match:
+      required: [episode_id, content, score, stream_source]
+      properties:
+        episode_id: "EVA_EPXXX"
+        stream_source: "enum[7 streams]"
+        metadata: [timestamp, resonance_index, tags, physio_snapshot]
+
+  validation_rules:
+    - "Deduplication: Primary key 'episode_id' must be unique in result set."
+    - "Sorting: Results must be ordered by final weighted score (descending)."
+    - "Sync Requirement: Cannot retrieve before Qualia Texture is generated."

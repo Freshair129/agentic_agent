@@ -1,0 +1,40 @@
+# EVA Matrix Interface
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0-S1
+updated: 2026-01-05
+bus_id: PSY_MATRIX_01
+
+component: EVAMatrix
+role: "Psyche Core / State Authority"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  # EVA Matrix listens for physical signals
+  - subscribe: "bus:physical"
+    action: "process_signals"
+    mapping: { input: "neural_signals", output: "psychological_state" }
+    description: "Receives neural signals (e.g., hormone levels) from the Physio Core to update psychological state."
+
+  # EVA Matrix publishes its current psychological state
+  - publish: "bus:psychological"
+    action: "get_full_state"
+    description: "Publishes the 9D psychological state and emotion label to the bus for other modules to consume."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "EVAMatrix"
+  module_path: "eva_matrix.eva_matrix_engine"
+  class_name: "EVAMatrixSystem"
+  
+  initialization:
+    args:
+      base_path: "ROOT"
+      msp: "HOOK:MSP Client"
+    
+  lifecycle:
+    on_startup: "load_state()"
+    on_shutdown: "_save_state()"

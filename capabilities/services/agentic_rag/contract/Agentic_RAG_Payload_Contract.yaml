@@ -1,0 +1,22 @@
+# ============================================================
+# EVA MODULE CONTRACT: Agentic RAG Payload
+# Version: 8.2.0-V2 (Strict)
+# Status: LOCKED
+# ============================================================
+
+module: "AgenticRAG"
+bus_channel: "bus:operational"
+schema_ref: "file:///e:/The%20Human%20Algorithm/T2/EVA%208.2.0/agentic_rag/schema/Agentic_RAG_Payload_Schema_v2.json"
+
+payload_structure:
+  memory_matches:
+    type: "Array"
+    description: "An array of memory match objects retrieved from the 7 streams."
+    items:
+      type: "object"
+      required: ["episode_id", "content", "score", "stream_source"]
+
+governance:
+  - "Every retrieval MUST publish to this contract."
+  - "Field types are immutable; additions require a V3 upgrade."
+  - "Results must be ordered by final weighted score."

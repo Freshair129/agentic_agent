@@ -1,0 +1,43 @@
+# PMT (Prompt Rule Layer) Interface
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0-S1
+updated: 2026-01-05
+bus_id: GOVERNANCE_PMT_01
+
+component: PMT
+role: "Behavioral Constraint & Identity Management"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  # PMT listens to the core latching streams to understand the system's state.
+  - subscribe: "bus:physical"
+    action: "modulate_rules"
+    description: "Receives biological signals to modulate which behavioral rules are active."
+    
+  - subscribe: "bus:psychological"
+    action: "modulate_rules"
+    description: "Receives psychological state to adjust behavioral tone and directives."
+
+  # PMT publishes the active set of rules and identity blocks.
+  - publish: "bus:knowledge"
+    action: "get_governance_payload"
+    description: "Publishes the active identity and behavioral rule blocks for CIN to inject into the prompt."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "PMT"
+  module_path: "orchestrator.pmt.pmt_engine"
+  class_name: "PromptRuleLayer"
+  
+  initialization:
+    args:
+      persona_path: "orchestrator/pmt/configs/Identity/persona.yaml"
+      soul_path: "orchestrator/pmt/docs/soul.md"
+    
+  lifecycle:
+    on_startup: "load_identity()"
+    on_shutdown: "clear_state()"

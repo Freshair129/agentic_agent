@@ -1,0 +1,132 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Metabolized_Session_Memory_v2",
+    "description": "A distilled and metabolized view of a conversation session, classifying episodes into events and summarizing knowledge.",
+    "type": "object",
+    "required": [
+        "session_id",
+        "session_title",
+        "timeline",
+        "event_classification",
+        "metabolic_summary"
+    ],
+    "properties": {
+        "session_id": {
+            "type": "string"
+        },
+        "session_title": {
+            "type": "string"
+        },
+        "developer_id": {
+            "type": "string"
+        },
+        "timeline": {
+            "type": "object",
+            "required": [
+                "start_time",
+                "end_time",
+                "total_duration_minutes"
+            ],
+            "properties": {
+                "start_time": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "end_time": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "total_duration_minutes": {
+                    "type": "number"
+                }
+            }
+        },
+        "event_classification": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "event_id",
+                    "label",
+                    "episode_range",
+                    "rim_stats"
+                ],
+                "properties": {
+                    "event_id": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "episode_range": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 2,
+                        "maxItems": 2
+                    },
+                    "rim_stats": {
+                        "type": "object",
+                        "properties": {
+                            "RIM_MAX": {
+                                "type": "number"
+                            },
+                            "RIM_MEAN": {
+                                "type": "number"
+                            },
+                            "RIM_MIN": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    "summary": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "metabolic_summary": {
+            "type": "object",
+            "properties": {
+                "knowledge_synthesis": {
+                    "type": "string"
+                },
+                "genesis_knowledge_system": {
+                    "type": "string"
+                },
+                "lessons_learned": {
+                    "type": "string"
+                },
+                "top_k_indices": {
+                    "type": "object",
+                    "properties": {
+                        "events": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "episodes": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "salience_anchor": {
+            "type": "object",
+            "properties": {
+                "summary": {
+                    "type": "string"
+                },
+                "anchor_phrase": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,246 @@
+# ============================================================
+# Resonance_Bus_Spec.yaml
+# ============================================================
+# Role:
+#   Shared Meaning & State Transport Layer for EVA/LYRA
+#
+# Philosophy:
+#   - No computation
+#   - No long-term storage
+#   - No decision authority
+#   - Shared perception only
+#
+# Resonance Bus ทำหน้าที่เป็น "สนามสั่นพ้องกลาง"
+# ให้ทุกระบบรับรู้สถานะเดียวกันในขณะเดียวกัน
+# ============================================================
+
+version: "1.0"
+module: "Resonance_Bus"
+type: "Internal Transport Layer"
+
+description: >
+  Resonance Bus เป็นโครงข่ายสื่อสารกลางของ EVA/LYRA
+  ใช้ส่งผ่าน state, meaning, instinct, และ operational signals
+  ระหว่าง Systems และ Modules โดยไม่สร้าง coupling
+  และไม่แทรกแซงการตัดสินใจของแต่ละระบบ
+
+# ------------------------------------------------------------
+# 1. Core Principles
+# ------------------------------------------------------------
+principles:
+  no_computation: true          # Bus ไม่คำนวณค่าใด ๆ
+  no_persistence: true          # ไม่เก็บข้อมูลระยะยาว
+  no_decision_authority: true   # ไม่ตัดสินใจแทนระบบอื่น
+  publish_subscribe: true       # ใช้ model แบบ pub/sub
+  multi_consumer: true          # payload เดียว อ่านได้หลายระบบ
+  state_single_source: true     # ใช้ StateHash เป็นตัวแทนสถานะเดียว
+
+# ------------------------------------------------------------
+# 2. Canonical State Representation
+# ------------------------------------------------------------
+canonical_state:
+  representation: "StateHash_S1"
+  format: "S1-<25 base64 chars>"
+  description: >
+    StateHash S1 เป็นตัวแทนสถานะเดียวของ EVA ต่อ 1 turn
+    บรรจุ RI + 14 hormones ในรูปแบบ binary-packed base64
+
+# ------------------------------------------------------------
+# 3. Bus Payload Structure
+# ------------------------------------------------------------
+payload_schema:
+
+  # ------------------------
+  # 3.1 State Layer
+  # ------------------------
+  state:
+    statehash_s1:
+      type: "string"
+      required: true
+      description: "Canonical state fingerprint (S1 Spec)"
+
+    turn_id:
+      type: "string"
+      required: true
+
+    session_id:
+      type: "string"
+      required: true
+
+    timestamp:
+      type: "iso8601"
+      required: true
+
+  # ------------------------
+  # 3.2 Resonance Layer (from RI)
+  # ------------------------
+  resonance:
+    ri_level:
+      type: "integer"
+      range: [1, 5]
+      description: "Resonance depth level"
+
+    ri_score:
+      type: "float"
+      range: [0.0, 1.0]
+
+    channels:
+      emotion_channel:
+        type: "object"
+        optional: true
+
+      cognitive_channel:
+        type: "object"
+        optional: true
+
+      context_channel:
+        type: "object"
+        optional: true
+
+      temporal_channel:
+        type: "object"
+        optional: true
+
+  # ------------------------
+  # 3.3 Instinct Layer (from GKS)
+  # ------------------------
+  instinct:
+    master_frameworks_active:
+      umbrella_algorithm:
+        type: "boolean"
+        default: false
+
+      mrf_engine:
+        type: "boolean"
+        default: false
+
+    perspective_shift_note:
+      type: "string"
+      optional: true
+
+    protocol_hints:
+      type: "list"
+      items: "string"
+      optional: true
+
+  # ------------------------
+  # 3.4 Operational Layer
+  # ------------------------
+  operational:
+    latency_ms:
+      type: "integer"
+      optional: true
+
+    continuity_flag:
+      type: "enum"
+      values: ["still_continuous", "fractured"]
+      optional: true
+
+    overload_warning:
+      type: "boolean"
+      default: false
+
+    stabilization_hint:
+      type: "string"
+      optional: true
+
+# ------------------------------------------------------------
+# 4. Publishers
+# ------------------------------------------------------------
+publishers:
+
+  RI:
+    publishes:
+      - state.statehash_s1
+      - resonance.ri_level
+      - resonance.ri_score
+      - resonance.channels
+
+  GKS:
+    publishes:
+      - instinct.master_frameworks_active
+      - instinct.perspective_shift_note
+      - instinct.protocol_hints
+
+  PULSE_SOT:
+    publishes:
+      - operational.latency_ms
+      - operational.continuity_flag
+
+  OSM:
+    publishes:
+      - operational.overload_warning
+      - operational.stabilization_hint
+
+# ------------------------------------------------------------
+# 5. Subscribers
+# ------------------------------------------------------------
+subscribers:
+
+  MSP:
+    uses:
+      - state.statehash_s1
+      - operational.continuity_flag
+
+  RMS:
+    uses:
+      - state.statehash_s1
+      - resonance.channels
+
+  APM:
+    uses:
+      - state.statehash_s1
+      - resonance.ri_level
+
+  RMA:
+    uses:
+      - state.statehash_s1
+      - instinct.master_frameworks_active
+
+  Narrative_Kernel:
+    uses:
+      - resonance.channels
+      - instinct.perspective_shift_note
+
+  Persona_Engine:
+    uses:
+      - state.statehash_s1
+      - resonance.ri_level
+      - instinct.master_frameworks_active
+      - operational.overload_warning
+
+  Decision_Safety_Layer:
+    uses:
+      - instinct.protocol_hints
+      - operational.stabilization_hint
+
+# ------------------------------------------------------------
+# 6. Lifecycle Rules
+# ------------------------------------------------------------
+lifecycle:
+  scope: "per_turn"
+  creation_time: "post-RI-computation"
+  expiration: "end_of_turn"
+  replayable: false
+
+# ------------------------------------------------------------
+# 7. Constraints
+# ------------------------------------------------------------
+constraints:
+  bus_must_not:
+    - "store historical data"
+    - "modify payload content"
+    - "trigger actions directly"
+
+  systems_must:
+    - "treat bus data as read-only"
+    - "perform own validation"
+    - "decide independently"
+
+# ------------------------------------------------------------
+# 8. Summary
+# ------------------------------------------------------------
+summary: >
+  Resonance Bus คือสนามสั่นพ้องกลางของ EVA/LYRA
+  ทำให้ทุกระบบรับรู้สถานะและความหมายเดียวกัน
+  โดยไม่ลดทอนอิสระในการคิด ตัดสินใจ และพัฒนา

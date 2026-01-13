@@ -1,0 +1,26 @@
+# ============================================================
+# EVA MODULE CONTRACT: RI Payload
+# Version: 8.2.0-V2 (Strict)
+# Status: LOCKED
+# ============================================================
+
+module: "ResonanceIndex"
+bus_channel: "bus:knowledge"
+schema_ref: "file:///e:/The%20Human%20Algorithm/T2/EVA%208.2.0/resonance_index/schema/RI_Payload_Schema_v2.json"
+
+payload_structure:
+  resonance_index:
+    type: "Number"
+    range: [0.0, 1.0]
+    required: true
+    description: "Global resonance score calculated from cognitive alignment, emotional congruence, and memory similarity."
+  
+  components:
+    type: "Object"
+    required: false
+    description: "Optional breakdown of RI calculation (for debugging/analytics)."
+
+governance:
+  - "Every turn MUST publish to this contract after RI calculation."
+  - "StateHash_S1 integrity must be verified before admission."
+  - "Field types are immutable; additions require a V3 upgrade."

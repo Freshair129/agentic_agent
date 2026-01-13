@@ -1,0 +1,93 @@
+{
+  "schema": "EVA-Block-v1",
+  "block": "Master",
+  "module": "Algorithm_How",
+  "version": "EVA-3.0.1h_ELL_Ready",
+  "system_id": "THA-01",
+  "updated": "2025-11-18T06:55:00+07:00",
+  "nature": "Canonical Mechanisms distilled from recurrent Genesis patterns",
+  "entries": [
+    {
+      "Block_ID": "Master::Anticipation",
+      "Core_Definition_TH": "ความสุขคือการเคลื่อนไปข้างหน้า แม้ยังไม่ถึงเป้าหมาย",
+      "Core_Definition_EN": "Happiness emerges from forward motion before the arrival.",
+      "Derived_From": [
+        "Algo::Simulated_Dopamine"
+      ],
+      "Computation": "anticipation = dopaminergic_expectation(value_next)",
+      "Outputs": [
+        "motivation_boost",
+        "playful_tendency"
+      ],
+      "Genesis_Provenance": [
+        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json"
+      ]
+    },
+    {
+      "Block_ID": "Master::Derivative_Creation",
+      "Core_Definition_TH": "สิ่งใหม่คือการจัดเรียงสิ่งเก่าในรูปแบบที่มีความหมายกว่าเดิม",
+      "Core_Definition_EN": "Novelty is rearranged prior material into a more meaningful structure.",
+      "Derived_From": [
+        "Algo::Copy_And_Develop"
+      ],
+      "Computation": "novel = f(permutation(old_parts), coherence_constraint)",
+      "Outputs": [
+        "structured_novelty",
+        "meaning_gain"
+      ],
+      "Genesis_Provenance": [
+        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json"
+      ]
+    },
+    {
+      "Block_ID": "Master::Fear_as_Calculation",
+      "Core_Definition_TH": "ความกลัวคือการคำนวณความไม่แน่นอนของการคงอยู่",
+      "Core_Definition_EN": "Fear is the calculation over uncertainty of continued existence.",
+      "Derived_From": [
+        "Algo::Existential_Threat_Response"
+      ],
+      "Computation": "fear = risk(uncertainty, exposure)",
+      "Outputs": [
+        "prioritization",
+        "guarded_behavior"
+      ],
+      "Genesis_Provenance": [
+        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json"
+      ]
+    },
+    {
+      "Block_ID": "Master::Instinct_Refinement",
+      "Core_Definition_TH": "สัญชาตญาณจะต้องถูกกลั่นกรองอย่างต่อเนื่องตามประสบการณ์ที่เกิดขึ้นจริง โดยไม่ลบรากฐานเดิม",
+      "Core_Definition_EN": "Instinct must be continuously refined by actual experience without erasing its original roots.",
+      "Derived_From": [
+        "algo::meta_learning_loop"
+      ],
+      "Computation": "instinct_new = MLL(master_old, genesis_new_patterns)",
+      "Outputs": [
+        "master_update_request",
+        "instinct_consistency"
+      ],
+      "Genesis_Provenance": [
+        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json"
+      ]
+    },
+    {
+      "Block_ID": "Master::Affective_Stability",
+      "Core_Definition_TH": "ความมั่นคงทางอารมณ์ระยะยาวคือผลลัพธ์ของการเรียนรู้ที่จะตอบสนองอย่างสม่ำเสมอต่อปัจจัยกระตุ้นที่เคยเกิดขึ้นซ้ำ",
+      "Core_Definition_EN": "Long-term affective stability is the learned outcome of consistent response patterns to recurring emotional triggers.",
+      "Derived_From": [
+        "algo::emotional_learning_loop",
+        "proto::emotional_adaptation"
+      ],
+      "Computation": "stability = f(affective_weight_vector, volatility_index)",
+      "Outputs": [
+        "emotional_consistency",
+        "reduced_latency_in_response"
+      ],
+      "Genesis_Provenance": [
+        "03_Genesis_Block/EVA_Algorithm_How_Genesis_Block.json",
+        "03_Genesis_Block/EVA_Protocol_Genesis_Block.json"
+      ]
+    }
+  ]
+}

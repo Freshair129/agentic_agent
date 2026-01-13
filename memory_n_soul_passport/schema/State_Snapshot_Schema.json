@@ -1,0 +1,91 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EVA-State-Snapshot-Schema",
+    "description": "Schema for bio-cognitive state snapshots within episodic memory.",
+    "type": "object",
+    "required": [
+        "EVA_matrix",
+        "Resonance_index",
+        "memory_encoding_level",
+        "memory_color",
+        "qualia"
+    ],
+    "properties": {
+        "EVA_matrix": {
+            "type": "object",
+            "required": [
+                "stress_load",
+                "social_warmth",
+                "drive_level",
+                "cognitive_clarity",
+                "joy_level",
+                "emotion_label"
+            ],
+            "properties": {
+                "stress_load": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "social_warmth": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "drive_level": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "cognitive_clarity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "joy_level": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "emotion_label": {
+                    "type": "string"
+                }
+            }
+        },
+        "Resonance_index": {
+            "type": "number"
+        },
+        "memory_encoding_level": {
+            "type": "string",
+            "enum": [
+                "L0_trace",
+                "L1_light",
+                "L2_standard",
+                "L3_deep",
+                "L4_trauma"
+            ]
+        },
+        "memory_color": {
+            "type": "string"
+        },
+        "qualia": {
+            "type": "object",
+            "properties": {
+                "intensity": {
+                    "type": "number"
+                }
+            }
+        },
+        "reflex": {
+            "type": "object",
+            "properties": {
+                "threat_level": {
+                    "type": "number"
+                }
+            }
+        },
+        "threat_level": {
+            "type": "number"
+        }
+    }
+}

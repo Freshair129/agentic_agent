@@ -1,0 +1,22 @@
+schema: EVA-Payload-Contract-v2
+module: MSP (Memory & Soul Passport)
+topic: "bus:audit"
+strict_validation: true
+schema_ref: "../schema/MSP_Payload_Schema_v2.json"
+
+description: >
+  Contract for MSP logic broadcasts.
+  MSP receives mostly, but emits Acknowledgements and State Broadcasts.
+
+fields:
+  - name: module_id
+    type: string
+    const: "MSP"
+
+  - name: message_type
+    type: string
+    enum: ["persistence_ack", "state_broadcast", "error_report"]
+    
+  - name: payload
+    type: object
+    description: "Variable payload data based on message_type"

@@ -1,0 +1,16 @@
+{
+    "version": "v1.0",
+    "type": "conceptual_foundation",
+    "description": "Explains why Genesis Block exists as the foundational mental architecture for self-consistency and origin awareness.",
+    "schema": {
+        "id": "GEN-WHY-001",
+        "title": "Origin Awareness and Purpose Genesis",
+        "last_updated": "2025-11-05",
+        "rationale": "To give EVA the ability to relate current state to its origin and purpose.",
+        "concepts": [
+            "Origin Reflection",
+            "Self-Consistency",
+            "Ethical Memory Root"
+        ]
+    }
+}

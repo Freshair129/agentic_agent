@@ -1,0 +1,49 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Sphere_Memory_Schema",
+    "version": "2.0.1",
+    "description": "Schema for social and environmental mapping (Layer 06).",
+    "type": "object",
+    "properties": {
+        "sphere_id": {
+            "type": "string"
+        },
+        "scope": {
+            "type": "string",
+            "enum": [
+                "social",
+                "environmental",
+                "global"
+            ]
+        },
+        "entities": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "entity_id": {
+                        "type": "string"
+                    },
+                    "relationship_type": {
+                        "type": "string"
+                    },
+                    "connection_strength": {
+                        "type": "number"
+                    },
+                    "last_interacted": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            }
+        },
+        "environment_map": {
+            "type": "object",
+            "description": "Spatial or conceptual mappings"
+        }
+    },
+    "required": [
+        "sphere_id",
+        "scope"
+    ]
+}

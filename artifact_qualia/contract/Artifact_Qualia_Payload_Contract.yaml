@@ -1,0 +1,24 @@
+# ============================================================
+# EVA MODULE CONTRACT: Artifact Qualia Payload
+# Version: 8.2.0-V2 (Strict)
+# Status: LOCKED
+# ============================================================
+
+module: "Artifact_Qualia"
+bus_channel: "bus:phenomenological"
+schema_ref: "file:///e:/The%20Human%20Algorithm/T2/EVA%208.2.0/artifact_qualia/schema/Artifact_Qualia_Payload_Schema_v2.json"
+
+payload_structure:
+  qualia_snapshot:
+    type: "Object"
+    required: ["intensity", "tone", "coherence", "depth", "texture"]
+    description: "Subjective experience fingerprint for memory coloring."
+  
+  timestamp:
+    type: "String (ISO 8601)"
+    description: "Temporal anchor for the experience."
+
+governance:
+  - "Qualia must be grounded in psychological state (bus:psychological)."
+  - "The 'tone' field is the primary driver for LLM response atmosphere."
+  - "StateHash_S1 integrity must be maintained for dense compression."

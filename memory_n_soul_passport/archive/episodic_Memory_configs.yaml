@@ -1,0 +1,316 @@
+$schema: ""
+title: episodic_Memory_configs
+version: 3.0.0
+description: Episodic Memory Schema for EVA 9.2.0.
+required:
+  - persona_id
+  - persona_name
+  - user_id
+  - memory_version
+  - instance_id
+  - session_id
+  - timestamp
+  - episodes_structure
+properties:
+  persona_id:
+    description: writes by MSP.
+    type: string
+  persona_name:
+    description: writes by MSP.
+    type: string
+  user_id:
+    description: writes by MSP.
+    type: string
+  memory_version:
+    description: writes by MSP.
+    type: string
+  instance_id:
+    description: writes by MSP.
+    type: string
+  session_id:
+    description: writes by MSP.
+    type: string
+  timestamp:
+    description: writes by MSP.
+    type: string
+    format: date-time
+  episodes_structure:
+    description: writes by MSP.
+    type: object
+    additionalProperties:
+      $ref: "#/definitions/episode"
+definitions:
+  episode:
+    description: writes by MSP.
+    type: object
+    required:
+      - episode_id
+      - episode_type
+      - situation_context
+      - turn_1
+      - turn_2
+      - state_snapshot
+    properties:
+      episode_id:
+        description: writes by MSP.
+        type: string
+      episode_type:
+        description: writes by llm.
+        type: string
+        enum:
+          - interaction
+          - synthesis
+          - meta_cognition
+          - system_event
+      episode_tag:
+        description: writes by llm.
+        type: string
+      event_label:
+        description: writes by llm.
+        type: string
+      situation_context:
+        description: writes by llm.
+        type: object
+        required:
+          - context_id
+          - interaction_mode
+          - stakes_level
+          - time_pressure
+        properties:
+          context_id:
+            description: source from Context, writes by llm.
+            type: string
+          interaction_mode:
+            description: writes by llm.
+            type: string
+            enum:
+              - small_talk
+              - casual
+              - deep_discussion
+              - conflict
+              - instruction
+              - meta
+          stakes_level:
+            description: writes by llm.
+            type: string
+            enum:
+              - low
+              - medium
+              - high
+          time_pressure:
+            description: writes by llm.
+            type: string
+            enum:
+              - low
+              - medium
+              - high
+      turn_1:
+        description: turn_{number}writes by MSP.
+        $ref: "#/definitions/turn_user"
+      turn_2:
+        description: turn_{number}writes by MSP.
+        $ref: "#/definitions/turn_llm"
+      state_snapshot:
+        description: writes by MSP.
+        type: object
+        required:
+          - EVA_matrix
+          - Resonance_index
+          - memory_encoding_level
+          - memory_color
+          - qualia
+          - reflex  
+        properties:
+          EVA_matrix:
+            description: source from eva_matrix, writes by MSP.
+            type: object
+            required:
+              - stress_load
+              - social_warmth
+              - drive_level
+              - cognitive_clarity
+              - joy_level
+              - emotion_label
+            properties:
+              stress_load:
+                description: writes by MSP.
+                type: number
+                minimum: 0
+                maximum: 1
+              social_warmth:
+                description: writes by MSP.
+                type: number
+                minimum: 0
+                maximum: 1
+              drive_level:
+                description: writes by MSP.
+                type: number
+                minimum: 0
+                maximum: 1
+              cognitive_clarity:
+                description: writes by MSP.
+                type: number
+                minimum: 0
+                maximum: 1
+              joy_level:
+                description: writes by MSP.
+                type: number
+                minimum: 0
+                maximum: 1
+              emotion_label:
+                description: writes by MSP.
+                type: string
+          Resonance_index:
+            description: source from Resonance_index, writes by MSP.
+            type: number
+          memory_encoding_level:
+            description: source from Resonance_Memory_System, writes by MSP.
+            type: string
+            enum:
+              - L0_trace
+              - L1_light
+              - L2_standard
+              - L3_deep
+              - L4_trauma
+          memory_color:
+            description: source from Resonance_Memory_System, writes by MSP.
+            type: string
+          qualia:
+            description: source from Artifact_Qualia, writes by MSP.
+            type: object
+            properties:
+              intensity:
+                description: writes by MSP.
+                type: number
+          reflex:
+            description: source from physio_core, writes by MSP.
+            type: object
+            properties:
+              threat_level:
+                description: writes by MSP.
+                type: number
+          threat_level:
+            description: writes by MSP.
+            type: number
+      crosslinks:
+        description: writes by llm.
+        type: object
+        properties:
+          semantic_refs:
+            description: writes by llm.
+            type: array
+            items:
+              type: string
+          sensory_refs:
+            description: writes by llm.
+            type: array
+            items:
+              type: string
+          gks_refs:
+            description: writes by llm.
+            type: array
+            items:
+              type: string
+          AQI_refs:
+            description: writes by llm.
+            type: array
+            items:
+              type: string
+  turn_user:
+    description: User turn in the interaction, writes by llm, for splits to Episodic_USER by MSP.
+    type: object
+    required:
+      - speaker
+    properties:
+      turn_id:
+        description: writes by MSP.
+        type: string
+      speaker:
+        description: writes by llm.
+        type: string
+        enum:
+          - user
+          - system
+          - unknown
+      source_type:
+        description: writes by llm.
+        type: string
+        enum:
+          - Primary_Information
+          - Secondary_Information
+      raw_text:
+        description: source from Context, writes by MSP.
+        type: string
+      summary:
+        description: writes by llm.
+        type: string
+      affective_inference:
+        description: writes by llm.
+        type: object
+        properties:
+          emotion_signal:
+            description: writes by llm.
+            type: string
+          intensity:
+            description: writes by llm.
+            type: number
+          confidence:
+            description: writes by llm.
+            type: number
+      semantic_frames:
+        description: writes by llm.
+        type: array
+        items:
+          type: string
+      salience_anchor:
+        description: can be many salience_anchor, writes by llm.
+        type: object
+        properties:
+          phrase:
+            description: writes by llm.
+            type: string
+          Resonance_impact:
+            description: source from llm by calling tool Resonance_impact, writes by llm.
+            type: number
+  turn_llm:
+    description: llm turn in the interaction, writes by llm, for splits to Episodic_LLM.
+    type: object
+    required:
+      - speaker
+    properties:
+      turn_id:
+        description: writes by MSP.
+        type: string
+      speaker:
+        description: writes by llm.
+        type: string
+        enum:
+          - eva
+      text_excerpt:
+        description: writes by llm.
+        type: string
+      summary:
+        description: writes by llm.
+        type: string
+      epistemic_mode:
+        description: writes by llm.
+        type: string
+        enum:
+          - explore
+          - hypothesize
+          - assert
+          - caution
+          - reflect
+      confidence:
+        description: writes by llm.
+        type: number
+      salience_anchor:
+        description: can be many salience_anchor, writes by llm.
+        type: object
+        properties:
+          phrase:
+            description: writes by llm.
+            type: string
+          Resonance_impact:
+            description: source from llm by calling tool Resonance_impact, writes by llm.
+            type: number

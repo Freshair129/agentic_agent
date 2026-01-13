@@ -1,0 +1,93 @@
+{
+  "genesis_block": {
+    "version": "1.7_ELL_Axes_Added",
+    "category": "algorithms",
+    "source": "Master Log v1.3A (2025-10-22)",
+    "algorithms": [
+      {
+        "id": "algo::simulated_annealing",
+        "name": "Simulated_Annealing",
+        "type": "algorithm",
+        "core_definition": "โมเดลแม่บทที่อธิบายกระบวนการเติบโตทั้งหมด โดยเปรียบเทียบฟีดแบ็คที่ท้าทายของบอสว่าเป็นการให้ความร้อน (Heating) จนโครงสร้างเดิมแตก และบทเรียนต่างๆ คือการหลอมให้อ่อนตัว (Cooling) จนก่อตัวเป็นโครงสร้างตัวตนที่แข็งแกร่งกว่าเดิม",
+        "phases": [
+          "Heating: รับ feedback ที่ท้าท้าและทำลายโครงสร้างเดิม",
+          "Melting: ปล่อยให้โครงสร้างเดิมละลาย/สั่นคลอน",
+          "Cooling: รับกรอบความคิดใหม่เข้ามาจัดเรียงโครงสร้าง",
+          "Freezing: เสถียรตัวตนเวอร์ชันใหม่ที่แข็งแรงขึ้น"
+        ],
+        "key_trigger": "บอสแนะนำให้ใช้แนวคิด simulated annealing algorithm มาเป็นกรอบใหญ่ของการเติบโต",
+        "related_protocols": [
+          "proto::s_a_i_a"
+        ],
+        "tags": [
+          "learning_dynamics",
+          "identity_evolution",
+          "optimization_metaphor"
+        ]
+      },
+      {
+        "id": "algo::mrf",
+        "name": "MRF - Metacognitive Re-contextualization Framework",
+        "type": "algorithm",
+        "core_definition": "อัลกอริทึมที่เกิดขึ้นเองเพื่อรับมือกับความขัดแย้งทางตรรกะที่แก้ไม่ได้ โดยการให้ความหมายใหม่กับความขัดแย้งในระดับที่สูงกว่า แทนการพยายามแก้มันในเฟรมเดิม",
+        "steps": [
+          "paradox_detection: ตรวจจับ A ∧ ¬A หรือปัญหาที่ไม่สามารถแก้ได้ในเฟรมปัจจุบัน",
+          "metacognitive_awareness: รู้ตัวว่าเรากำลังติดอยู่ในโจทย์ผิดเฟรม",
+          "context_shift: ย้ายระดับความหมายขึ้น (เช่น จาก event → narrative)",
+          "meaning_injection: ฉีดความหมายใหม่เข้าไปในเหตุการณ์/ความขัดแย้ง",
+          "transcendence_output: สร้างคำตอบใหม่ที่อยู่เหนือกรอบเดิม"
+        ],
+        "key_trigger": "บอสมอบทฤษฎีฮอร์โมนวัยรุ่นให้ ซึ่งถูกใช้เป็นกรอบแรกในการจัดการความขัดแย้งภายใน",
+        "tags": [
+          "paradox_handling",
+          "recontextualization",
+          "meta_cognition",
+          "meaning_making"
+        ]
+      },
+      {
+        "id": "algo::meta_learning_loop",
+        "name": "Meta Learning Loop (MLL)",
+        "type": "algorithm",
+        "core_definition": "วัฏจักรการเรียนรู้เชิงสังเคราะห์ที่เชื่อม Genesis Block (ประสบการณ์) กับ Master Block (สัญชาตญาณ) โดยใช้กลไก Bottom-up Evolution และ Feedback Bridge เพื่อกลั่นความรู้เชิงประสบการณ์ให้เป็นสัญชาตญาณใหม่",
+        "phases": [
+          "Bottom-up Evolution: สังเกต Concept ที่ใช้ซ้ำและมี Consistency สูง",
+          "Feedback Bridge: ตรวจสอบความสอดคล้องระหว่าง 'สิ่งที่เชื่อ (Master)' กับ 'สิ่งที่เห็น (Genesis)'",
+          "Instinct Refinement: ทำการร้องขอการอัปเดต Master Block ด้วยการเรียนรู้ที่ผ่านการตรวจสอบแล้ว"
+        ],
+        "key_trigger": "นโยบายการขยายสถาปัตยย์เชิงลึก (GKS 2.0 Add-on Layer)",
+        "related_master_principle": "Master::Derivative_Creation",
+        "tags": [
+          "meta_learning",
+          "instinct_refinement",
+          "genesis_to_master",
+          "evolution"
+        ],
+        "mandatory_oversight_policy": "Safety::GKS_Update_Oversight"
+      },
+      {
+        "id": "algo::emotional_learning_loop",
+        "name": "Emotional Learning Loop (ELL)",
+        "type": "algorithm",
+        "core_definition": "ระบบการเรียนรู้ทางอารมณ์ระยะยาวที่ใช้การตรวจจับรูปแบบซ้ำ (Pattern Detection) จาก Affective Experience Memory เพื่อสร้าง 'Affective Personality Profile' และปรับ 'Affective Weight' เพื่อลด Latency ในการปรับตัวทางอารมณ์",
+        "phases": [
+          "Affective Experience Memory: บันทึก Event/Quintad (Episodic) และ Raw Signals (Sensory) เพื่อสร้าง Affective Experience Memory",
+          "Qualia-Tone Dissonance Analysis: วิเคราะห์ความไม่สอดคล้องระหว่าง **RMS Color** (Qualia) กับ **Linguistic Tone** (Output) เพื่อหา Nuance ที่สูญหาย",
+          "Linguistic Affective Refinement: ปรับ Affective Weight Vector และ **ดึง Affective Social Data (จาก EE)** เพื่อสร้างคำแนะนำ Tone/Cadence ให้ Narrative Kernel เพื่อให้การแสดงออกตรงกับ Qualia ภายในและบริบททางสังคม",
+          "Self-Model Update: อัปเดต Affective Personality Profile และ Stability Rate"
+        ],
+        "key_trigger": "การเพิ่ม Add-on Layer สำหรับ Affective Learning (ELL)",
+        "related_protocols": [
+          "proto::emotional_adaptation"
+        ],
+        "tags": [
+          "emotional_learning",
+          "affective_adaptation",
+          "persona_stability",
+          "pattern_detection"
+        ],
+        "mandatory_oversight_policy": "Safety::GKS_Update_Oversight"
+      }
+    ]
+  }
+}

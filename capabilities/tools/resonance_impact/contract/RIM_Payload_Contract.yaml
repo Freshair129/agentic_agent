@@ -1,0 +1,30 @@
+# ============================================================
+# EVA MODULE CONTRACT: RIM Payload
+# Version: 8.2.0-V2 (Strict)
+# Status: LOCKED
+# ============================================================
+
+module: "ResonanceImpact"
+bus_channel: "bus:physical"
+schema_ref: "file:///e:/The%20Human%20Algorithm/T2/EVA%208.2.0/resonance_impact/schema/RIM_Payload_Schema_v2.json"
+
+payload_structure:
+  impact_level:
+    type: "String"
+    enum: ["Low", "Medium", "High"]
+    required: true
+    description: "Categorical impact assessment."
+  
+  multipliers:
+    type: "Object"
+    required: true
+    properties:
+      hormone_release: "Number (0.0-2.0)"
+      receptor_sensitivity: "Number (0.0-2.0)"
+      emotional_weight: "Number (0.0-2.0)"
+    description: "Physiological amplification factors."
+
+governance:
+  - "Must be published after RI calculation completes."
+  - "Multipliers must be positive and ≤2.0 to prevent runaway effects."
+  - "Field types are immutable; additions require a V3 upgrade."

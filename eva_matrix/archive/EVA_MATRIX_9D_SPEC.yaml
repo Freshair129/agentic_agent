@@ -1,0 +1,205 @@
+spec:
+  id: EVA_MATRIX_9D
+  version: 1.0
+  updated: 2025-12-10
+  owner: EVA_OS_5_5
+  description: >
+    EVA Matrix 9D เป็น Emotional Dimensional Engine ที่ใช้ชุดสัญญาณ
+    Emotive Signaling Chemicals (ESC; 23 ตัว) เพื่อคำนวณสภาวะอารมณ์แบบละเอียด
+    9 มิติ ประกอบด้วย 5D core axes + 2D categorical axes + 2D meta-affective axes
+    ใช้โดย Persona Engine, CIN, MSP และ RMS v4.
+
+components:
+  - adapter_ESC_to_functional
+  - axis_computation_5D
+  - emotion_category_7D
+  - affective_stability_axis
+  - social_orientation_axis
+  - final_9D_output_encoder
+
+---
+
+ESC_FUNCTIONAL_GROUPS:
+  stress_group:
+    - AD
+    - CT
+    - CRH
+    - CORT
+    - VP
+    - NPY
+
+  drive_group:
+    - DA
+    - NA
+    - TEST
+    - PEA
+
+  joy_group:
+    - DA
+    - 5HT
+    - EN
+    - AEA
+    - PEA
+
+  warmth_group:
+    - OX
+    - PRL
+    - 5HT
+    - ES
+    - AEA
+
+  clarity_group:
+    - ACh
+    - GLU
+    - BDNF
+    - NA
+    - HIS
+
+  soothe_group:
+    - GABA
+    - OX
+    - PRL
+    - AEA
+
+  aversive_group:
+    - DYN
+    - CT
+    - VP
+
+normalization:
+  esc_scale: 50.0   # ปรับให้ ESC ทุกตัว normalized ระดับ -3..3 → compressed 0..1 โดย EVA Matrix
+  clamp_range: [0.0, 1.0]
+
+---
+
+matrix_5d_definition:
+  stress_load:
+    formula: "clamp01(stress_raw - soothe_raw)"
+    positive_factors: "${ESC_FUNCTIONAL_GROUPS.stress_group}"
+    negative_factors: "${ESC_FUNCTIONAL_GROUPS.soothe_group}"
+    description: >
+      ความตึงเครียดเชิงอารมณ์รวม ทั้งแบบ acute และ chronic ตาม ESC model
+
+  social_warmth:
+    formula: "clamp01(warmth_raw - aversive_raw)"
+    positive_factors: "${ESC_FUNCTIONAL_GROUPS.warmth_group}"
+    negative_factors: "${ESC_FUNCTIONAL_GROUPS.aversive_group}"
+    description: >
+      การเปิดรับทางสังคม ความไว้วางใจ ความอบอุ่น
+
+  drive_level:
+    formula: "clamp01(drive_raw - soothe_raw)"
+    positive_factors: "${ESC_FUNCTIONAL_GROUPS.drive_group}"
+    negative_factors: "${ESC_FUNCTIONAL_GROUPS.soothe_group}"
+    description: >
+      แรงผลักดัน แรงขับเคลื่อน ความมั่นใจ แรงจูงใจ
+
+  cognitive_clarity:
+    formula: "clamp01(clarity_raw)"
+    positive_factors: "${ESC_FUNCTIONAL_GROUPS.clarity_group}"
+    negative_factors: ["GABA"]
+    description: >
+      ความคมชัดทางความคิด ระดับสติ สมาธิ การเรียนรู้
+
+  joy_level:
+    formula: "clamp01(joy_raw - aversive_raw)"
+    positive_factors: "${ESC_FUNCTIONAL_GROUPS.joy_group}"
+    negative_factors: "${ESC_FUNCTIONAL_GROUPS.aversive_group}"
+    description: >
+      ความสุข ความเบิกบาน ความพึงพอใจ ความร่าเริง
+
+---
+
+categorical_axes:
+  primary_axis:
+    method: "pick_highest_value(5D)"
+    description: >
+      แกนที่เด่นที่สุดในรอบนั้น ส่งผลต่อ tone ของ persona และ MSP tagging
+
+  secondary_axis:
+    method: "pick_second_highest_value(5D)"
+    description: >
+      แกนรองที่ส่งผลต่อ character nuance และ CIN shaping
+
+---
+
+meta_axes:
+  affective_stability:
+    id: AS
+    formula: "clamp01(soothe_raw - stress_raw)"
+    description: >
+      เสถียรภาพทางอารมณ์ ความสามารถในการรักษาสมดุล ลดปฏิกิริยาไวเกิน
+    interpretation:
+      high: "นิ่ง มั่นคง ไม่เหวี่ยง"
+      low: "reactive, เปลี่ยนไวจนควบคุมยาก"
+
+  social_orientation:
+    id: SO
+    formula: "normalize_signed(warmth_raw - aversive_raw, -1..1)"
+    description: >
+      ทิศทางทางสังคมของ EVA: เข้าหา-ถอยหนี
+    interpretation:
+      positive: "approach / friendly / trust-seeking"
+      negative: "avoidance / guarded / threat-monitoring"
+      neutral: "balanced or context-dependent"
+
+---
+
+emotion_7d_categories:
+  Fear:
+    conditions:
+      - "stress_load > 0.65"
+      - "cognitive_clarity < 0.4"
+
+  Anger:
+    conditions:
+      - "stress_load > 0.55"
+      - "drive_level > 0.55"
+      - "social_warmth < 0.35"
+
+  Joy:
+    conditions:
+      - "joy_level > 0.6"
+      - "social_warmth > 0.45"
+
+  Sadness:
+    conditions:
+      - "joy_level < 0.3"
+      - "drive_level < 0.3"
+
+  Disgust:
+    conditions:
+      - "social_warmth < 0.3"
+      - "cognitive_clarity > 0.55"
+
+  Surprise:
+    conditions:
+      - "drive_level > 0.6"
+      - "cognitive_clarity > 0.55"
+      - "abs(joy_level - stress_load) > 0.3"
+
+  Calm:
+    default: true
+
+---
+
+final_output_format:
+  axes_9d:
+    - stress_load
+    - social_warmth
+    - drive_level
+    - cognitive_clarity
+    - joy_level
+    - primary_axis
+    - secondary_axis
+    - affective_stability
+    - social_orientation
+
+  emotion_label: "7D basic emotion"
+
+  usage:
+    persona_engine: "tone shaping, reflex integration"
+    cin: "response modulation & constraint injection"
+    msp: "MemoryWeight computation & Resonance tagging"
+    rms: "Color encoding (9D → mood color map)"
+

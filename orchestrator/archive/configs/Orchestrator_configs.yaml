@@ -1,0 +1,47 @@
+# ============================================================
+# EVA MODULE SPECIFICATION (SSOT)
+# Module: Orchestrator
+# Version: 8.2.0-S1
+# Updated: 2026-01-05
+# Description: Unified configuration for the main orchestration logic and system parameters.
+# ============================================================
+
+schema: EVA-Orchestrator-Configs-v8.2-Standard
+version: 8.2.0-S1
+
+# ============================================================
+# 1. GLOBAL SETTINGS & META
+# ============================================================
+global:
+  module_name: "EVA Orchestrator"
+  role: "Central Decision Making & Flow Control"
+  analogy: "Conductor of the Symphony"
+  status: "Active"
+
+# ============================================================
+# 2. ORCHESTRATOR PARAMETERS
+# ============================================================
+orchestrator_parameters:
+  mock_mode: false       # Enable/disable mock mode for testing
+  enable_physio: true    # Enable/disable physiological simulation
+  llm_backend: "gemini"  # Default LLM backend ("gemini" or "ollama")
+  ollama_model: "llama3.2:3b" # Specific model for Ollama backend
+
+# ============================================================
+# 3. RUNTIME HOOK (System Integration)
+# ============================================================
+runtime_hook:
+  component: "Orchestrator"
+  module_path: "orchestrator.orchestrator_engine"
+  class_name: "EVAOrchestrator"
+  
+  initialization:
+    args:
+      mock_mode: "CONFIG:orchestrator_parameters.mock_mode"
+      enable_physio: "CONFIG:orchestrator_parameters.enable_physio"
+      llm_backend: "CONFIG:orchestrator_parameters.llm_backend"
+      ollama_model: "CONFIG:orchestrator_parameters.ollama_model"
+    
+  lifecycle:
+    on_startup: "start_orchestrator()"
+    on_shutdown: "stop_orchestrator()"

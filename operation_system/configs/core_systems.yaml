@@ -1,0 +1,231 @@
+schema: EVA-CoreSystems-v9
+version: 9.4.0
+updated: 2026-01-13
+
+description: >
+  Core operating systems for EVA 9.4.0 (Resonance Refactored).
+  Standardized to reflect the consolidated identity logic in IdentityManager.
+
+core_systems:
+  # ----------------------------------------------------------
+  # Transport Layer
+  # ----------------------------------------------------------
+  - id: Resonance_Bus
+    name: Resonance_Bus
+    version: 9.4.0
+    role: transport_layer
+    domain: communication
+    id_registry: "IdentityManager.BUS_*"
+    main_files:
+      - path: operation_system/resonance_bus.py
+
+  - id: Identity_Manager
+    name: Identity_Manager
+    version: 9.4.0
+    role: identity_authority
+    domain: security
+    description: "Central authority for ID generation and identity unification."
+    main_files:
+      - path: operation_system/identity_manager.py
+    id_registry: "IdentityManager.SYSTEM_IDM"
+
+  # ----------------------------------------------------------
+  # Memory & Persistence
+  # ----------------------------------------------------------
+  - id: MSP
+    name: Memory_Soul_Passport
+    version: 9.4.0
+    role: core_system
+    domain: memory_persistence
+    description: "Unified Memory OS. Manages Episodic (JSON), Semantic (ChromaDB), and Sensory (JSONL) memory."
+    main_files:
+      - path: memory_n_soul_passport/memory_n_soul_passport_engine.py
+      - path: memory_n_soul_passport/configs/MSP_configs.yaml
+    id_registry: "IdentityManager.SYSTEM_MSP"
+    owned_modules:
+      - EpisodicMemoryModule (The Journal)
+      - SemanticMemoryModule (Dynamic Context)
+      - SensoryMemoryModule (Qualia Storage)
+
+  # ----------------------------------------------------------
+  # Biological & Psychological Mind
+  # ----------------------------------------------------------
+  - id: PhysioCore
+    name: Physiological_Core_Engine
+    version: 9.4.0
+    role: system_authority
+    domain: biological_simulation
+    description: "Full physiological pipeline. Orchestrates endocrine, blood, and vital signs."
+    main_files:
+      - path: physio_core/physio_core.py
+      - path: physio_core/configs/PhysioCore_configs.yaml
+    id_registry: "IdentityManager.SYSTEM_PHYSIO"
+    owned_modules:
+      - EndocrineEngine
+      - BloodEngine
+      - ReceptorEngine
+      - FastReflexEngine
+      - AutonomicResponseEngine
+      - VitalsEngine
+
+  - id: EVA_Matrix
+    name: Psychological_Engine
+    version: 9.4.0
+    role: core_system
+    domain: psyche
+    description: "9D Psychological State Engine (5 Core + 2 Meta + 2 Categorical axes)."
+    main_files:
+      - path: eva_matrix/eva_matrix.py
+      - path: eva_matrix/configs/EVA_Matrix_configs.yaml
+    id_registry: "IdentityManager.SYSTEM_MATRIX"
+    owned_modules:
+      - MatrixPsychModule
+
+  - id: Artifact_Qualia
+    name: Phenomenological_Experience_Engine
+    version: 9.4.0
+    role: core_system
+    domain: phenomenology
+    description: "Phenomenological experience integrator (Intensity, Tone, Coherence, Texture)."
+    main_files:
+      - path: artifact_qualia/artifact_qualia.py
+      - path: artifact_qualia/configs/Artifact_Qualia_configs.yaml
+    id_registry: "IdentityManager.SYSTEM_QUALIA"
+    owned_modules:
+      - QualiaIntegratorModule
+
+  # ----------------------------------------------------------
+  # Orchestration & Retrieval
+  # ----------------------------------------------------------
+  - id: CIM
+    name: Context_Injection_Module
+    version: 9.4.0
+    role: core_system
+    domain: orchestration
+    description: "Dual-phase context builder for Single-Session One-Inference pattern."
+    main_files:
+      - path: orchestrator/cim/cim.py
+    id_registry: "IdentityManager.SYSTEM_CIM"
+
+  - id: AgenticRAG
+    name: Agentic_RAG_Engine
+    version: 9.4.0
+    role: core_system
+    domain: memory_retrieval
+    description: "7-dimensional affective memory retrieval system."
+    main_files:
+      - path: capabilities/services/rag_engine/agentic_rag_engine.py
+      - path: capabilities/services/rag_engine/configs/Agentic_RAG_configs.yaml
+    id_registry: "IdentityManager.SYSTEM_RAG"
+
+  - id: SLM_Bridge
+    name: SLM_Bridge
+    version: 9.4.0
+    role: cognitive_gateway
+    domain: interpretation
+    description: "Small Language Model bridge for intent extraction and gut feeling."
+    main_files:
+      - path: capabilities/services/slm_core/slm_bridge.py
+    id_registry: "IdentityManager.SYSTEM_SLM"
+
+  - id: Vector_Bridge
+    name: Vector_Bridge
+    version: 9.4.0
+    role: memory_index
+    domain: storage
+    description: "Vector database bridge for high-dimensional recall."
+    main_files:
+      - path: capabilities/services/vector_db/chroma_bridge.py
+    id_registry: "IdentityManager.SYSTEM_VEC"
+
+  - id: PRN
+    name: Prompt_Rule_Node
+    version: 9.4.0
+    role: core_system
+    domain: behavioral_governance
+    description: "Manages behavioral constraints and identity principles."
+    main_files:
+      - path: orchestrator/cim/prompt_rule/prompt_rule_node.py
+      - path: orchestrator/cim/prompt_rule/configs/PMT_configs.yaml
+    id_registry: "IdentityManager.SYSTEM_PRN"
+
+  # ----------------------------------------------------------
+  # Knowledge & Cognition
+  # ----------------------------------------------------------
+  - id: GKS
+    name: Genesis_Knowledge_System
+    version: 9.4.0
+    role: knowledge_authority
+    domain: epistemology
+    description: "The static knowledge backbone. Manages Master Blocks and Genesis Blocks."
+    main_files:
+      - path: genesis_knowledge_system/gks_loader.py
+      - path: genesis_knowledge_system/gks_interface.py
+    id_registry: "IdentityManager.SYSTEM_GKS"
+    owned_modules:
+      - NexusMind
+      - MetaLearningLoop
+      - ArchetypalProjection
+
+  - id: NexusMind
+    name: NexusMind_Engine
+    version: 9.4.0
+    role: cognitive_module
+    domain: genesis_knowledge_system/reasoning
+    description: "The strategic brain. Executes decision matrices and insecurity checks (ERD Aligned)."
+    main_files:
+      - path: genesis_knowledge_system/nexus_mind/nexus_mind_engine.py
+    id_registry: "IdentityManager.SYSTEM_NEXUS"
+
+  - id: MLL
+    name: Meta_Learning_Loop
+    version: 9.4.0
+    role: learning_module
+    domain: genesis_knowledge_system/learning
+    description: "Long-term pattern recognition and instinct refinement."
+    main_files:
+      - path: genesis_knowledge_system/meta_learning_loop/mll_engine.py
+    id_registry: "IdentityManager.SYSTEM_MLL"
+
+  - id: APM
+    name: Archetypal_Projection_Module
+    version: 9.4.0
+    role: identity_module
+    domain: genesis_knowledge_system/identity
+    description: "Maps internal state to archetypal templates (Hero, Caregiver, etc.)."
+    main_files:
+      - path: genesis_knowledge_system/archetypal_projection/apm_engine.py
+    id_registry: "IdentityManager.SYSTEM_APM"
+    
+  - id: TemporalEngine
+    name: Temporal_Engine
+    version: 9.4.0
+    role: perception_node
+    domain: orchestrator/temporal
+    description: "Manages subjective time, rhythm analysis, and stability."
+    main_files:
+      - path: orchestrator/temporal/temporal_engine.py
+    id_registry: "IdentityManager.SYSTEM_TEMPORAL"
+
+  - id: RMS
+    name: Resonance_Memory_System
+    version: 9.4.0
+    role: core_system
+    domain: memory_resonance
+    description: "Manages qualia thresholds and resonance smoothing."
+    main_files:
+      - path: resonance_memory_system/rms.py
+    id_registry: "IdentityManager.SYSTEM_RMS"
+
+  - id: Orchestrator
+    name: EVA_Orchestrator
+    version: 9.4.0
+    role: system_authority
+    domain: central_nervous_system
+    description: "Main engine for 1-Inference Sequential Function Calling."
+    main_files:
+      - path: orchestrator/orchestrator.py
+    id_registry: "IdentityManager.SYSTEM_ORCH"
+    owned_modules:
+      - ContextInjectionModule (CIM)
+      - TemporalEngine

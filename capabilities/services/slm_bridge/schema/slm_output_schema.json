@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SLM Bridge Intent Extraction Schema",
+    "description": "Defines the output structure for the SLM's quick perception (Step 1).",
+    "type": "object",
+    "required": [
+        "intent",
+        "salience_anchor",
+        "emotional_signal",
+        "gut_vector"
+    ],
+    "properties": {
+        "intent": {
+            "type": "string",
+            "description": "Short summary of the user's intent."
+        },
+        "salience_anchor": {
+            "type": "string",
+            "description": "The exact phrase that triggered the emotion."
+        },
+        "emotional_signal": {
+            "type": "string",
+            "description": "Initial gut feeling (system 1)."
+        },
+        "gut_vector": {
+            "type": "object",
+            "properties": {
+                "valence": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "arousal": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "stress": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "warmth": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                }
+            },
+            "required": [
+                "valence",
+                "arousal",
+                "stress",
+                "warmth"
+            ]
+        }
+    }
+}

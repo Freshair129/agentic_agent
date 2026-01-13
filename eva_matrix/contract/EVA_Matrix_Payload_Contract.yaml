@@ -1,0 +1,24 @@
+# ============================================================
+# EVA MODULE CONTRACT: EVA Matrix Payload
+# Version: 8.2.0-V2 (Strict)
+# Status: LOCKED
+# ============================================================
+
+module: "EVA_Matrix"
+bus_channel: "bus:psychological"
+schema_ref: "file:///e:/The%20Human%20Algorithm/T2/EVA%208.2.0/eva_matrix/schema/EVA_Matrix_Payload_Schema_v2.json"
+
+payload_structure:
+  matrix_state:
+    type: "Object"
+    required: ["axes_9d", "emotion_label", "momentum"]
+    description: "Multi-dimensional emotional state and psychic energy."
+  
+  reflex_directives:
+    type: "Object"
+    description: "Downstream bio-feedback overrides (e.g., focus shifts)."
+
+governance:
+  - "Psychological state is the sole authority of psyche-congruent response."
+  - "Must be synchronized with bus:physical signals."
+  - "Snapshot must be JSON-serializable for MSP archival."

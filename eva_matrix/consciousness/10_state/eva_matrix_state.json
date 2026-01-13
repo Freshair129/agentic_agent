@@ -1,0 +1,13 @@
+{
+  "axes_9d": {
+    "stress": 0.5,
+    "arousal": 0.5,
+    "valence": 0.5,
+    "clarity": 0.7
+  },
+  "momentum": {
+    "intensity": 0.1
+  },
+  "emotion_label": "Stable",
+  "last_updated": "2026-01-07T18:58:01.332681+00:00"
+}

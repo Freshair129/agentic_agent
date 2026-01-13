@@ -1,0 +1,40 @@
+# Artifact Qualia Interface
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0-S1
+updated: 2026-01-05
+bus_id: PHENOM_QUALIA_01
+
+component: ArtifactQualia
+role: "Phenomenological Experience Integrator"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  # Artifact Qualia listens for psychological state updates from EVA Matrix
+  - subscribe: "bus:psychological"
+    action: "integrate"
+    mapping: { input: "eva_state", output: "qualia_snapshot" }
+    description: "Receives the 9D psychological state to integrate into phenomenological experience."
+  
+  # Artifact Qualia publishes its current phenomenological experience
+  - publish: "bus:phenomenological"
+    action: "process_experience" # Action derived from main_orchestrator usage
+    description: "Publishes the synthesized 'felt quality' (qualia snapshot) to the bus."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "ArtifactQualia"
+  module_path: "artifact_qualia.artifact_qualia_engine"
+  class_name: "ArtifactQualiaSystem"
+  
+  initialization:
+    args:
+      base_path: "ROOT"
+      msp: "HOOK:MSP Client" # Assuming it connects to MSP for some state or config
+    
+  lifecycle:
+    on_startup: "load_config()"
+    on_shutdown: "save_state()"

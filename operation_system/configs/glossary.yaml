@@ -1,0 +1,56 @@
+schema: EVA-Glossary-v9
+version: 9.2.0
+updated: 2026-01-12
+
+description: >
+  Unified glossary for EVA 9.1.0 (Resonance Edition).
+  Updated to reflect current component names and the "Single-Session" architecture.
+
+glossary:
+  # --- Core Components ---
+  - term: Orchestrator
+    full_name: Single-Session Orchestrator
+    meaning: "The main engine controlling the 3-Phase inference flow (Perception, The Gap, Reasoning)."
+  
+  - term: CIM
+    full_name: Context Injection Module
+    meaning: "Consolidated module for bootstrapping LLM context in both phases. Replaces CIN/CPN."
+
+  - term: PhysioCore
+    full_name: Physiological Core
+    meaning: "The simulated biological engine (Hormones, Vitals, ANS). Replaces BioDigitalCore/ESS."
+
+  - term: EVA_Matrix
+    full_name: Psychological Engine
+    meaning: "9-Dimensional affective state model (5 Core + 2 Meta + 2 Categorical)."
+
+  - term: MSP
+    full_name: Memory & Soul Passport
+    meaning: "Unified memory management layer for episodic, semantic, and sensory persistence."
+
+  - term: Resonance Bus
+    full_name: Transient Transport Layer
+    meaning: "Pub/sub communication bus connecting all systems via standardized channels (physical, psychological, etc.)."
+
+  # --- Metrics ---
+  - term: RI
+    full_name: Resonance Index
+    meaning: "Authoritative score (0-1) measuring the combined biological and cognitive impact of an interaction."
+
+  - term: RIM
+    full_name: Resonance Impact Metric
+    meaning: "Calculates instinctual impact of incoming stimuli before cognitive processing."
+
+  - term: Qualia
+    full_name: Phenomenological Experience
+    meaning: "Subjective texture and tone of an interaction produced by ArtifactQualia."
+
+  # --- Protocols ---
+  - term: The Gap
+    full_name: Bio-Digital Sync Phase
+    meaning: "The execution phase where physiological and psychological systems update without LLM involvement."
+
+  - term: Doc-to-Code
+    full_name: Ghost Key Protocol
+    meaning: "Development methodology where config changes (SSOT) must precede code implementation."
+

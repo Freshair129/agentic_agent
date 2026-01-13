@@ -1,0 +1,143 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "State_Storage_Schema",
+    "version": "2.0.1",
+    "description": "Schema for real-time bio-cognitive metrics (Layer 08).",
+    "type": "object",
+    "properties": {
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "session_id": {
+                    "type": "string"
+                },
+                "turn_count": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "timestamp",
+                "session_id"
+            ]
+        },
+        "physio_state": {
+            "type": "object",
+            "description": "Active physiological snapshot from PhysioCore",
+            "properties": {
+                "blood": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number",
+                        "minimum": 0.0
+                    }
+                },
+                "autonomic": {
+                    "type": "object",
+                    "properties": {
+                        "sympathetic": {
+                            "type": "number",
+                            "minimum": 0.0,
+                            "maximum": 1.0
+                        },
+                        "parasympathetic": {
+                            "type": "number",
+                            "minimum": 0.0,
+                            "maximum": 1.0
+                        }
+                    },
+                    "required": [
+                        "sympathetic",
+                        "parasympathetic"
+                    ]
+                }
+            },
+            "required": [
+                "blood",
+                "autonomic"
+            ]
+        },
+        "eva_matrix_state": {
+            "type": "object",
+            "description": "Active psychological snapshot from EVA Matrix",
+            "properties": {
+                "axes_9d": {
+                    "type": "object",
+                    "properties": {
+                        "stress": {
+                            "type": "number"
+                        },
+                        "warmth": {
+                            "type": "number"
+                        },
+                        "drive": {
+                            "type": "number"
+                        },
+                        "clarity": {
+                            "type": "number"
+                        },
+                        "joy": {
+                            "type": "number"
+                        },
+                        "alertness": {
+                            "type": "number"
+                        },
+                        "connection": {
+                            "type": "number"
+                        },
+                        "groundedness": {
+                            "type": "number"
+                        },
+                        "openness": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "stress",
+                        "warmth",
+                        "drive",
+                        "clarity",
+                        "joy",
+                        "alertness",
+                        "connection",
+                        "groundedness",
+                        "openness"
+                    ]
+                },
+                "emotion_label": {
+                    "type": "string"
+                },
+                "momentum": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "axes_9d",
+                "emotion_label"
+            ]
+        },
+        "qualia_state": {
+            "type": "object",
+            "description": "Active phenomenological snapshot from Artifact Qualia",
+            "properties": {
+                "intensity": {
+                    "type": "number"
+                },
+                "tone": {
+                    "type": "string"
+                },
+                "coherence": {
+                    "type": "number"
+                }
+            }
+        }
+    },
+    "required": [
+        "metadata",
+        "physio_state",
+        "eva_matrix_state"
+    ]
+}

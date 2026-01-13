@@ -1,0 +1,53 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EVA RI Output Payload Schema",
+    "description": "Strict specification for Resonance Index signals published to bus:knowledge in EVA 8.2.0.",
+    "type": "object",
+    "required": [
+        "resonance_index",
+        "timestamp",
+        "state_hash_ref"
+    ],
+    "properties": {
+        "timestamp": {
+            "type": "number",
+            "description": "Unix timestamp of the RI calculation event."
+        },
+        "state_hash_ref": {
+            "type": "string",
+            "pattern": "^S1-",
+            "description": "Hash of the system state this RI refers to."
+        },
+        "resonance_index": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Global resonance score (0.0 = no resonance, 1.0 = perfect resonance)"
+        },
+        "components": {
+            "type": "object",
+            "description": "Breakdown of RI calculation components",
+            "properties": {
+                "cognitive_alignment": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 1.0,
+                    "description": "Alignment with current cognitive state"
+                },
+                "emotional_congruence": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 1.0,
+                    "description": "Emotional state match"
+                },
+                "memory_similarity": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 1.0,
+                    "description": "Similarity to stored memories"
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

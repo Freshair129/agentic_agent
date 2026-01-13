@@ -1,0 +1,127 @@
+# ============================================================
+# EVA MODULE SPECIFICATION (SSOT)
+# Module: CIM (Context Injection Module)
+# Version: 8.2.0-S1
+# Updated: 2026-01-04
+# Description: Unified configuration for context orchestration and dual-phase prompt building.
+# ============================================================
+
+schema: EVA-CIM-Configs-v8.2-Standard
+version: 8.2.0-S1
+
+# ============================================================
+# 1. GLOBAL & TOKEN SETTINGS
+# ============================================================
+global:
+  module_name: "Context Injection Module"
+  role: "Orchestration, Context Builder & Stimulus Normalizer"
+  analogy: "Thalamus & Hippocampus Integration"
+
+runtime:
+  mode: "event_driven" # Triggered by Orchestrator
+  phases: ["Phase 1 (Sync)", "Gap (Async)", "Phase 2 (Sync)"]
+  persistence: "per_turn"
+  
+token_settings:
+  model: "cl100k_base"
+  fallback_multiplier: 4.0
+  total_max_context: 5500 # Phase 1 (3000) + Phase 2 (2500)
+
+# ============================================================
+# 2. DUAL-PHASE BUDGETS (Tokens)
+# ============================================================
+phases:
+  phase_1_perception:
+    description: "Intuition-based context for initial intent analysis."
+    total_max: 3000
+    latency_target: 100
+    budget:
+      identity_anchor: 500
+      physio_baseline: 100
+      pmt_rules: 200 # Rules from PMT (Prompt Rule Layer)
+      memory_buffer: 250
+      semantic_knowledge: 150
+      conversation_history: 1300 # Reduced slightly to accommodate new contexts
+      previous_context: 200      # Summary + Plan from previous turn
+      intuition_flashes: 200     # Quick Keyword Recall
+      perception_directive: 150
+
+  phase_2_reasoning:
+    description: "Deep affective context and RAG retrieval after biological processing."
+    total_max: 2500
+    latency_target: 500
+    budget:
+      embodied_sensation: 200
+      eva_matrix_9d: 300
+      artifact_qualia: 300
+      physio_delta: 150
+      hept_stream_recall: 1000
+      cognitive_rules: 200
+      context_summary_template: 150
+      final_directive: 150
+
+# ============================================================
+# 3. INTERFACE (Bus Position & Dual-Phase Flow)
+# ============================================================
+interface:
+  bus_id: "ORCH_CIM_01"
+  bus_role: "publisher/subscriber"
+  
+  subscriptions:
+    - stream: "all" # CIM listens to all for comprehensive context building
+  
+  publishes:
+    - stream: "operational"
+  
+  managed_slots:
+    - "perception_context"
+    - "reasoning_context"
+    - "context_id"
+
+  execution_flow: "Physio Snapshot -> Phase 1 -> LLM Perception -> sync_biocognitive_state() -> Phase 2 -> LLM Reasoning -> Phase 3 (Prediction)"
+
+# ============================================================
+# 4. DATA CONTRACTS (Input/Output/Validation)
+# ============================================================
+contracts:
+  inputs:
+    identity:
+      persona: { source: "orchestrator/pmt/configs/persona.yaml", required: true }
+      soul: { source: "orchestrator/pmt/docs/soul.md", required: true }
+    physiology:
+      source: "PhysioController"
+      contract: "Input_from_PhysioController_Contract.yaml"
+    memory_state:
+      source: "MSP (Memory & Soul Passport)"
+      perception_required: ["Raw turns", "Physio baseline", "User profile"]
+      reasoning_required: ["9D Matrix", "Resonance", "AgenticRAG (Agentic Retrieval-Augmented Generation)"]
+
+  outputs:
+    perception_context: { type: "object", delivery: "bus:operational" }
+    reasoning_context: { type: "object", delivery: "bus:operational" }
+    validated_stimulus: { type: "object", description: "Normalized vector for biological injection" }
+
+  validation_rules:
+    - "Phase Separation: Phase 2 must not be processed before Phase 1 completion."
+    - "Read-Only: CIM must never modify memory directly."
+    - "Safety Scaling: Enforce stimulus safety limits before injection."
+
+# ============================================================
+# 5. HEPT-STREAM RAG LOGIC (Phase 2 Weights)
+# ============================================================
+hept_stream_weights:
+  emotion: 0.35      # Critical: Cosine similarity on ANS + hormones
+  narrative: 0.20    # Sequential episode chains
+  salience: 0.15     # High RI scores (>0.7)
+  sensory: 0.10      # Qualia texture matching
+  temporal: 0.10     # Time-based decay (30d half-life)
+  intuition: 0.05    # Semantic graph patterns
+  operational: 0.05  # System stability & task context
+
+# ============================================================
+# 6. PATH DISCOVERY (System Overrides)
+# ============================================================
+discovery_paths:
+  persona: "orchestrator/pmt/configs/Identity/persona.yaml"
+  soul: "orchestrator/pmt/configs/Identity/soul.md"
+  pmt_rules: "orchestrator/pmt/configs/"

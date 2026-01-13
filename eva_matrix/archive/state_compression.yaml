@@ -1,0 +1,61 @@
+# ============================================================
+# EVA 9.1.0 - State Compression Configuration
+# ============================================================
+# Layer: EVA Matrix (Psyche)
+# Role: Define compression rules for 9D Matrix state history
+# ============================================================
+
+schema: EVA-State-Compression-v1
+version: 1.0.0
+last_updated: "2026-01-10"
+description: "Configuration for EmotionMatrixHash compression logic to optimize token usage for historical emotional states."
+
+# ------------------------------------------------------------------
+# Compression Templates
+# ------------------------------------------------------------------
+templates:
+  # FULL 9-Dimension Hash
+  # Use when significant changes occur across all dimensions
+  H9:
+    format_string: "H{format_version}-{ri}-S{stress}W{warmth}D{drive}C{clarity}J{joy}A{alertness}CO{connection}GN{groundedness}OP{openness}"
+    description: "Full resolution hash including all 9 psychological dimensions."
+    triggers:
+      - "Initital state of new episode"
+      - "Significant shift (>0.2) in Alertness, Connection, Groundedness, or Openness"
+
+  # COMPRESSED 5-Dimension Hash
+  # Use when the last 4 dimensions (A, CO, GN, OP) are stable
+  H5:
+    format_string: "H{format_version}-{ri}-S{stress}W{warmth}D{drive}C{clarity}J{joy}"
+    description: "Compressed hash omitting stable background dimensions (A/CO/GN/OP)."
+    triggers:
+      - "Routine state updates"
+      - "Delta < 0.05 for A, CO, GN, OP dimensions"
+
+# ------------------------------------------------------------------
+# Encoding Rules
+# ------------------------------------------------------------------
+encoding_rules:
+  scale_factor: 1000
+  rounding: "floor"
+  max_value_representation: "1"  # If value is 1.0 (1000), replace with single char '1'
+  
+  # Dimension mapping to single char codes in Hash
+  dimension_map:
+    stress: "S"
+    warmth: "W"
+    drive: "D"
+    clarity: "C"
+    joy: "J"
+    alertness: "A"
+    connection: "CO"
+    groundedness: "GN"
+    openness: "OP"
+
+# ------------------------------------------------------------------
+# Usage Guidelines
+# ------------------------------------------------------------------
+# 1. Calculate truncated integers: value * scale_factor (e.g., 0.45 -> 450)
+# 2. Check for max value: if 1000, use "1"
+# 3. Determine Format (H9 vs H5) based on delta check
+# 4. Construct string

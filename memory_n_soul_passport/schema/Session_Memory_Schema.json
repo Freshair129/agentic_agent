@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Session_Memory_Schema",
+    "version": "2.0.1",
+    "description": "Schema for session-level context snapshots (Layer 04).",
+    "type": "object",
+    "properties": {
+        "session_id": {
+            "type": "string"
+        },
+        "start_time": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "end_time": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "turn_count": {
+            "type": "integer"
+        },
+        "summary": {
+            "type": "string"
+        },
+        "key_events": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "turn_id": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "importance": {
+                        "type": "number"
+                    }
+                }
+            }
+        },
+        "state_trajectory": {
+            "type": "object",
+            "description": "Average or peak states during session"
+        }
+    },
+    "required": [
+        "session_id",
+        "summary"
+    ]
+}

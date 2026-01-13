@@ -1,0 +1,56 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Context_Storage_Schema",
+    "version": "2.0.1",
+    "description": "Schema for working memory buffers and active context (Layer 09).",
+    "type": "object",
+    "properties": {
+        "context_id": {
+            "type": "string"
+        },
+        "turn_sequence": {
+            "type": "integer"
+        },
+        "phase_states": {
+            "type": "object",
+            "properties": {
+                "phase_1_perception": {
+                    "type": "object"
+                },
+                "phase_2_reasoning": {
+                    "type": "object"
+                },
+                "phase_3_prediction": {
+                    "type": "object"
+                }
+            }
+        },
+        "active_buffers": {
+            "type": "object",
+            "properties": {
+                "history_window": {
+                    "type": "array",
+                    "maxItems": 10
+                },
+                "retrieved_memories": {
+                    "type": "array"
+                }
+            }
+        },
+        "meta_cognitive": {
+            "type": "object",
+            "properties": {
+                "cognitive_load": {
+                    "type": "number"
+                },
+                "current_focus": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "required": [
+        "context_id",
+        "turn_sequence"
+    ]
+}

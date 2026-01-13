@@ -1,0 +1,88 @@
+# ============================================================
+# EVA MODULE SPECIFICATION (SSOT)
+# Module: EVA Matrix (Psychological State Matrix)
+# Version: 9.1.0-R1 (5+2+2 Model)
+# Updated: 2026-01-12
+# Description: Unified configuration for the 5+2+2 psychological dimensional engine.
+# ============================================================
+
+schema: EVA-Matrix-Configs-v9.1
+version: 9.1.0-R1
+
+# ============================================================
+# 1. EMOTIONAL AXES DEFINITION (5+2+2)
+# ============================================================
+axes_structure:
+  # 5 Core Affective Axes (H5 Core)
+  core_5d:
+    stress:
+      positive_factors: ["ESC_H01_ADRENALINE", "ESC_H02_CORTISOL", "ESC_N01_NORADRENALINE"]
+      negative_factors: ["ESC_N05_GABA", "ESC_N03_SEROTONIN"]
+      description: "Emotional tension and acute stress load."
+    warmth:
+      positive_factors: ["ESC_H04_OXYTOCIN", "ESC_N03_SEROTONIN"]
+      negative_factors: ["ESC_H02_CORTISOL"] # Stress inhibits warmth
+      description: "Social trust, empathy, and openness."
+    drive:
+      positive_factors: ["ESC_N02_DOPAMINE", "ESC_H06_TESTOSTERONE"]
+      negative_factors: ["ESC_N05_GABA"]
+      description: "Motivation, confidence, and goal-seeking."
+    clarity:
+      positive_factors: ["ESC_N02_DOPAMINE", "ESC_N03_SEROTONIN"]
+      negative_factors: ["ESC_N06_ADENOSINE", "ESC_H02_CORTISOL"]
+      description: "Cognitive focus and mental sharpness."
+    joy:
+      positive_factors: ["ESC_N02_DOPAMINE", "ESC_N03_SEROTONIN", "ESC_N04_ENDORPHIN"]
+      negative_factors: ["ESC_H02_CORTISOL"]
+      description: "Happiness, satisfaction, and resonance."
+
+  # 2 Meta-Directional Axes (The "Directions")
+  meta_2d:
+    affective_stability:
+      formula: "ESC_N05_GABA - ESC_H01_ADRENALINE"
+      description: "Emotional inertia vs. reactivity."
+    social_orientation:
+      formula: "ESC_H04_OXYTOCIN - ESC_H02_CORTISOL"
+      description: "Social direction: Approach (positive) vs. Avoidance (negative)."
+
+  # 2 Categorical Axes (Pointers)
+  categorical_2d:
+    primary_axis: { method: "highest", source: "core_5d" }
+    secondary_axis: { method: "second_highest", source: "core_5d" }
+
+# ============================================================
+# 2. MOOD DYNAMICS & MOMENTUM
+# ============================================================
+mood_dynamics:
+  momentum_decay: 0.15          # How fast momentum drops over turns [0-1]
+  state_inertia: 0.7            # Influence of previous state on new calculation
+  learning_rate: 0.3            # Sensitivity to new stimulus signals
+
+# ============================================================
+# 3. EMOTION CATEGORIES (7D Categorization)
+# ============================================================
+emotion_categories:
+  Fear:     { condition: "stress > 0.65 and clarity < 0.4" }
+  Anger:    { condition: "stress > 0.55 and drive > 0.55 and warmth < 0.35" }
+  Joy:      { condition: "joy > 0.6 and warmth > 0.45" }
+  Sadness:  { condition: "joy < 0.3 and drive < 0.3" }
+  Disgust:  { condition: "warmth < 0.3 and clarity > 0.55" }
+  Surprise: { condition: "drive > 0.6 and clarity > 0.55" }
+  Calm:     { condition: "default" }
+
+# ============================================================
+# 4. RUNTIME INTEGRATION
+# ============================================================
+runtime_hook:
+  persistence_file: "eva/consciousness/state_memory/eva_matrix_state.json"
+  reflex_thresholds:
+    high_stress: 0.85
+    concise_mode: true
+
+# ============================================================
+# 5. DATA CONTRACTS
+# ============================================================
+contracts:
+  outputs:
+    axes_9d:
+      required: [stress, warmth, drive, clarity, joy, stability, orientation, primary, secondary]

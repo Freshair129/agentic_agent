@@ -1,0 +1,33 @@
+# Output to Orchestrator (Main Conductor) Contract
+# Component: CIN (Context Injection Node) -> Orchestrator (Main Conductor)
+# version: 8.1.0-R1
+# Date: 2026-01-03
+
+schema: EVA-Output-to-Orchestrator-Contract-v1.0
+version: 8.1.0-R1
+schema_ref: "orchestrator/cin/schema/CIN_Payload_Schema_v2.json"
+
+required_outputs:
+  - name: phase_1_perception_bootstrap
+    type: "object"
+    description: "Rapid context including raw history, current physio, and user profile metadata."
+  
+  - name: phase_2_reasoning_deep_context
+    type: "object"
+    description: "Deep context including AgenticRAG (7D) and 9D Matrix psychological state."
+
+  - name: turn_context_lifecycle
+    type: "object"
+    description: "Complete 3-stage context buffer for persistence (Phase 1 + Phase 2 + Final LLM Output)."
+
+data_delivery:
+  - "Phase 1 must be delivered to orchestrator for 'Intuition' prompt construction."
+  - "Phase 2 must be delivered for 'Reasoning' prompt construction."
+  - "Final compiled context must be sent to MSP for 10_context_storage persistence."
+    required: true
+
+  context_meta:
+    type: "object"
+    properties:
+      context_id: { type: "string" }
+      token_count: { type: "integer" }

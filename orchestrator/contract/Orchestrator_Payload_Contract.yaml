@@ -1,0 +1,26 @@
+# ============================================================
+# EVA MODULE CONTRACT: Orchestrator Payload
+# Version: 8.2.0-V2 (Strict)
+# Status: LOCKED
+# ============================================================
+
+module: "Orchestrator"
+bus_channel: "bus:orchestrator_output" # A new theoretical bus for orchestrator output
+schema_ref: "file:///e:/The%20Human%20Algorithm/T2/EVA%208.2.0/orchestrator/schema/Orchestrator_Payload_Schema_v2.json"
+
+payload_structure:
+  final_response:
+    type: "string"
+    description: "The final generated response from EVA to the user."
+  emotion_label:
+    type: "string"
+    description: "The primary emotion label of EVA after processing the user input."
+  resonance_hash:
+    type: "string"
+    pattern: "^S1-",
+    description: "The StateHash_S1 representing the final state of the system for this turn."
+
+governance:
+  - "The Orchestrator is the final authority for the user-facing response."
+  - "Output must reflect the 60% Physio / 40% Persona weighting."
+  - "Field types are immutable; additions require a V3 upgrade."

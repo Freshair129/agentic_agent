@@ -1,0 +1,35 @@
+# Generated Payload Contract for v8.2.0
+
+{
+
+  "module": "CIM",
+
+  "payload_schema": {
+
+    "perception_context": {
+
+      "type": "auto",
+
+      "description": "Internal state for perception_context"
+
+    },
+
+    "reasoning_context": {
+
+      "type": "auto",
+
+      "description": "Internal state for reasoning_context"
+
+    },
+
+    "context_id": {
+
+      "type": "auto",
+
+      "description": "Internal state for context_id"
+
+    }
+
+  }
+
+}

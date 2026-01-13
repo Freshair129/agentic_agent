@@ -23,26 +23,31 @@ agent/
 ├── consciousness/            # [AWARENESS DOMAIN] สติสัมปชัญญะ - LLM Full R/W (Locked)
 │   │
 │   # === Memory (รู้ว่ามันมีอะไร / Awareness of What) ===
-│   ├── episodic_memory/      # [MSP owned] ความจำเหตุการณ์ (Active story)
-│   ├── semantic_memory/      # [GKS owned] ความจำความหมาย (Active concepts)
-│   ├── sensory_memory/       # [AQI owned] ความจำการรับรู้ (Active sensation)
+│   ├── episodic_memory/      # [MSP owned] ความจำเหตุการณ์ → move to memory/session_memory when session end
+│   ├── semantic_memory/      # [GKS owned] ความจำความหมาย → move to GKS stores when session end
+│   ├── sensory_memory/       # [AQI owned] ความจำการรับรู้ (perceptual/phenomenological)
 │   │
 │   # === Capabilities (รู้ว่ามันทำอะไรได้ / Awareness of How) ===
-│   # These are SHORTCUTS / REF FILES pointing to capabilities/ implementation
 │   ├── tools/                # [SHORTCUTS] Interfaces to stateless tools (Read-Only)
-│   │   ├── write_file.lnk    # → /capabilities/tools/filesystem/write_file.py
-│   │   ├── search_web.lnk    # → /capabilities/tools/browser/search_web.py
-│   │   └── ...
+│   │   ├── write_file.lnk    # → /tools/filesystem/write_file.py
+│   │   ├── read_file.lnk     # → /tools/filesystem/read_file.py
+│   │   ├── search_web.lnk    # → /tools/browser/search_web.py
+│   │   ├── run_command.lnk   # → /tools/terminal/run_command.py
+│   │   └── ... (shortcuts to actual implementations)
 │   │
 │   ├── skills/               # [SHORTCUTS] Interfaces to complex skills (Read-Only)
-│   │   ├── emotional_analysis.lnk  # → /capabilities/skills/cognitive/analysis.py
-│   │   └── ...
+│   │   ├── emotional_analysis.lnk     # → /eva/eva_matrix/logic/analysis.py
+│   │   ├── memory_synthesis.lnk       # → /services/agentic_rag/synthesis.py
+│   │   ├── code_generation.lnk        # → /tools/coding/generator.py
+│   │   └── ... (shortcuts to skill modules)
 │   │
 │   ├── services/             # [SHORTCUTS] Interfaces to external providers (Read-Only)
-│   │   ├── agentic_rag.lnk   # → /capabilities/services/rag_engine/
-│   │   └── ...
+│   │   ├── agentic_rag.lnk       # → /services/agentic_rag/
+│   │   ├── slm_bridge.lnk        # → /services/slm_bridge/
+│   │   ├── vector_search.lnk     # → /services/vector_bridge/
+│   │   └── ... (shortcuts to service inputs)
 │   │
-│   └── indexes/              # [Active Indices]
+│   └── indexes/              
 │
 ├── capabilities/             # [IMPLEMENTATION] Source code (Hidden/Locked from LLM)
 │   ├── tools/                # Stateless atomic tools
@@ -61,29 +66,80 @@ agent/
 │       ├── slm_core/         
 │       └── vector_db/        
 │
-├── memory/                   # [STORAGE] Persistence Layer (MSP Custodian)
-│   ├── session_memory/       # Archived sessions
-│   ├── core_memory/          # Long-term identity
-│   ├── sphere_memory/        # Structural knowledge
-│   ├── user_profile/         # User data
-│   ├── state_store/          # System snapshot storage
-│   ├── context_store/        # Orchestrator context
-│   ├── archival_memory/      # Deep freeze
+├── memory/                   # [STORAGE] ความทรงจำที่เก็บรักษา - LLM Read-only (via MSP) (Locked)
+│   ├── session_memory/       # [past sessions] Short-term memory
+│   ├── core_memory/          # [long-term] Deep identity markers
+│   ├── sphere_memory/        # [structured] Social & environmental maps
+│   ├── user_profile/         # [user modeling]
+│   ├── state_store/          # [system state] PhysioCore, Matrix, RMS state (LLM read-only)
+│   ├── context_store/        # [working buffers] CIM context
+│   ├── archival_memory/      # [frozen] Immutable archives (MSP owned)
 │   │
-│   # === GKS Knowledge Blocks (Read-Only Source) ===
-│   ├── genesis_block/        
-│   ├── master_block/         
-│   ├── safety_block/         
+│   # === GKS Blocks (moved from consciousness - read-only knowledge) ===
+│   ├── genesis_block/        # [read-only cache] Loaded from GKS stores
+│   ├── master_block/         # [read-only cache] Core knowledge (DNA)
+│   ├── safety_block/         # [read-only cache] Safety protocols
 │   │
-│   └── indexes/              # Storage Indices
+│   └── indexes/              # [memory indices]
 │
-# === SYSTEMS (The Organs) ===
-├── genesis_knowledge_system/ # [BRAIN] Strategic reasoning & knowledge
-├── physio_core/              # [BODY] Biological simulation
-├── eva_matrix/               # [MIND] Psychological state
-├── artifact_qualia/          # [SENSE] Phenomenological experience
-├── resonance_memory_system/  # [SUBCONSCIOUS] Automatic memory encoding
-└── memory_n_soul_passport/   # [OS] Memory operating system
+├── genesis_knowledge_system/ # [SYSTEM] Source of truth for knowledge (Locked)
+│   ├── configs/              # [configs]
+│   ├── contracts/            # [contracts]
+│   ├── logic/                # [logic]
+│   ├── schemas/              # [schemas]
+│   ├── nexus_mind/           # [MODULE] Strategic brain (reasoning & decision)
+│   ├── archetypal_projection/# [MODULE] Framework projection (APM)
+│   ├── meta_learning_loop/   # [MODULE] Pattern reinforcement (MLL)
+│   ├── grounding/            # [NODE] User conflict detection
+│   ├── Algorithm_how_Genesis_Block_store/ 
+│   ├── concept_why_Genesis_Block_store/
+│   ├── framework_genesis_Block_store/ 
+│   ├── parameter_what_Genesis_Block_store/
+│   ├── protocol_process_Genesis_Block_store/      
+│   └── master_block_store/
+│
+├── physio_core/              # [SYSTEM] Biological simulation (Hormones + ANS) (Locked)
+│   ├── configs/              # PhysioCore configs
+│   ├── logic/
+│   │   ├── endocrine/        # Hormone glands
+│   │   ├── bloodstream/      # Circulation & transport
+│   │   ├── vitals/           # Medical vitals (BPM, RPM, BP, Temp)
+│   │   └── autonomous/       # ANS (Sympathetic/Parasympathetic)
+│   └── physio_core.py        # Main engine
+│
+├── eva_matrix/               # [SYSTEM] Psychological state (9D axes) (Locked)
+│   ├── configs/              # Matrix configs
+│   ├── logic/
+│   │   ├── core_axes/        # 5 Core: Arousal, Valence, Tension, Clarity, Warmth
+│   │   └── meta_axes/        # 2 Meta: Stability, Coherence + 2 Categorical
+│   └── eva_matrix.py         # Psychological engine
+│
+├── artifact_qualia/          # [SYSTEM] Phenomenological experience (AQI) (Locked)
+│   ├── configs/              # AQI configs
+│   ├── logic/
+│   │   ├── intensity/        # Experience intensity
+│   │   ├── tone/             # Emotional tone
+│   │   ├── coherence/        # Narrative coherence
+│   │   └── texture/          # Phenomenological texture
+│   └── artifact_qualia.py    # Qualia engine
+│
+├── resonance_memory_system/  # [AUTOMATIC] สติไร้สำนึก - Memory encoding (LLM cannot control) (Locked)
+│   ├── configs/              # RMS Configs
+│   ├── contract/             # RMS Payload Contract (Locked)
+│   ├── schema/               # RMS Payload Schema v2 (Locked)
+│   ├── trauma_store/         # Trauma indexing
+│   └── rms.py                # Encoding engine (Locked)
+│
+└── memory_n_soul_passport/   # [SYSTEM] MSP - Memory OS & Custodian (Locked)
+    ├── configs/              # MSP configs
+    ├── schema/               # Memory schemas
+
+
+├── operation_system/         # [SYSTEM] Core Identity & Bus Management (Locked)
+        ├── configs/              # OS configs
+        ├── identity_manager.py   # Global ID Factory
+        ├── resonance_bus.py      # Communication Backbone
+        └── rim_calculator.py     # RIM Logic
 ```
 
 ---
@@ -96,8 +152,59 @@ agent/
 - **Memory Flow:**
   - Session Start: Load relevant blocks to `consciousness/memory`.
   - Session End: Flush `consciousness/memory` to `memory/session_memory` (via MSP).
+หัวใจการออกแบบของเราตอนนี้คือ doc to code นะ เพราะฉะนั้นจะแก้อะไรแก้ไฟล์ yaml,md ก่อน
 
 ---
+
+## Structural Hierarchy
+
+## 🏗️ The Hierarchy (ลำดับชั้นโครงสร้าง)
+
+1. **System (ระบบหลัก/อวัยวะ)**: หน่วยอิสระที่มี State ของตัวเอง หรือจะไม่มีก็ได้ แต่เกิดจากการประสารการทำงานของหลายๆโมดูล เช่น หลอดเลือด คือส่วนนึงของ ระบบไหลเวียนโลหิต ซึ่งมี State ของตัวเอง คือ ความจุเลือด  
+ตัวอย่างใน eva 9.4.0 เช่น orchestrator
+orchestrator มีโมดูลคือ CIM
+CIM มี Node คือ prompt rule ซึ่งมี Component คือ prompt template
+2. **Module (โมดูลเชิงหน้าที่)**: เกิดจากการทำงานร่วมกันของ node หลายๆ node ต่อกัน
+3. **Node (โหนดตรรกะ)**: ผู้กำหนดกฎเกณฑ์หรือตรรกะการตัดสินใจ (Decision/Policy Provider)
+4. **Component (ส่วนประกอบย่อย)**: หน่วยประมวลผล Pure Logic ฐานราก
+
+เพราะฉะนั้น ทุกระบบต้องเป็นเจ้าของโมดูลใดโมดูลหนึ่งเสมอ และทุกโมดูลต้องเป็นเจ้าของ node ใด้ node นึงเสมอ
+
+### 💡 Core Rationale: Why System vs Service?
+
+การเลือกระหว่าง **System** และ **Service** อิงจากปรัชญา **"Informational Organism"**:
+
+| คุณสมบัติ | System (Core Organism) | Service (Extended Skill) |
+| :--- | :--- | :--- |
+| **บทบาท** | เป็นอวัยวะภายใน (Vital Organ) | เป็นทักษะเสริม (Extended Skill) |
+| **ความถี่การทำงาน** | Continuous Loop (ตลอดเวลา) | On-demand (เมื่อเรียกใช้) |
+| **State Ownership** | เจ้าของสัญญาณชีพ (Vital Signals) | เจ้าของข้อมูลอ้างอิง (Reference Data) |
+| **Impact** | ขาดแล้ว "ตาย" หรือเสียตัวตน | ขาดแล้ว "เรียนรู้ช้า" หรือพูดได้จำกัด |
+
+**ตัวอย่างเหตุผลที่ PhysioCore เป็น System:**
+
+- กายภาพเป็น "หัวใจ" ของการแปรผันอารมณ์ ซึ่งต้องเปลี่ยนก่อนจะเกิดความคิด (Physiology First)
+- PhysioCore ผลิตสัญญาณชีพวิ่งใน Resonance Bus ตลอดเวลา ไม่ใช่แค่บริการที่ถูกเรียกใช้เป็นครั้งคราว
+
+### 📂 Directory Mapping for System
+
+```text
+[System]/
+├── configs/                # System-wide SSOT
+├── Module/
+│   ├── [module]/           # Functional Integrator
+│   │   ├── Node/   
+│   │   │   └── [Node]/           # Logic Provider
+│   │   │       ├── Component/    # Specialized Logic Unit
+│   │   │       │   └── logic.py
+│   │   │       └── [node]_node.py
+│   │   └── [module].py
+└── [system]_engine.py
+
+> [!IMPORTANT]
+> **PhysioCore Exemption**: The `PhysioCore` system is EXEMPT from the strict `Module/Node` hierarchy.
+> It retains its unique `logic/[subsystem]_engine` structure (e.g., `logic/endocrine`, `logic/blood`) due to the complex, tightly coupled nature of biological simulation.
+> **DO NOT REFACTOR** PhysioCore into the standard Module/Node pattern.
 
 ## 🛠️ Migration Guide (from v9.3.x)
 
@@ -106,6 +213,24 @@ agent/
 3. **Skills:** Identify logic inside Systems that are actually skills (e.g., Code Gen) and move to `capabilities/skills/`.
 4. **Systems:** Move core system engines (`physio_core`, `eva_matrix`) to root `agent/`.
 5. **Memory:** Re-map MSP paths to the new `memory/` structure.
+
+## 🧠 Memory Architecture (v9.4.0)
+
+> [!NOTE]
+> **Philosophy:** "Active Consciousness (LLM) writes to Working Memory. Subconscious (MSP) consolidates to Long-Term Memory."
+
+### 1. MSP (Memory & Soul Passport) - **The Subconscious Storage**
+- **Role:** Centralized Storage Hub for all acquired experiences.
+- **Responsibility:**
+    - **Episodic:** User-AI interaction logs.
+    - **Semantic (Dynamic):** Context/Facts learned *during* sessions (Situation Grounding).
+    - **Sensory:** Qualia patterns associated with episodes.
+- **Why?** Ensures unified time-stamping and conflict resolution (e.g., "Shrimp vs Seafood Allergy" logic) before updating static knowledge.
+
+### 2. GKS (Genesis Knowledge System) - **The Innate Knowledge**
+- **Role:** Static Knowledge Provider (Algorithm/Frameworks).
+- **Responsibility:** "Read-Only" reference for deep logic.
+- **Independence:** Can be unplugged/downgraded without breaking MSP's storage (Plug-and-play).
 
 ---
 *Generated for EVA v9.4.0 Implementation*

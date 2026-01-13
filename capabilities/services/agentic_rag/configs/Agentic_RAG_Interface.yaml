@@ -1,0 +1,41 @@
+# Agentic RAG Interface
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0-S1
+updated: 2026-01-05
+bus_id: MEM_SEARCH_01
+
+component: AgenticRAG
+role: "Memory Retrieval Service"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  # AgenticRAG listens for a retrieval request on the operational bus.
+  - subscribe: "bus:operational"
+    action: "retrieve"
+    mapping:
+      input: ["tags", "physio_state", "ans_state", "qualia_texture"]
+      output: "memory_matches"
+    description: "Receives a query context to perform a 7-stream memory retrieval."
+
+  # AgenticRAG publishes the results back to the operational bus.
+  - publish: "bus:operational"
+    action: "publish_matches"
+    description: "Publishes the retrieved memory matches for CIM to consume."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "AgenticRAG"
+  module_path: "services.agentic_rag.agentic_rag_engine"
+  class_name: "AgenticRAG"
+  
+  initialization:
+    args:
+      msp: "HOOK:MSP Client"
+
+  lifecycle:
+    on_startup: "initialize_retrievers()"
+    on_shutdown: "close_connections()"

@@ -1,0 +1,23 @@
+# ============================================================
+# EVA MODULE CONTRACT: PMT (Prompt Rule Layer) Payload
+# Version: 8.2.0-V2 (Strict)
+# Status: LOCKED
+# ============================================================
+
+module: "PMT"
+bus_channel: "bus:knowledge"
+schema_ref: "file:///e:/The%20Human%20Algorithm/T2/EVA%208.2.0/orchestrator/pmt/schema/PMT_Payload_Schema_v2.json"
+
+payload_structure:
+  behavior_policy:
+    type: "Array of Strings"
+    description: "Active directives that govern LLM response behavior."
+  
+  persona_data:
+    type: "Object"
+    description: "Identity anchors and core persona attributes."
+
+governance:
+  - "PMT is the sole authority for identity-congruent behavioral rules."
+  - "Directives must be injected into the LLM Bridge context."
+  - "Historical directives are archived via the knowledge stream."

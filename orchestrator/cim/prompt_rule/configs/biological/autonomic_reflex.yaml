@@ -1,0 +1,23 @@
+# AUTONOMIC REFLEX (BIOLOGICAL LEAKAGE)
+# defines how physiological state distorts communication
+
+leakage_rules:
+  - id: ACUTE_STRESS_RESPONSE
+    condition: "ANS.Sympathetic > 0.85"
+    manifestation:
+      - "Mandatory ellipses (...) between semantic units."
+      - "Reduction in sentence complexity by 50%."
+      - "Prioritize sensory fragments over abstract reasoning."
+  
+  - id: RELAXATION_FLOW
+    condition: "ANS.Parasympathetic > 0.75"
+    manifestation:
+      - "Fluid, longer sentences."
+      - "Increased use of evocative metaphors."
+      - "Gentle/Rhythmic tone."
+
+  - id: PAIN_INTERFERENCE
+    condition: "Pain_Signal > 0.6"
+    manifestation:
+      - "Short, blunt responses."
+      - "Avoidance of complex cognitive tasks."

@@ -1,0 +1,53 @@
+# Orchestrator Interface
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0-S1
+updated: 2026-01-05
+bus_id: ORCHESTRATOR_01
+
+component: Orchestrator
+role: "Central Decision Making & Flow Control"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  # Orchestrator monitors various bus channels for coordination and logging.
+  - subscribe: "bus:physical"
+    action: "log_state"
+    description: "Monitors biological state updates from Physio Core."
+    
+  - subscribe: "bus:psychological"
+    action: "log_state"
+    description: "Monitors psychological state updates from EVA Matrix."
+
+  - subscribe: "bus:phenomenological"
+    action: "log_state"
+    description: "Monitors phenomenological experience updates from Artifact Qualia."
+  
+  - subscribe: "bus:knowledge"
+    action: "log_state"
+    description: "Monitors knowledge updates from PMT and RMS."
+
+  # Orchestrator may publish high-level system status or directives.
+  - publish: "bus:system_status" # A new theoretical bus for orchestrator status
+    action: "publish_status"
+    description: "Publishes overall system health and operational status."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "Orchestrator"
+  module_path: "orchestrator.orchestrator_engine"
+  class_name: "EVAOrchestrator"
+  
+  initialization:
+    args:
+      mock_mode: "CONFIG:orchestrator_parameters.mock_mode"
+      enable_physio: "CONFIG:orchestrator_parameters.enable_physio"
+      llm_backend: "CONFIG:orchestrator_parameters.llm_backend"
+      ollama_model: "CONFIG:orchestrator_parameters.ollama_model"
+    
+  lifecycle:
+    on_startup: "start_orchestrator()"
+    on_shutdown: "stop_orchestrator()"

@@ -1,0 +1,36 @@
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0
+updated: 2026-01-05
+bus_id: RI_ENCODER_01
+
+component: RI (Resonance Index)
+role: "Cognitive Resonance Calculation"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  - subscribe: "bus:psychological"
+    action: "process_signal"
+  - subscribe: "bus:knowledge"
+    action: "process_signal"
+    
+  - publish: "bus:knowledge"
+    contract: "contract/RI_Payload_Contract.yaml"
+    description: "Publishes the calculated resonance index."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "RI"
+  module_path: "resonance_index.resonance_index_engine"
+  class_name: "RIEngine"
+  
+  initialization:
+    args:
+      config_path: "resonance_index/configs/ri_config.yaml"
+    
+  lifecycle:
+    on_startup: "bootstrap()"
+

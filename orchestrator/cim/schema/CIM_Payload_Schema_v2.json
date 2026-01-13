@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EVA CIM Output Payload Schema V2",
+    "description": "Strict specification for context payloads published to bus:operational by the Context Injection Node (CIM) in EVA 8.2.0 Architecture.",
+    "type": "object",
+    "required": [
+        "context_id",
+        "timestamp",
+        "state_hash_ref",
+        "payload_type",
+        "payload"
+    ],
+    "properties": {
+        "context_id": {
+            "type": "string",
+            "pattern": "^ctx_v8_",
+            "description": "The unique ID for the entire interaction turn."
+        },
+        "timestamp": {
+            "type": "number",
+            "description": "Unix timestamp of the context publication."
+        },
+        "state_hash_ref": {
+            "type": "string",
+            "pattern": "^S1-",
+            "description": "Hash of the system state this payload refers to."
+        },
+        "payload_type": {
+            "type": "string",
+            "enum": ["perception_context", "reasoning_context", "validated_stimulus"],
+            "description": "The type of payload being published."
+        },
+        "payload": {
+            "type": "object",
+            "description": "The actual context payload, structure depends on payload_type."
+        }
+    },
+    "additionalProperties": false
+}

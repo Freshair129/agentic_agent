@@ -1,0 +1,109 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EVA Physio Core Output Payload Schema",
+    "description": "Strict specification for biological signals published to bus:physical in EVA 8.2.0 Architecture.",
+    "type": "object",
+    "required": [
+        "ans_state",
+        "blood_levels",
+        "timestamp",
+        "state_hash_ref"
+    ],
+    "properties": {
+        "timestamp": {
+            "type": "number",
+            "description": "Unix timestamp of the biological step."
+        },
+        "state_hash_ref": {
+            "type": "string",
+            "pattern": "^S1-",
+            "description": "Hash of the system state this payload refers to."
+        },
+        "ans_state": {
+            "type": "object",
+            "required": [
+                "sympathetic",
+                "parasympathetic",
+                "balance",
+                "dominance"
+            ],
+            "properties": {
+                "sympathetic": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "parasympathetic": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "balance": {
+                    "type": "number",
+                    "description": "Ratio or difference between S/P"
+                },
+                "dominance": {
+                    "type": "string",
+                    "enum": [
+                        "sympathetic",
+                        "parasympathetic",
+                        "neutral"
+                    ]
+                }
+            }
+        },
+        "blood_levels": {
+            "type": "object",
+            "patternProperties": {
+                "^ESC_[H|N|P]\\d{2}_[A-Z]+$": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            },
+            "description": "Hormone concentrations indexed by ESC IDs (e.g., ESC_H01_ADRENALINE)."
+        },
+        "receptor_signals": {
+            "type": "object",
+            "properties": {
+                "amygdala": {
+                    "type": "number"
+                },
+                "prefrontal_cortex": {
+                    "type": "number"
+                },
+                "hippocampus": {
+                    "type": "number"
+                },
+                "ventral_striatum": {
+                    "type": "number"
+                }
+            }
+        },
+        "reflex_vector": {
+            "type": "object",
+            "properties": {
+                "freeze": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "flee": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "fight": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "approach": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

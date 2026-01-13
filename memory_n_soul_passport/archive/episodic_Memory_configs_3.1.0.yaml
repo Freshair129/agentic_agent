@@ -1,0 +1,307 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: EVA-Episodic-Memory-v2.1
+version: 3.1.0
+description: >
+  Canonical episodic memory schema for EVA.
+  MSP is the single write authority.
+  LLM contributes annotations only via defined namespaces.
+  for EVA 9.2.0.
+
+type: object
+required:
+  - persona_id
+  - persona_name
+  - user_id
+  - memory_version
+  - instance_id
+  - session_id
+  - timestamp
+  - episodes
+
+properties:
+
+  # --------------------------------------------------
+  # Identity & Session Metadata (MSP-only)
+  # --------------------------------------------------
+  persona_id:
+    type: string
+    description: Stable persona identifier (MSP).
+
+  persona_name:
+    type: string
+    description: Human-readable persona name (MSP).
+
+  user_id:
+    type: string
+    description: User identifier (MSP).
+
+  memory_version:
+    type: string
+    description: Episodic memory format version (MSP).
+
+  instance_id:
+    type: string
+    description: EVA runtime instance id (MSP).
+
+  session_id:
+    type: string
+    description: Session identifier (MSP).
+
+  timestamp:
+    type: string
+    format: date-time
+    description: File creation timestamp (MSP).
+
+  # --------------------------------------------------
+  # Episodes Container
+  # --------------------------------------------------
+  episodes:
+    type: array
+    description: Ordered episodic records (append-only).
+    items:
+      $ref: "#/definitions/episode"
+
+# ==================================================
+# DEFINITIONS
+# ==================================================
+definitions:
+
+  # --------------------------------------------------
+  # Episode (Single Event)
+  # --------------------------------------------------
+  episode:
+    type: object
+    required:
+      - episode_id
+      - episode_type
+      - situation_context
+      - turns
+      - state_trace
+
+    properties:
+
+      episode_id:
+        type: string
+        description: Unique episodic identifier (MSP).
+
+      episode_schema_version:
+        type: string
+        description: Schema version used for this episode.
+
+      episode_type:
+        type: string
+        enum:
+          - interaction
+          - synthesis
+          - meta_cognition
+          - system_event
+        description: High-level episode category (LLM classified, MSP stored).
+
+      # ----------------------------------------------
+      # LLM-only Interpretive Layer
+      # ----------------------------------------------
+      llm_annotations:
+        type: object
+        description: >
+          Interpretive annotations produced by LLM.
+          Not authoritative facts.
+        properties:
+          episode_tag:
+            type: string
+            description: High-level semantic tag.
+          event_label:
+            type: string
+            description: Natural language label summarizing the event.
+          crosslinks:
+            $ref: "#/definitions/crosslinks"
+
+      # ----------------------------------------------
+      # Situation Context (LLM → MSP validated)
+      # ----------------------------------------------
+      situation_context:
+        type: object
+        required:
+          - context_id
+          - interaction_mode
+          - stakes_level
+          - time_pressure
+        properties:
+          context_id:
+            type: string
+            description: Context identifier injected by CIN.
+          interaction_mode:
+            type: string
+            enum:
+              - small_talk
+              - casual
+              - deep_discussion
+              - conflict
+              - instruction
+              - meta
+          stakes_level:
+            type: string
+            enum: [low, medium, high]
+          time_pressure:
+            type: string
+            enum: [low, medium, high]
+
+      # ----------------------------------------------
+      # Turns (Future-proof, ordered)
+      # ----------------------------------------------
+      turns:
+        type: array
+        minItems: 1
+        description: >
+          Ordered conversational or system turns.
+          Backward-compatible with legacy turn_1 / turn_2.
+        items:
+          oneOf:
+            - $ref: "#/definitions/turn_user"
+            - $ref: "#/definitions/turn_eva"
+            - $ref: "#/definitions/turn_system"
+
+      # ----------------------------------------------
+      # State Trace (Lightweight, Episodic-Level)
+      # ----------------------------------------------
+      state_trace:
+        type: object
+        description: >
+          Lightweight trace for retrieval and salience.
+          Full state lives in physio / RMS subsystems.
+        required:
+          - stress_load
+          - resonance_index
+          - memory_encoding_level
+        properties:
+          stress_load:
+            type: number
+            minimum: 0
+            maximum: 1
+          resonance_index:
+            type: number
+          memory_encoding_level:
+            type: string
+            enum:
+              - L0_trace
+              - L1_light
+              - L2_standard
+              - L3_deep
+              - L4_trauma
+          threat_level:
+            type: number
+
+      # ----------------------------------------------
+      # Integrity & Provenance (Audit-grade)
+      # ----------------------------------------------
+      integrity:
+        type: object
+        properties:
+          checksum:
+            type: string
+          algorithm:
+            type: string
+
+      provenance:
+        type: object
+        properties:
+          written_by:
+            type: string
+            enum: [MSP]
+          llm_model:
+            type: string
+          pipeline_version:
+            type: string
+
+  # --------------------------------------------------
+  # Turn Definitions
+  # --------------------------------------------------
+  turn_user:
+    type: object
+    required: [speaker]
+    properties:
+      turn_id:
+        type: string
+      speaker:
+        type: string
+        enum: [user, system, unknown]
+      raw_text:
+        type: string
+      summary:
+        type: string
+      affective_inference:
+        type: object
+        properties:
+          emotion_signal:
+            type: string
+          intensity:
+            type: number
+          confidence:
+            type: number
+      semantic_frames:
+        type: array
+        items:
+          type: string
+      salience_anchors:
+        type: array
+        items:
+          $ref: "#/definitions/salience_anchor"
+
+  turn_eva:
+    type: object
+    required: [speaker]
+    properties:
+      turn_id:
+        type: string
+      speaker:
+        type: string
+        enum: [eva]
+      text_excerpt:
+        type: string
+      summary:
+        type: string
+      epistemic_mode:
+        type: string
+        enum: [explore, hypothesize, assert, caution, reflect]
+      confidence:
+        type: number
+      salience_anchors:
+        type: array
+        items:
+          $ref: "#/definitions/salience_anchor"
+
+  turn_system:
+    type: object
+    required: [speaker]
+    properties:
+      speaker:
+        type: string
+        enum: [system]
+      event:
+        type: string
+
+  # --------------------------------------------------
+  # Shared Utility Objects
+  # --------------------------------------------------
+  salience_anchor:
+    type: object
+    properties:
+      phrase:
+        type: string
+      resonance_impact:
+        type: number
+
+  crosslinks:
+    type: object
+    properties:
+      semantic_refs:
+        type: array
+        items: { type: string }
+      sensory_refs:
+        type: array
+        items: { type: string }
+      gks_refs:
+        type: array
+        items: { type: string }
+      aqi_refs:
+        type: array
+        items: { type: string }

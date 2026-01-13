@@ -1,0 +1,34 @@
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0
+updated: 2026-01-05
+bus_id: RIM_MULTIPLIER_01
+
+component: RIM (Resonance Impact)
+role: "Physiological Impact Multiplier Calculation"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  - subscribe: "bus:knowledge"
+    action: "process_ri"
+    
+  - publish: "bus:physical"
+    contract: "contract/RIM_Payload_Contract.yaml"
+    description: "Publishes physiological multipliers based on RI."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "RIM"
+  module_path: "resonance_impact.resonance_impact_engine"
+  class_name: "RIMEngine"
+  
+  initialization:
+    args:
+      config_path: "resonance_impact/configs/rim_config.yaml"
+    
+  lifecycle:
+    on_startup: "bootstrap()"
+

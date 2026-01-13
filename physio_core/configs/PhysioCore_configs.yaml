@@ -1,0 +1,189 @@
+# ============================================================
+# EVA PhysioCore Configuration
+# Unified Source of Truth (SSOT)
+# version: 9.1.0-C1 (Consolidated)
+# ============================================================
+
+schema: EVA-PhysioCore-Configs-v9.1
+version: 9.1.0-C1
+updated: "2026-01-12"
+
+# ------------------------------------------------------------
+# 1. Global System Settings
+# ------------------------------------------------------------
+global:
+  module_name: "PhysioCore"
+  role: "Biological Simulation Engine"
+  time_unit: "seconds"
+  update_rate_hz: 30.0
+  max_dt_sec: 0.2
+  deterministic: true
+
+# ------------------------------------------------------------
+# 2. Model Parameters (External References)
+# ------------------------------------------------------------
+model_parameters:
+  hormone_specs: "hormone_spec_ml.yaml"  # Large chemical database
+
+# ------------------------------------------------------------
+# 3. Subsystem Configurations
+# ------------------------------------------------------------
+subsystems:
+
+  # ==========================================================
+  # 3.1 Blood & Circulation
+  # ==========================================================
+  blood:
+    total_volume_ml: 5000
+    
+    compartments:
+      arterial: { volume_fraction: 0.15, compliance: 1.5, resistance: 1.0 }
+      capillary: { volume_fraction: 0.10, compliance: 4.0, resistance: 3.0 }
+      venous: { volume_fraction: 0.75, compliance: 20.0, resistance: 0.5 }
+
+    hemodynamics:
+      heart_rate_bpm: 70
+      stroke_volume_ml: 70
+      cardiac_output_l_min: 5.0
+      blood_viscosity: { baseline: 1.0, dehydration_factor: 1.3, anemia_factor: 0.7 }
+
+    hormone_transport:
+      distribution_volume_ml: 5000
+      mixing_model: "instant_plasma"
+      clearance: { mode: "half_life", lazy_decay: true }
+
+    plasma_proteins:
+      albumin: { concentration_g_dl: 4.0 }
+      shbg: { concentration_nmol_l: 30 }
+      cbg: { concentration_nmol_l: 35 }
+      
+    binding:
+      testosterone: { albumin_kd: 0.6, shbg_kd: 1.0 }
+      cortisol: { albumin_kd: 0.7, cbg_kd: 0.8 }
+
+  # ==========================================================
+  # 3.2 Autonomic Nervous System (ANS)
+  # ==========================================================
+  autonomic:
+    smoothing: { alpha_sympathetic: 0.2, alpha_parasympathetic: 0.1 }
+    balance_sensitivity: 1.0
+
+    hormone_weights:
+      # Sympathetic Drivers
+      ESC_H01_ADRENALINE: { sympathetic: 0.95, parasympathetic: 0.0 }
+      ESC_N01_NORADRENALINE: { sympathetic: 0.85, parasympathetic: 0.0 }
+      ESC_H02_CORTISOL: { sympathetic: 0.60, parasympathetic: 0.05 }
+      ESC_N02_DOPAMINE: { sympathetic: 0.50, parasympathetic: 0.0 }
+      ESC_H06_TESTOSTERONE: { sympathetic: 0.40, parasympathetic: 0.0 }
+      
+      # Parasympathetic Drivers
+      ESC_H04_OXYTOCIN: { sympathetic: 0.0, parasympathetic: 0.80 }
+      ESC_N05_GABA: { sympathetic: -0.2, parasympathetic: 0.90 }
+      ESC_N03_SEROTONIN: { sympathetic: -0.1, parasympathetic: 0.50 }
+      ESC_N04_ENDORPHIN: { sympathetic: -0.3, parasympathetic: 0.60 }
+      ESC_H14_MELATONIN: { sympathetic: -0.5, parasympathetic: 0.70 }
+
+    reflex_integration:
+      enabled: true
+      mappings:
+        threat_surge: { target: "sympathetic", gain: 0.8 }
+        startle_surge: { target: "sympathetic", gain: 1.0 }
+        freeze_reflex: { target: "sympathetic", gain: 0.5, secondary_target: "parasympathetic", secondary_gain: 0.5 }
+
+  # ==========================================================
+  # 3.3 Endocrine Regulation (HPA / Circadian)
+  # ==========================================================
+  endocrine_regulation:
+    HPA_axis:
+      enabled: true
+      dynamics:
+        hypothalamus: { input: { stress_signal: 1.0, uncertainty: 0.6, safety_signal: -0.8 }, gain: 1.0, baseline: 0.1 }
+        pituitary: { gain: 0.9, latency_sec: 60.0 }
+        adrenal: { gain: 1.0, latency_sec: 300.0 }
+      negative_feedback:
+        cortisol_inhibition: { source: "COR", threshold: 1.0, strength: 0.7, curve: "sigmoid" }
+      output: { hormone: "COR", apply_to: "stimulus_modifier", weight: 1.0 }
+
+    circadian:
+      enabled: true
+      clock: { period_hours: 24.0, phase_reference: "local_time" }
+      zeitgebers:
+        light:
+          daylight: { gain: 1.0 }
+          darkness: { gain: -1.0 }
+          blue_light: { gain: -1.2 }
+        activity:
+          active: 0.3
+          inactive: -0.2
+      hormone_modulation:
+        MEL: { night_peak: { start_hour: 21, end_hour: 6, amplitude: 1.0 }, daylight_suppression: -1.0 }
+        COR: { morning_peak: { start_hour: 6, end_hour: 9, amplitude: 0.6 }, evening_suppression: -0.3 }
+        GH: { deep_night_window: { start_hour: 23, end_hour: 3, amplitude: 0.8 } }
+
+  # ==========================================================
+  # 3.4 Receptors & Transduction
+  # ==========================================================
+  receptors:
+    receptor_mapping:
+      ESC_H01_ADRENALINE:
+        Amygdala: { kd: 45.0, hill_n: 2.2, bmax: 1.0, efficacy: 1.0 }
+        Prefrontal_Cortex: { kd: 60.0, hill_n: 1.8, bmax: 0.8, efficacy: 0.9 }
+      ESC_H02_CORTISOL:
+        Amygdala: { kd: 120.0, hill_n: 1.2, bmax: 0.9, efficacy: 1.0 }
+        Hippocampus: { kd: 150.0, hill_n: 1.0, bmax: 0.7, efficacy: 0.8 }
+      ESC_N01_NORADRENALINE:
+        Amygdala: { kd: 60.0, hill_n: 1.8, bmax: 1.0, efficacy: 1.0 }
+        Locus_Coeruleus: { kd: 50.0, hill_n: 2.0, bmax: 0.9, efficacy: 1.0 }
+      ESC_N02_DOPAMINE:
+        VTA: { kd: 80.0, hill_n: 1.5, bmax: 1.0, efficacy: 1.0 }
+        Nucleus_Accumbens: { kd: 70.0, hill_n: 1.6, bmax: 1.0, efficacy: 1.0 }
+        Prefrontal_Cortex: { kd: 100.0, hill_n: 1.3, bmax: 0.8, efficacy: 0.9 }
+      ESC_N03_SEROTONIN:
+        Raphe_Nucleus: { kd: 150.0, hill_n: 1.1, bmax: 0.8, efficacy: 1.0 }
+        Prefrontal_Cortex: { kd: 180.0, hill_n: 1.0, bmax: 0.7, efficacy: 0.8 }
+        Amygdala: { kd: 200.0, hill_n: 1.0, bmax: 0.6, efficacy: -0.5 }
+      ESC_H04_OXYTOCIN:
+        Hypothalamus: { kd: 300.0, hill_n: 1.0, bmax: 1.0, efficacy: 1.0 }
+        Amygdala: { kd: 350.0, hill_n: 1.0, bmax: 0.8, efficacy: -0.6 }
+        Nucleus_Accumbens: { kd: 320.0, hill_n: 1.1, bmax: 0.9, efficacy: 0.8 }
+      ESC_H05_VASOPRESSIN:
+        Hypothalamus: { kd: 250.0, hill_n: 1.3, bmax: 0.9, efficacy: 1.0 }
+        Amygdala: { kd: 280.0, hill_n: 1.2, bmax: 0.7, efficacy: 0.7 }
+      ESC_N05_GABA:
+        Amygdala: { kd: 250.0, hill_n: 1.4, bmax: 0.9, efficacy: -1.0 }
+        Prefrontal_Cortex: { kd: 270.0, hill_n: 1.3, bmax: 0.8, efficacy: -0.8 }
+        Hippocampus: { kd: 300.0, hill_n: 1.2, bmax: 0.7, efficacy: -0.7 }
+      ESC_H14_MELATONIN:
+        Suprachiasmatic_Nucleus: { kd: 100.0, hill_n: 2.0, bmax: 1.0, efficacy: 1.0 }
+        Pineal_Gland: { kd: 90.0, hill_n: 2.1, bmax: 0.9, efficacy: 1.0 }
+      ESC_N06_ADENOSINE:
+        Basal_Forebrain: { kd: 700.0, hill_n: 1.6, bmax: 1.0, efficacy: -0.9 }
+        Prefrontal_Cortex: { kd: 750.0, hill_n: 1.5, bmax: 0.8, efficacy: -0.7 }
+      ESC_N04_ENDORPHIN:
+        Periaqueductal_Gray: { kd: 200.0, hill_n: 1.4, bmax: 1.0, efficacy: 1.0 }
+        Amygdala: { kd: 250.0, hill_n: 1.3, bmax: 0.8, efficacy: -0.5 }
+
+  # ==========================================================
+  # 3.5 Reflexes (Fast Path)
+  # ==========================================================
+  reflex:
+    tuning:
+      Gain_Factor: 2.5
+      Saturation_Cutoff: 1.2
+      Reflex_Decay_Rate: 0.9
+      Inhibition_Threshold: 0.05
+
+    pathway_mapping:
+      - { path_id: "AFFILIATION_FAST", stimulus_type: "praise", target_receptor: "ESC_H04_OXYTOCIN", gain_modifier: 1.5 }
+      - { path_id: "VALIDATION_FAST", stimulus_type: "validation", target_receptor: "ESC_H04_OXYTOCIN", gain_modifier: 1.5 }
+      - { path_id: "REWARD_SURGE", stimulus_type: "success", target_receptor: "ESC_N02_DOPAMINE", gain_modifier: 2.0 }
+      - { path_id: "ACHIEVEMENT_SURGE", stimulus_type: "achievement", target_receptor: "ESC_N02_DOPAMINE", gain_modifier: 2.0 }
+      - { path_id: "FIGHT_OR_FLIGHT_FAST", stimulus_type: "threat", target_receptor: "ESC_H01_ADRENALINE", gain_modifier: 3.5 }
+      - { path_id: "INSULT_FAST", stimulus_type: "insult", target_receptor: "ESC_H01_ADRENALINE", gain_modifier: 3.5 }
+      - { path_id: "ALERT_SIGNAL", stimulus_type: "uncertainty", target_receptor: "ESC_N01_NORADRENALINE", gain_modifier: 1.8 }
+      - { path_id: "SOCIAL_PAIN_REFLEX", stimulus_type: "rejection", target_receptor: "ESC_H16_PROLACTIN", gain_modifier: 1.2 }
+      - { path_id: "STRESS_INJECTION", stimulus_type: "conflict", target_receptor: "ESC_H02_CORTISOL", gain_modifier: 1.0 }
+
+# ============================================================
+# End of Unified Configuration
+# ============================================================

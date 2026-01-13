@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EVA Agentic RAG Output Payload Schema V2",
+    "description": "Strict specification for memory retrieval payloads published to bus:operational by Agentic RAG in EVA 8.2.0 Architecture.",
+    "type": "object",
+    "required": [
+        "memory_matches",
+        "timestamp",
+        "state_hash_ref"
+    ],
+    "properties": {
+        "timestamp": {
+            "type": "number",
+            "description": "Unix timestamp of the memory retrieval event."
+        },
+        "state_hash_ref": {
+            "type": "string",
+            "pattern": "^S1-",
+            "description": "Hash of the system state this payload refers to."
+        },
+        "memory_matches": {
+            "type": "array",
+            "description": "An array of memory match objects from the 7 streams.",
+            "items": {
+                "type": "object",
+                "required": ["episode_id", "content", "score", "stream_source"],
+                "properties": {
+                    "episode_id": {
+                        "type": "string",
+                        "pattern": "^EVA_EP",
+                        "description": "The unique ID of the retrieved memory episode."
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "The textual content of the memory."
+                    },
+                    "score": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "description": "The final weighted relevance score of the memory match."
+                    },
+                    "stream_source": {
+                        "type": "string",
+                        "enum": ["emotion", "narrative", "salience", "sensory", "temporal", "intuition", "reflection"],
+                        "description": "The Hept-Stream from which this memory was retrieved."
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "properties": {
+                            "timestamp": { "type": "number" },
+                            "resonance_index": { "type": "number" },
+                            "tags": { "type": "array", "items": { "type": "string" } },
+                            "physio_snapshot": { "type": "object" }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

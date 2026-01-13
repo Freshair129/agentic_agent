@@ -1,0 +1,52 @@
+# Context Injection Module (CIM) Interface
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0-S1
+updated: 2026-01-05
+bus_id: ORCH_CIM_01
+
+component: CIM
+role: "Orchestration, Context Builder & Stimulus Normalizer"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  # CIM listens to all latching streams to build a comprehensive world model for the LLM.
+  - subscribe: "bus:physical"
+    action: "update_context"
+    description: "Receives biological signals from Physio Core for context building."
+    
+  - subscribe: "bus:psychological"
+    action: "update_context"
+    description: "Receives psychological state from EVA Matrix for context building."
+
+  - subscribe: "bus:phenomenological"
+    action: "update_context"
+    description: "Receives phenomenological experience from Artifact Qualia for context building."
+  
+  - subscribe: "bus:knowledge"
+    action: "update_context"
+    description: "Receives memory and knowledge updates from other systems."
+
+  # CIM publishes operational contexts for the LLM.
+  - publish: "bus:operational"
+    action: "publish_context"
+    description: "Publishes Phase 1 (Perception) and Phase 2 (Reasoning) contexts for the LLM to consume."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "CIM"
+  module_path: "orchestrator.cim.cim_engine"
+  class_name: "ContextInjectionModule"
+  
+  initialization:
+    args:
+      base_path: "ROOT"
+      msp: "HOOK:MSP Client"
+      physio_controller: "HOOK:PhysioController"
+    
+  lifecycle:
+    on_startup: "load_configs()"
+    on_shutdown: "clear_cache()"

@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "CIN_Output_Schema",
+    "description": "Schema for data sent from CIN to the Main Orchestrator (Dual-Phase Results)",
+    "type": "object",
+    "required": [
+        "phase_1_perception_bootstrap",
+        "phase_2_reasoning_deep_context",
+        "turn_context_lifecycle"
+    ],
+    "properties": {
+        "phase_1_perception_bootstrap": {
+            "type": "object",
+            "description": "Output for preliminary intuition prompt."
+        },
+        "phase_2_reasoning_deep_context": {
+            "type": "object",
+            "description": "Output for deep reasoning prompt."
+        },
+        "turn_context_lifecycle": {
+            "type": "object",
+            "description": "Compiled 3-stage metadata for MSP persistence."
+        }
+    },
+    "additionalProperties": false
+}

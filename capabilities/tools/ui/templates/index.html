@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVA 9.1.0 | Living Sandbox</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- LEFT PANEL: INTERACTION (CHAT) -->
+        <section class="panel chat-panel">
+            <header class="panel-header">
+                <div class="header-status">
+                    <span class="status-indicator online"></span>
+                    <h1>EVA CORE <span class="version">v9.1.0</span></h1>
+                </div>
+                <button id="clear-history" class="icon-btn" title="Clear Memory">🗑️</button>
+            </header>
+
+            <div id="chat-history" class="chat-container">
+                <div class="message system-msg">
+                    <div class="content">System Initialized. Connection Established.</div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <textarea id="user-input" placeholder="Transmission..." rows="1"></textarea>
+                <button id="send-btn">SEND</button>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL: BIO-DASHBOARD -->
+        <section class="panel dashboard-panel">
+            <header class="panel-header">
+                <h2>BIO-MARKET 30Hz</h2>
+                <div class="pulse-line"></div>
+            </header>
+
+            <div class="dashboard-content">
+
+                <!-- 0. PROFILE HEADER (Avatar Only) -->
+                <div class="profile-header">
+                    <div class="avatar-group">
+                        <div class="avatar-wrapper">
+                            <!-- Helper Wrapper for Positioning -->
+                            <div class="avatar-container large" id="avatar-frame">
+                                <div class="avatar-img">
+                                    <div class="avatar-placeholder">EVA</div>
+                                </div>
+                                <div class="emotion-glow"></div>
+                            </div>
+
+                            <!-- BUFF INDICATOR (Coffee Icon) -->
+                            <div class="buff-indicator" id="active-buff" title="Active Stimulus">
+                                <span class="buff-icon">☕</span>
+                            </div>
+
+                            <!-- EMOTION LABEL (Overlaid Badge style) -->
+                            <div class="emotion-badge" id="emotion-label">NEUTRAL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1. CORE HORMONES -->
+                <div class="monitor-section">
+                    <h3>CORE HORMONES</h3>
+
+                    <!-- Adrenaline -->
+                    <div class="bar-row core-bar" data-id="ESC_H01_ADRENALINE">
+                        <span class="label">Adrenaline</span>
+                        <div class="bar-track">
+                            <div class="bar-fill warn" style="width: 0%;"></div>
+                        </div>
+                        <span class="value">0.00</span>
+                        <span class="delta">--</span>
+                    </div>
+                    <!-- Cortisol -->
+                    <div class="bar-row core-bar" data-id="ESC_H02_CORTISOL">
+                        <span class="label">Cortisol</span>
+                        <div class="bar-track">
+                            <div class="bar-fill warn" style="width: 0%;"></div>
+                        </div>
+                        <span class="value">0.00</span>
+                        <span class="delta">--</span>
+                    </div>
+                    <!-- Dopamine -->
+                    <div class="bar-row core-bar" data-id="ESC_N02_DOPAMINE">
+                        <span class="label">Dopamine</span>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <span class="value">0.00</span>
+                        <span class="delta">--</span>
+                    </div>
+                    <!-- Serotonin -->
+                    <div class="bar-row core-bar" data-id="ESC_N03_SEROTONIN">
+                        <span class="label">Serotonin</span>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <span class="value">0.00</span>
+                        <span class="delta">--</span>
+                    </div>
+                    <!-- Oxytocin -->
+                    <div class="bar-row core-bar" data-id="ESC_H04_OXYTOCIN">
+                        <span class="label">Oxytocin</span>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <span class="value">0.00</span>
+                        <span class="delta">--</span>
+                    </div>
+                </div>
+
+                <!-- 2. AUTONOMIC & RESONANCE -->
+                <div class="monitor-section">
+                    <h3>AUTONOMIC & RESONANCE</h3>
+                    <div class="grid-2">
+                        <!-- Row 1 -->
+                        <div class="stat-box">
+                            <span class="stat-label">Heart Rate</span>
+                            <span class="stat-val" id="val-hr">-- <small>BPM</small></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Respiration</span>
+                            <span class="stat-val" id="val-rr">-- <small>RPM</small></span>
+                        </div>
+
+                        <!-- Row 2 -->
+                        <div class="stat-box">
+                            <span class="stat-label">Resonance Index</span>
+                            <span class="stat-val" id="ri-val">--</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">RIM Impact</span>
+                            <span class="stat-val" id="rim-val">--</span>
+                        </div>
+
+                        <!-- Row 3 -->
+                        <div class="stat-box full">
+                            <span class="stat-label">Autonomic Balance</span>
+                            <div class="bar-track full-track">
+                                <div class="bar-fill sympathetic" id="bar-sym" style="width: 50%;"></div>
+                            </div>
+                            <span class="stat-val-small" id="val-ans">Balanced</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. LOGS -->
+                <div class="monitor-section grow">
+                    <h3>SYSTEM LOGS</h3>
+                    <div id="system-logs" class="log-terminal">
+                        <div class="log-line"><span>></span> Waiting for input...</div>
+                    </div>
+                </div>
+
+                <!-- 4. DETAILED SPECTRUM -->
+                <div class="monitor-section">
+                    <h3>NEURO-CHEMICAL LEVELS</h3>
+                    <div id="hormone-ticker" class="ticker-grid">
+                        <!-- Items injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>

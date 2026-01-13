@@ -1,0 +1,436 @@
+# ============================================================
+# EVA Permission & Classification System
+# Authority Rules for System/Module/Node Hierarchy
+# Integrates: eva_final_boundary_spec.md (Memory Ownership)
+# Version: 9.3.4
+# Updated: 2026-01-13
+# ============================================================
+schema: EVA-Permission-v9
+version: 9.3.4
+
+description: >
+  Canonical ruleset for classifying entities into System, Central Module, Module, or Node.
+  Defines Bus authority, State ownership, and Slot creation rights.
+
+# ============================================================
+# 1. CLASSIFICATION CRITERIA
+# ============================================================
+classification_criteria:
+  system:
+    label: "System"
+    identity: "Who am I?"
+    description: "Vital organ with independent state and continuous runtime."
+    requirements:
+      bus_authority: true
+      state_ownership: true
+      continuous_runtime: true
+      slot_creation: true
+      parent: "root (eva/ or orchestrator/)"
+    examples:
+      - PhysioCore
+      - EVAMatrix
+      - ArtifactQualia
+      - MSP
+      - RMS
+    death_condition: "System ขาดไปแล้ว EVA 'ตาย' หรือเสียตัวตน"
+
+  central_module:
+    label: "Central Module (โมดูลกลาง)"
+    identity: "What do I provide to OS?"
+    description: "OS-adjacent module without dedicated parent system. Has limited Bus/Slot rights."
+    requirements:
+      bus_authority: "limited (ตามที่ OS อนุญาต)"
+      state_ownership: "optional (ไม่บังคับ)"
+      continuous_runtime: false
+      slot_creation: "root-level (สร้าง slot ที่ root ได้)"
+      parent: "operation_system/ or services/"
+    examples:
+      - AgenticRAG       # services/agentic_rag
+      - SLMBridge        # services/slm_bridge
+      - VectorBridge     # services/vector_bridge
+      - LLMBridge        # operation_system/llm_bridge
+    death_condition: "ขาดไปแล้ว 'ทำงานช้า' หรือ 'สูญเสียความสามารถบางอย่าง'"
+
+  module:
+    label: "Module"
+    identity: "What do I integrate?"
+    description: "Functional integrator within a parent System."
+    requirements:
+      bus_authority: false
+      state_ownership: false
+      continuous_runtime: false
+      slot_creation: false
+      parent: "Must have parent System"
+    examples:
+      - CIM              # orchestrator/cim (parent: Orchestrator)
+      - NexusMind        # eva/genesis_knowledge_system/nexus_mind (parent: GKS)
+      - APM              # eva/genesis_knowledge_system/archetypal_projection (parent: GKS)
+      - MLL              # eva/genesis_knowledge_system/meta_learning_loop (parent: GKS)
+    communication: "ต้องติดต่อผ่าน parent System เท่านั้น"
+
+  node:
+    label: "Node"
+    identity: "How do I enforce this?"
+    description: "Policy/logic provider within a Module or System."
+    requirements:
+      bus_authority: false
+      state_ownership: false
+      continuous_runtime: false
+      slot_creation: false
+      parent: "Must have parent Module or System"
+    examples:
+      - PRN              # orchestrator/cim/prompt_rule (parent: CIM)
+      - Temporal         # orchestrator/temporal (parent: Orchestrator)
+      - Grounding        # eva/genesis_knowledge_system/grounding (parent: GKS)
+    communication: "ต้องติดต่อผ่าน parent Module/System เท่านั้น"
+
+# ============================================================
+# 2. BUS AUTHORITY (Pub/Sub Rights)
+# ============================================================
+bus_authority:
+  rule: "Only Systems and approved Central Modules may subscribe/publish to Resonance Bus."
+  
+  full_authority:
+    - PhysioCore          # Publish → bus:physical
+    - EVAMatrix           # Publish → bus:psychological
+    - ArtifactQualia      # Publish → bus:phenomenological
+    - MSP                 # Subscribe → ALL buses
+    - RMS                 # Subscribe/Publish → bus:memory (ถ้ามี)
+    - Orchestrator        # Publish → bus:operational (ถ้ามี)
+
+  limited_authority:
+    description: "Central Modules may pub/sub only with explicit OS permission."
+    modules:
+      - AgenticRAG        # Subscribe → bus:knowledge (ถ้า OS อนุญาต)
+      - LLMBridge         # Publish → bus:llm_response (ถ้า OS อนุญาต)
+
+  no_authority:
+    description: "Modules and Nodes must communicate through their parent System."
+    entities:
+      - CIM
+      - NexusMind
+      - APM
+      - MLL
+      - PRN
+      - Temporal
+      - Grounding
+
+# ============================================================
+# 3. STATE OWNERSHIP (MSP Slot Rights)
+# ============================================================
+state_ownership:
+  rule: "Only Systems own persistent state slots in MSP."
+  
+  mandatory_state:
+    description: "These Systems MUST have state files in eva/consciousness/state_memory/"
+    systems:
+      - system: PhysioCore
+        state_file: physio_core_state.json
+        content: "Endocrine, ANS, Vitals"
+      
+      - system: EVAMatrix
+        state_file: eva_matrix_state.json
+        content: "9D Psychological Axes"
+      
+      - system: ArtifactQualia
+        state_file: artifact_qualia_state.json
+        content: "Tone, Intensity, Coherence"
+      
+      - system: RMS
+        state_file: rms_state.json
+        content: "Resonance Thresholds, Smoothing"
+      
+      - system: CIM
+        state_file: cim_state.json
+        content: "Context Stats, Turn Metadata"
+
+  optional_state:
+    description: "Central Modules may create state if needed."
+    modules:
+      - AgenticRAG        # อาจมี rag_state.json ถ้าต้องการ
+
+  no_state:
+    description: "Modules and Nodes do not own state."
+    entities:
+      - NexusMind         # ใช้ GKS Blocks (static data)
+      - APM               # ใช้ GKS Framework Blocks
+      - MLL               # ใช้ GKS Parameter Blocks
+      - PRN               # ใช้ Prompt Rule configs
+      - Temporal          # ใช้ Time Genesis Block
+      - Grounding         # ไม่มี State
+
+# ============================================================
+# 4. SLOT CREATION RIGHTS (Root-Level Storage)
+# ============================================================
+slot_creation:
+  rule: "Systems and Central Modules may create root-level slots (directories/files)."
+  
+  systems:
+    description: "Systems automatically have root slot rights."
+    examples:
+      - eva/consciousness/state_memory/physio_core_state.json
+      - eva/consciousness/state_memory/rms_state.json
+
+  central_modules:
+    description: "Central Modules may create slots at services/ or operation_system/ root."
+    examples:
+      - services/agentic_rag/rag_cache/
+      - services/vector_bridge/chroma_store/
+      - operation_system/llm_bridge/conversation_history/
+
+  modules_nodes:
+    description: "Modules/Nodes may NOT create root slots. Must use parent's namespace."
+    restriction: "ห้ามสร้าง slot ที่ root level"
+
+# ============================================================
+# 5. COMMUNICATION RULES
+# ============================================================
+communication_rules:
+  cross_system:
+    rule: "Systems communicate ONLY via Resonance Bus."
+    violation: "Direct function calls across Systems are FORBIDDEN."
+    example_violation: "Orchestrator calling NexusMind.__init__() directly"
+
+  system_to_module:
+    rule: "Parent System may call its child Modules directly."
+    allowed: "GKS Engine → NexusMind.process_insecurity_check()"
+
+  module_to_module:
+    rule: "Modules under SAME parent may call each other."
+    allowed: "NexusMind → APM.project_archetype() (both under GKS)"
+    forbidden: "NexusMind → Temporal (cross-system)"
+
+  central_module_isolation:
+    rule: "Central Modules are isolated unless OS explicitly routes requests."
+    allowed: "Orchestrator → AgenticRAG.retrieve_memory()"
+
+# ============================================================
+# 6. REGISTRY & ID MANAGEMENT
+# ============================================================
+registry_rules:
+  system_id:
+    format: "SYSTEM_*"
+    authority: "IdentityManager.py"
+    requirement: "Only Systems and Central Modules with Bus rights get SYSTEM_* ID."
+    examples:
+      - SYSTEM_PHYSIO
+      - SYSTEM_GKS
+      - SYSTEM_RAG        # Central Module with Bus rights
+
+  module_id:
+    format: "MODULE_* (optional)"
+    authority: "Not required in IdentityManager"
+    note: "Modules identified by their parent System + path"
+
+  node_id:
+    format: "NODE_* (optional)"
+    authority: "Not required in IdentityManager"
+    note: "Nodes identified by their parent Module/System + path"
+
+# ============================================================
+# 7. DECISION TREE (ใช้ตอบคำถาม "อันนี้ควรเป็นอะไร?")
+# ============================================================
+decision_tree:
+  question_1:
+    ask: "มีสิทธิ์ pub/sub กับ Resonance Bus หรือไม่?"
+    yes: "→ System หรือ Central Module"
+    no: "→ Module หรือ Node (ต่อคำถามถัดไป)"
+
+  question_2:
+    ask: "มี State ของตัวเอง (MSP slot) หรือไม่?"
+    yes: "→ System"
+    no: "→ ต่อคำถามถัดไป"
+
+  question_3:
+    ask: "มี parent System ที่ดูแลโดยตรง หรือไม่?"
+    yes: "→ Module (ถ้าประสานงาน) หรือ Node (ถ้าให้ logic)"
+    no: "→ Central Module (ทำงานตรงกับ OS)"
+
+  question_4:
+    ask: "ทำหน้าที่อะไร?"
+    integrate: "→ Module"
+    enforce: "→ Node"
+
+# ============================================================
+# 8. MEMORY DOMAIN OWNERSHIP (from eva_final_boundary_spec.md)
+# ============================================================
+memory_domains:
+  core_invariant: >
+    EVA owns lived memory.
+    MSP protects frozen memory.
+    No component may cross its boundary.
+
+  domain_ownership:
+    live_consciousness:
+      path: "eva/consciousness/"
+      owner: "EVA"
+      mutability: "Mutable"
+      authority: "EVA has absolute write authority"
+      scope:
+        - episodic_memory/
+        - semantic_memory/
+        - sensory_memory/
+        - session_memory/
+        - core_memory/
+        - sphere_memory/
+
+    context_storage:
+      path: "eva/memory/context_storage/"
+      owner: "CIM"
+      mutability: "Mutable (Turn-only)"
+      authority: "CIM manages working context buffers"
+
+    state_memory:
+      path: "eva/consciousness/state_memory/"
+      owner: "Systems (PhysioCore, Matrix, RMS, etc.)"
+      mutability: "Append-Only (JSONL for hot cache)"
+      authority: "Each System owns its state file"
+      format: "state_memory/{system}_state.json"
+
+    archival_memory:
+      path: "eva/memory/archival_memory/"
+      owner: "MSP"
+      mutability: "Immutable"
+      authority: "MSP is sole custodian of frozen archives"
+      flow: "One-way from Consciousness → Archive (irreversible)"
+
+  ownership_rules:
+    - "Ownership is absolute and must never be inferred implicitly."
+    - "Memory flows forward only (no reverse write)."
+    - "MSP never writes to eva/consciousness/"
+    - "EVA never modifies eva/memory/archival_memory/"
+    - "LLM has full R/W access to eva/consciousness/ (all layers)"
+    - "LLM has NO access to eva/memory/archival_memory/"
+
+  llm_domain_access:
+    description: "LLM is the primary actor for EVA's lived experience"
+    
+    eva_consciousness:
+      path: "eva/consciousness/*"
+      read: true
+      write: true
+      modify: true
+      mechanism: "Via propose_episodic_memory and context injection"
+      scope:
+        - episodic_memory/
+        - semantic_memory/
+        - sensory_memory/
+        - session_memory/
+        - core_memory/
+        - sphere_memory/
+        - user_profile/
+      note: "Full R/W access to EVA's lived experience"
+    
+    eva_consciousness_indexes:
+      path: "eva/consciousness/indexes/*"
+      read: true
+      write: false
+      modify: false
+      note: "Auto-generated indices (MSP managed)"
+    
+    eva_context_storage:
+      path: "eva/memory/context_storage/"
+      read: true
+      write: true
+      modify: true
+      note: "Working memory for current turn"
+    
+    eva_system_state:
+      path: "eva/system_state/*"
+      read: true
+      write: false
+      modify: false
+      owner: "Systems (PhysioCore, Matrix, RMS, CIM, AQI)"
+      note: "System-owned state. LLM can read for context but cannot modify."
+      enforcement: "CRITICAL FAULT if LLM writes to system_state"
+
+# ============================================================
+# 9. BOUNDARY GUARANTEES (Runtime Enforcement)
+# ============================================================
+boundary_guarantees:
+  memory_flow:
+    rule: "Memory flows forward only (Time Direction)"
+    allowed:
+      - "LLM → Consciousness (read/write via tools)"
+      - "EVA → Consciousness (owner authority)"
+      - "MSP → Archival Memory (freeze/archive)"
+      - "Systems → MSP (propose/signal)"
+    forbidden:
+      - "LLM → Archival Memory (direct access)"
+      - "MSP → Consciousness (backward write)"
+      - "EVA → Archival Memory (direct write, must go via MSP)"
+      - "Systems → Consciousness (bypass MSP)"
+
+  llm_isolation:
+    rule: "LLM has full access to Consciousness but never to Archive"
+    allowed:
+      - "Read from eva/consciousness/ (all memory layers)"
+      - "Write to eva/consciousness/ (via propose_episodic_memory tool)"
+      - "Modify working context in eva/memory/context_storage/"
+    forbidden:
+      - "Direct write to eva/memory/archival_memory/"
+      - "Bypass MSP for persistence"
+    note: >
+      LLM is the primary actor for EVA's lived experience.
+      It has full authority over Consciousness (mutable domain)
+      but must never touch Archive (immutable domain).
+
+  system_isolation:
+    rule: "Systems and Services never bypass MSP"
+    allowed: "Emit signals to Resonance Bus"
+    forbidden: "Direct file write to eva/consciousness/ or eva/memory/"
+
+  archive_immutability:
+    rule: "Archived memory is immutable forever"
+    enforcement: "Read-only filesystem permissions on archival_memory/"
+
+# ============================================================
+# 10. VIOLATION SEVERITY & ENFORCEMENT
+# ============================================================
+violation_severity:
+  critical_fault:
+    description: "Immediate halt or rollback required"
+    violations:
+      - name: "MSP writes consciousness"
+        action: "HALT: MSP attempted backward write"
+      
+      - name: "EVA modifies archive"
+        action: "HALT: Archive immutability violated"
+      
+      - name: "System/Service bypasses MSP"
+        action: "HALT: Unauthorized memory persistence"
+      
+      - name: "Cross-System direct call without Bus"
+        action: "HALT: Bus authority violated"
+
+  temporal_paradox:
+    description: "Archive used as live context"
+    violation: "Attempting to restore compressed state (H5) as full precision"
+    action: "WARN: Data loss fault (EmotiveHash boundary)"
+
+  data_loss_fault:
+    description: "Attempting to restore full state from lossy hash"
+    example: "H5 (lite) used for Episode Initialization (requires H9)"
+    authority: "EVAMatrix owns compression logic"
+
+# ============================================================
+# 11. EMOTIVE HASH BOUNDARY (State Compression)
+# ============================================================
+emotive_hash:
+  authority: "EVAMatrix owns compression logic"
+  persistence: "Compressed hashes stored in state_memory/ (Hot Cache)"
+  
+  hash_types:
+    h9_full:
+      name: "EmotionMatrixHash (9D Full)"
+      usage: "Episode Initialization, Shifts > 0.2"
+      precision: "Full float precision"
+      
+    h5_lite:
+      name: "EmotionMatrixHash (5D Lite)"
+      usage: "Routine updates with stable backgrounds"
+      precision: "Lossy compression"
+  
+  violation:
+    rule: "Restoring full state from H5 is a Data Loss Fault"
+    severity: "Critical"

@@ -1,0 +1,7 @@
+version: 8.1.0-R1
+# RI Engine Configuration
+weights:
+  ER: 0.25 # Emotional Resonance
+  IF: 0.30 # Intent Fit
+  SR: 0.30 # Semantic Resonance
+  CR: 0.15 # Contextual Resonance

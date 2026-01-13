@@ -1,0 +1,63 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EVA RIM Output Payload Schema",
+    "description": "Strict specification for Resonance Impact multipliers sent to PhysioController in EVA 8.2.0.",
+    "type": "object",
+    "required": [
+        "impact_level",
+        "multipliers",
+        "timestamp",
+        "resonance_index_ref"
+    ],
+    "properties": {
+        "timestamp": {
+            "type": "number",
+            "description": "Unix timestamp of the RIM calculation event."
+        },
+        "resonance_index_ref": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "The RI value this RIM was calculated from."
+        },
+        "impact_level": {
+            "type": "string",
+            "enum": [
+                "Low",
+                "Medium",
+                "High"
+            ],
+            "description": "Categorical impact level derived from RI."
+        },
+        "multipliers": {
+            "type": "object",
+            "description": "Physiological multipliers applied to hormone release and receptor sensitivity.",
+            "required": [
+                "hormone_release",
+                "receptor_sensitivity",
+                "emotional_weight"
+            ],
+            "properties": {
+                "hormone_release": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 2.0,
+                    "description": "Multiplier for hormone secretion (1.0 = baseline)"
+                },
+                "receptor_sensitivity": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 2.0,
+                    "description": "Multiplier for receptor signal transduction (1.0 = baseline)"
+                },
+                "emotional_weight": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 2.0,
+                    "description": "Multiplier for emotional state intensity (1.0 = baseline)"
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

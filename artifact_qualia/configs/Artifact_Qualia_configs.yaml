@@ -1,0 +1,119 @@
+# ============================================================
+# EVA MODULE SPECIFICATION (SSOT)
+# Module: Artifact Qualia
+# Version: 8.2.0-S1
+# Updated: 2026-01-04
+# Description: Unified configuration for phenomenological experience integration.
+# ============================================================
+
+schema: EVA-Artifact-Qualia-Configs-v8.2-Standard
+version: 8.2.0-S1
+
+# ============================================================
+# 1. GLOBAL SETTINGS & META
+# ============================================================
+global:
+  module_name: "Artifact Qualia"
+  role: "Phenomenological Experience Integrator"
+  analogy: "Experiential Grounding (ความรู้สึกที่แท้จริง)"
+  status: "Active"
+
+# ============================================================
+# 2. LOGIC & DYNAMICS (Experience Parameters)
+# ============================================================
+dynamics:
+  temporal_smoothing:
+    intensity_alpha: 0.65  # 65% old + 35% new
+    coherence_alpha: 0.70  # 70% old + 30% new
+    depth_alpha: 0.85      # 85% old + 15% new (Slow immersion)
+  
+  texture_modulation:
+    impact_boost: 1.15     # 15% boost to texture dimensions matching RIM domains
+    clamping: [0.0, 1.0]
+
+  thresholds:
+    quiet_groundedness: 0.6
+    charged_stress: 0.7
+    perception_min: 0.05
+
+principles:
+  - "Qualia is experience, not description."
+  - "Body sends signals, not labels."
+  - "Trend is more important than absolute value."
+  - "Trend reflects 'what it's like' to be in this state."
+
+# ============================================================
+# 3. RUNTIME HOOK (System Integration)
+# ============================================================
+runtime_hook:
+  component: "ArtifactQualia"
+  module_path: "eva/artifact_qualia/artifact_qualia"
+  class_name: "ArtifactQualiaCore"
+  
+  initialization:
+    args:
+      config_path: "eva/artifact_qualia/configs/Artifact_Qualia_configs.yaml"
+    
+  bus_bindings:
+    - subscribe: "bus:psychological" # From EVA Matrix
+      action: "integrate"
+      mapping: { input: "eva_state", output: "qualia_snapshot" }
+    - subscribe: "bus:phenomenological" # RIM impact signals
+    - publish: "bus:phenomenological" # Publishes felt quality
+
+  resources:
+    configs: "eva/artifact_qualia/configs/"
+    contract: "eva/artifact_qualia/configs/Artifact_Qualia_configs.yaml"
+
+# ============================================================
+# 4. INTERFACE (Bus Position & Logic)
+# ============================================================
+interface:
+  bus_id: "PHENOM_QUALIA_01"
+  bus_role: "experience_integrator"
+  
+  managed_slots:
+    - "intensity"
+    - "tone"
+    - "coherence"
+    - "depth"
+    - "texture"
+
+  execution_order:
+    - Receive EVA Matrix state (9D)
+    - Receive RIM Semantic Impact
+    - Compute Subjective Intensity (Stress + Alertness + Drive)
+    - Determine Coarse Tone (Quiet | Charged | Settling | Neutral)
+    - Apply Temporal Smoothing (EMA)
+    - Build 4D Texture Vector (Emotional, Relational, Identity, Ambient)
+    - Publish Qualia Snapshot for RMS and CIN
+
+# ============================================================
+# 5. DATA CONTRACTS (Input/Output/Validation)
+# ============================================================
+contracts:
+  inputs:
+    eva_state:
+      axes_9d: { required: true, fields: 9 }
+      momentum: { required: false }
+    rim_semantic:
+      impact_level: ["low", "medium", "high"]
+      impact_trend: ["rising", "stable", "fading"]
+      affected_domains: ["emotional", "relational", "identity", "ambient"]
+
+  outputs:
+    qualia_snapshot:
+      intensity: { type: "float", range: [0.0, 1.0] }
+      tone: { type: "enum", values: [quiet, charged, settling, neutral] }
+      coherence: { type: "float", range: [0.0, 1.0] }
+      depth: { type: "float", range: [0.0, 1.0] }
+      texture:
+        emotional: "axes.stress"
+        relational: "(axes.alertness + axes.drive) / 2"
+        identity: "axes.clarity"
+        ambient: "momentum.intensity"
+
+  validation_rules:
+    - "Non-Linguistic: No emotional labels (เขิน, เครียด) allowed in output."
+    - "Vividness: Coherence drops if RIM impact is high."
+    - "Continuity: EMA prevents jarring experience jumps."

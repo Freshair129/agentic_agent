@@ -1,0 +1,271 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: EVA-Episodic-Memory-v3.1.1
+version: 3.1.1
+description: >
+  Canonical episodic memory schema with clean multi-persona support.
+  Turn roles are stable. Persona identity is contextual.
+
+type: object
+required:
+  - instance_id
+  - session_id
+  - timestamp
+  - episodes
+
+properties:
+
+  instance_id:
+    type: string
+    description: EVA runtime instance id (MSP).
+
+  session_id:
+    type: string
+    description: Session identifier (MSP).
+
+  timestamp:
+    type: string
+    format: date-time
+    description: File creation timestamp (MSP).
+
+  episodes:
+    type: array
+    description: Ordered episodic records (append-only).
+    items:
+      $ref: "#/definitions/episode"
+
+# ==================================================
+# DEFINITIONS
+# ==================================================
+definitions:
+
+  # --------------------------------------------------
+  # Episode
+  # --------------------------------------------------
+  episode:
+    type: object
+    required:
+      - episode_id
+      - episode_type
+      - situation_context
+      - persona_context
+      - turns
+      - state_trace
+
+    properties:
+
+      episode_id:
+        type: string
+        description: Unique episodic identifier (MSP).
+
+      episode_schema_version:
+        type: string
+        description: Schema version used for this episode.
+
+      episode_type:
+        type: string
+        enum:
+          - interaction
+          - synthesis
+          - meta_cognition
+          - system_event
+
+      # ----------------------------------------------
+      # Persona Context (Multi-Persona Core)
+      # ----------------------------------------------
+      persona_context:
+        type: object
+        description: >
+          Persona identities involved in this episode.
+          Does not define turn structure.
+        required:
+          - active_persona
+        properties:
+          active_persona:
+            type: string
+            description: Persona currently speaking as EVA.
+          participants:
+            type: array
+            description: All personas involved in this episode.
+            items:
+              type: string
+          handoff:
+            type: array
+            description: Persona switches during the episode.
+            items:
+              type: object
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+                reason:
+                  type: string
+
+      # ----------------------------------------------
+      # LLM Interpretive Layer (Non-authoritative)
+      # ----------------------------------------------
+      llm_annotations:
+        type: object
+        properties:
+          episode_tag:
+            type: string
+          event_label:
+            type: string
+          crosslinks:
+            $ref: "#/definitions/crosslinks"
+
+      # ----------------------------------------------
+      # Situation Context
+      # ----------------------------------------------
+      situation_context:
+        type: object
+        required:
+          - context_id
+          - interaction_mode
+          - stakes_level
+          - time_pressure
+        properties:
+          context_id:
+            type: string
+          interaction_mode:
+            type: string
+            enum:
+              - small_talk
+              - casual
+              - deep_discussion
+              - conflict
+              - instruction
+              - meta
+          stakes_level:
+            type: string
+            enum: [low, medium, high]
+          time_pressure:
+            type: string
+            enum: [low, medium, high]
+
+      # ----------------------------------------------
+      # Turns (Role-based, Persona-agnostic)
+      # ----------------------------------------------
+      turns:
+        type: array
+        minItems: 1
+        description: >
+          Ordered turns. Persona identity is resolved via persona_context.
+        items:
+          oneOf:
+            - $ref: "#/definitions/turn_user"
+            - $ref: "#/definitions/turn_eva"
+            - $ref: "#/definitions/turn_system"
+
+      # ----------------------------------------------
+      # State Trace (Lightweight)
+      # ----------------------------------------------
+      state_trace:
+        type: object
+        required:
+          - stress_load
+          - resonance_index
+          - memory_encoding_level
+        properties:
+          stress_load:
+            type: number
+            minimum: 0
+            maximum: 1
+          resonance_index:
+            type: number
+          memory_encoding_level:
+            type: string
+            enum:
+              - L0_trace
+              - L1_light
+              - L2_standard
+              - L3_deep
+              - L4_trauma
+          threat_level:
+            type: number
+
+      # ----------------------------------------------
+      # Integrity & Provenance
+      # ----------------------------------------------
+      integrity:
+        type: object
+        properties:
+          checksum:
+            type: string
+          algorithm:
+            type: string
+
+      provenance:
+        type: object
+        properties:
+          written_by:
+            type: string
+            enum: [MSP]
+          llm_model:
+            type: string
+          pipeline_version:
+            type: string
+
+  # --------------------------------------------------
+  # Turn Definitions (UNCHANGED ROLES)
+  # --------------------------------------------------
+  turn_user:
+    type: object
+    required: [speaker]
+    properties:
+      speaker:
+        type: string
+        enum: [user]
+      raw_text:
+        type: string
+      summary:
+        type: string
+
+  turn_eva:
+    type: object
+    required: [speaker]
+    description: >
+      Embodied assistant turn.
+      Persona resolved via persona_context.active_persona.
+    properties:
+      speaker:
+        type: string
+        enum: [eva]
+      text_excerpt:
+        type: string
+      summary:
+        type: string
+      epistemic_mode:
+        type: string
+        enum: [explore, hypothesize, assert, caution, reflect]
+      confidence:
+        type: number
+
+  turn_system:
+    type: object
+    required: [speaker]
+    properties:
+      speaker:
+        type: string
+        enum: [system]
+      event:
+        type: string
+
+  # --------------------------------------------------
+  # Shared Objects
+  # --------------------------------------------------
+  crosslinks:
+    type: object
+    properties:
+      semantic_refs:
+        type: array
+        items: { type: string }
+      sensory_refs:
+        type: array
+        items: { type: string }
+      gks_refs:
+        type: array
+        items: { type: string }
+      aqi_refs:
+        type: array
+        items: { type: string }

@@ -1,0 +1,35 @@
+# ============================================================
+# EVA MODULE CONTRACT: PhysioController Payload
+# Version: 8.2.0-V2 (Strict)
+# Status: LOCKED
+# ============================================================
+
+module: "PhysioController"
+bus_channel: "bus:physical"
+schema_ref: "file:///e:/The%20Human%20Algorithm/T2/EVA%208.2.0/physio_core/schema/Physio_Payload_Schema_v2.json"
+
+payload_structure:
+  ans_state:
+    type: "Object"
+    required: ["sympathetic", "parasympathetic", "balance", "dominance"]
+    description: "Autonomic Nervous System primary metrics."
+  
+  blood_levels:
+    type: "Object (KV-Map)"
+    required: ["ESC_H01_ADRENALINE", "ESC_H02_CORTISOL"] # Minimum set
+    description: "Hormone concentrations indexed by ESC ID."
+    
+  receptor_signals:
+    type: "Object"
+    required: ["amygdala", "prefrontal_cortex"]
+    description: "Regional brain impact vectors."
+
+  reflex_vector:
+    type: "Object"
+    required: ["freeze" , "flee", "fight", "approach"]
+    description: "Instantaneous reflexive drives."
+
+governance:
+  - "Every turn MUST publish to this contract."
+  - "StateHash_S1 integrity must be verified before admission."
+  - "Field types are immutable; additions require a V3 upgrade."
