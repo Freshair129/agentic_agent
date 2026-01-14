@@ -17,7 +17,7 @@ RIM takes signals from the **Cognitive Gateway (SLM)** and maps them to a float 
 
 ### The Formula
 
-```
+```text
 Impact = (Base_Emotion_Score * Salience_Multiplier) -> Clamped[-1.0, 1.0]
 ```
 

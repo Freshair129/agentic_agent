@@ -48,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **permissions.yaml**: Added TrajectoryManager to System examples
 - **EVA_9.4_Architecture.md**: Updated directory mappings for relocated modules
 
-## [9.4.1-Memory] - 2026-01-15
+## [9.4.1-SystemRefactor] - 2026-01-15
 
 ### Added
 
@@ -58,20 +58,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Feature Integration Workflow**: Standardized protocol `integrate_feature.md` for adding new components with strict documentation and registration enforcement.
 - **RIM Refactor**: Standardized Resonance Impact Model into `operation_system/rim/` with dedicated config separation.
 - **Glossary Updates**: Added GKS and Engram definitions to `glossary.yaml`.
-
-### Changed
-
-- **Permissions & Registration**: Updated `core_systems.yaml` and `permissions.yaml` to include Engram and RIM, ensuring full architectural consistency.
-
-## [9.4.1-SystemRefactor] - 2026-01-15
-
-### Added
-
 - **Truth Seeked Node**: Implemented `genesis_knowledge_system/grounding/truth_seeker_node.py` ("The Judge") to validate candidate facts against User Block, specifically detecting conflicts (e.g., Shrimp vs Allergy) using the "Grilled Shrimp" logic.
 - **Session Manager Module**: Implemented `orchestrator/session_manager/session_manager.py` ("The Boss") to decouple lifecycle management (/start, /stop, timeout) from the main Orchestrator loop.
 
 ### Changed
 
+- **Permissions & Registration**: Updated `core_systems.yaml` and `permissions.yaml` to include Engram and RIM, ensuring full architectural consistency.
 - **Orchestrator Logic**: Refactored `orchestrator.py` to delegate session control to `SessionManager`, significantly cleaning up the main inference loop.
 - **MSP Architecture**: Clarified `end_session` role as purely Storage/Archival, leveraging the new `SessionManager` to handle the validation business logic before/after storage.
 - **Documentation**: Updated `EVA_9.4_Architecture.md` to reflect the new `Grounding` Node and `SessionManager` Module structure.
@@ -89,7 +81,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `server.py` (FastAPI) implementation with 30Hz background physiological loop.
   - `run_sandbox_ui.bat` shortcut for ease of use.
 
-## [9.1.0-C3] - 2026-01-10
+## [9.1.0-Resonance] - 2026-01-10
+
+### Added
+
+- **SLM Bridge:** Implemented `Qwen3` (0.6b) as a Cognitive Gateway (Pre-Inference) for accurate Thai intent tagging.
+- **Vector Memory:** Implemented `ChromaDB` (Local) with `sentence-transformers` (`multilingual-e5-base`) for robust multilingual semantic search.
+- **Pre-Inference Flow:** Added "Cognitive Gateway" step in Orchestrator to inject Intent & Fast Memories before Phase 1 Perception.
 
 ### Changed
 
@@ -98,19 +96,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Session ID:** Aligned with session memory logic: `SES_{dev_id}_SP{sphere}C{core}_SS{session}`.
 - **Identity Logic:** Centralized all ID generation in `IdentityManager`.
 - **Cleanup:** Removed legacy `transient_id` and deleted redundant `eva/identity` directory.
-
-## [9.1.0-C2] - 2026-01-10
-
-### Added
-
-- **SLM Bridge:** Implemented `Qwen3` (0.6b) as a Cognitive Gateway (Pre-Inference) for accurate Thai intent tagging.
-- **Vector Memory:** Implemented `ChromaDB` (Local) with `sentence-transformers` (`multilingual-e5-base`) for robust multilingual semantic search.
-- **Pre-Inference Flow:** Added "Cognitive Gateway" step in Orchestrator to inject Intent & Fast Memories before Phase 1 Perception.
-
-## [9.1.0-Resonance] - 2026-01-10
-
-### Changed
-
 - **Architectural Pivot:** Moved from "3-Phase / Multi-Turn" to **"1-Inference / Single-Session"** architecture.
   - Reduced LLM calls from 3 to 1 per turn (plus 1 continuation).
   - Consolidated context injection into "Pre-Inference".
