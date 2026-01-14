@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [9.4.0-Refactor] - 2026-01-13
 
+## [9.4.2-ArchitectureConsolidation] - 2026-01-15
+
+### Added
+
+- **Trajectory System**: Implemented execution trace logger for capturing LLM reasoning, tool calls, and decision points.
+  - **Engine**: `operation_system/trajectory/trajectory_manager.py`
+  - **Config**: `operation_system/configs/trajectory_config.yaml`
+  - **Concept**: `docs/systems/trajectory/Trajectory_Concept.md`
+- **4-Layer Resonance Architecture**: Unified RTI, MRF, and APM into cohesive `ResonanceEngine`.
+  - **Engine**: `operation_system/resonance_engine/resonance_engine.py`
+  - **Config**: `operation_system/resonance_engine/configs/resonance_config.yaml`
+  - **Concept**: `docs/systems/resonance_engine/Resonance_Engine_Concept.md`
+- **MRF Engine**: Migrated Metacognitive Re-contextualization Framework to OS as Central Module.
+  - **Location**: `operation_system/mrf_engine/`
+  - **7-Layer Processor** for deep interpretation (Literal → Transcendental)
+- **Umbrella Engine**: Created toggle-based safety layer with EMP (Exposure Management Protocol).
+  - **Location**: `operation_system/umbrella/`
+  - **Features**: State-based protection, graceful degradation, Prime Directive integration.
+- **Verification Suite**: Created `tests/test_resonance_engine.py` for automated pipeline validation.
+- **ADR-005**: Formally documented the "Unified 4-Layer Resonance Architecture" decision.
+
+### Changed
+
+- **NexusMind**: Relocated from `genesis_knowledge_system/nexus_mind/` to `operation_system/nexus_mind/`
+  - **Reason**: Functions as Thinking Mode Controller (Infrastructure), not just Knowledge
+  - **Updated Role**: `central_module` (cognitive mode switcher)
+- **APM (Archetypal Projection Module)**: Relocated from GKS to `operation_system/archetypal_projection/`
+  - **Reason**: Cross-system usage as Central Module
+  - **Updated Role**: `central_module` (independent, callable by multiple systems)
+- **Architecture Cleanup**:
+  - Disabled `TemporalEngine` (requires major refactor)
+  - Removed APM and NexusMind from GKS `owned_modules`
+  - All Central Modules now consolidated in `operation_system/`
+
+### Updated
+
+- **core_systems.yaml**: Registered Trajectory, Resonance Engine, MRF Engine, Umbrella Engine
+- **permissions.yaml**: Added TrajectoryManager to System examples
+- **EVA_9.4_Architecture.md**: Updated directory mappings for relocated modules
+
 ## [9.4.1-Memory] - 2026-01-15
 
 ### Added

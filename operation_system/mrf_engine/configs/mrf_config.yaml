@@ -1,0 +1,49 @@
+---
+# MRF Engine Configuration (v9.4.0)
+# Metacognitive Re-contextualization Framework
+
+layers:
+  literal:
+    enabled: true
+    description: "Layer 1: Surface meaning (who, what, where)"
+    
+  emotional:
+    enabled: true
+    description: "Layer 2: Emotional undertone beneath words"
+    
+  symbolic:
+    enabled: true
+    description: "Layer 3: Convert words to symbolic comparisons"
+    use_apm: true  # Use Archetypal Projection for symbolism
+    
+  relational:
+    enabled: true
+    description: "Layer 4: Analyze relationships between entities"
+    
+  narrative:
+    enabled: true
+    description: "Layer 5: Position in life story arc"
+    
+  meta:
+    enabled: true
+    description: "Layer 6: Meta-cognition (why interpret this way?)"
+    
+  transcendental:
+    enabled: true
+    description: "Layer 7: Transcendence to wisdom (umbrella deployment)"
+    umbrella_integration: true
+
+paradox_detection:
+  enabled: true
+  threshold: 0.7  # Trigger when contradiction score > 0.7
+  
+umbrella_trigger:
+  enabled: true
+  deploy_at_layer: 7  # Deploy umbrella at transcendental layer
+  
+output:
+  primary: "interpretation_map"  # Map of 7-layer interpretation
+  secondary: "paradox_flag"      # Boolean: paradox detected?
+  metadata:
+    - "layer_depth"              # Which layer was reached
+    - "umbrella_deployed"        # Was umbrella activated?

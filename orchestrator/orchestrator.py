@@ -59,6 +59,8 @@ from eva.genesis_knowledge_system.gks_interface import gks_interface  # [NEW] V9
 from capabilities.services.engram_system.engram_engine import EngramEngine
 # [NEW] Session Manager
 from orchestrator.session_manager.session_manager import SessionManager
+# [NEW] Trajectory System
+from operation_system.trajectory.trajectory_manager import TrajectoryManager
 
 class EVAOrchestrator:
     """
@@ -204,6 +206,10 @@ class EVAOrchestrator:
             gks_interface=gks_interface
         )
         
+        # [NEW] Trajectory Manager (Execution Trace Logger)
+        safe_print("  - Initializing Trajectory Manager (Trace Logger)...")
+        self.trajectory = TrajectoryManager()
+        
         self.pending_session_end = False # For confirmation flow
         self.last_interaction = datetime.now()
         self.session_start_time = datetime.now()
@@ -345,6 +351,10 @@ class EVAOrchestrator:
 
         self.turn_count += 1
         self.bus_log = [] # Clear log for fresh monitoring
+        
+        # [NEW] Start trajectory capture for this turn
+        self.trajectory.start_turn(self.session_id, self.turn_count)
+        
         print(f"\n{'='*60}")
         print(f"🎯 Turn {self.turn_count} (Resonance Exchange)")
         print(f"{'='*60}")

@@ -160,6 +160,52 @@ core_systems:
       - path: agent/orchestrator/session_manager/session_manager.py
     id_registry: "MODULE_SESSION_MGR"
 
+  - id: Trajectory_Manager
+    name: Trajectory_Manager
+    version: 9.4.0
+    role: system
+    domain: operation_system_trace
+    description: "Captures execution traces for debugging and analysis (LLM calls, tool usage, errors)."
+    main_files:
+      - path: agent/operation_system/trajectory/trajectory_manager.py
+      - path: agent/operation_system/configs/trajectory_config.yaml
+    id_registry: "SYSTEM_TRAJECTORY"
+
+  - id: Resonance_Engine
+    name: Resonance_Engine
+    version: 9.4.0
+    role: system
+    domain: operation_system_resonance
+    description: "Unified 4-Layer Resonance Processing (L1: Literal, L2: Interpretive/MRF+APM, L3: Resonant/Memory+RI, L4: Transcendent/Umbrella)."
+    main_files:
+      - path: agent/operation_system/resonance_engine/resonance_engine.py
+      - path: agent/operation_system/resonance_engine/configs/resonance_config.yaml
+    id_registry: "SYSTEM_RESONANCE"
+    owned_modules:
+      - APM (Archetypal Projection)
+
+  - id: MRF_Engine
+    name: MRF_Engine
+    version: 9.4.0
+    role: central_module
+    domain: operation_system_cognition
+    description: "Metacognitive Re-contextualization Framework. 7-layer interpretation engine for transforming unsolvable problems by shifting context."
+    main_files:
+      - path: agent/operation_system/mrf_engine/mrf_engine.py
+      - path: agent/operation_system/mrf_engine/configs/mrf_config.yaml
+    id_registry: "IdentityManager.MODULE_MRF"
+    
+  - id: Umbrella_Engine
+    name: Umbrella_Engine
+    version: 9.4.0
+    role: central_module
+    domain: operation_system_safety
+    description: "Toggle-based safety layer (Umbrella Principle). Coexists with uncontrollable events via EMP (Exposure Management Protocol)."
+    main_files:
+      - path: agent/operation_system/umbrella/umbrella_engine.py
+      - path: agent/operation_system/umbrella/configs/umbrella_config.yaml
+    id_registry: "IdentityManager.MODULE_UMBRELLA"
+
   - id: RIM_Calculator
     name: RIM_Calculator
     version: 9.1.0
@@ -196,19 +242,19 @@ core_systems:
       - path: genesis_knowledge_system/gks_interface.py
     id_registry: "IdentityManager.SYSTEM_GKS"
     owned_modules:
-      - NexusMind
       - MetaLearningLoop
-      - ArchetypalProjection
+      # NexusMind moved to Operation System (cognitive mode controller)
+      # APM moved to Central Module (independent)
 
   - id: NexusMind
     name: NexusMind_Engine
     version: 9.4.0
-    role: cognitive_module
-    domain: genesis_knowledge_system/reasoning
-    description: "The strategic brain. Executes decision matrices and insecurity checks (ERD Aligned)."
+    role: central_module  # Changed from cognitive_module - it's a mode controller
+    domain: operation_system/cognitive_modes
+    description: "Thinking Mode Controller. Executes decision matrices and switches cognitive strategies (analytical, intuitive, etc.)."
     main_files:
-      - path: genesis_knowledge_system/nexus_mind/nexus_mind_engine.py
-    id_registry: "IdentityManager.SYSTEM_NEXUS"
+      - path: operation_system/nexus_mind/nexus_mind_engine.py
+    id_registry: "IdentityManager.MODULE_NEXUS"
 
   - id: MLL
     name: Meta_Learning_Loop
@@ -223,22 +269,23 @@ core_systems:
   - id: APM
     name: Archetypal_Projection_Module
     version: 9.4.0
-    role: identity_module
-    domain: genesis_knowledge_system/identity
-    description: "Maps internal state to archetypal templates (Hero, Caregiver, etc.)."
+    role: central_module  # Changed from identity_module to central_module
+    domain: archetypal_projection
+    description: "Maps internal state to archetypal templates (Hero, Caregiver, etc.). Independent module callable from multiple systems."
     main_files:
-      - path: genesis_knowledge_system/archetypal_projection/apm_engine.py
-    id_registry: "IdentityManager.SYSTEM_APM"
+      - path: operation_system/archetypal_projection/apm_engine.py
+    id_registry: "IdentityManager.MODULE_APM"
     
-  - id: TemporalEngine
-    name: Temporal_Engine
-    version: 9.4.0
-    role: perception_node
-    domain: orchestrator/temporal
-    description: "Manages subjective time, rhythm analysis, and stability."
-    main_files:
-      - path: orchestrator/temporal/temporal_engine.py
-    id_registry: "IdentityManager.SYSTEM_TEMPORAL"
+  # - id: TemporalEngine
+  #   name: Temporal_Engine
+  #   version: 9.4.0
+  #   role: perception_node
+  #   domain: orchestrator/temporal
+  #   description: "Manages subjective time, rhythm analysis, and stability."
+  #   main_files:
+  #     - path: orchestrator/temporal/temporal_engine.py
+  #   id_registry: "IdentityManager.SYSTEM_TEMPORAL"
+  #   note: "DISABLED - Requires major refactor"
 
   - id: RMS
     name: Resonance_Memory_System

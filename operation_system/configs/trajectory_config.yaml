@@ -1,0 +1,27 @@
+---
+# Trajectory Manager Configuration (v9.4.0)
+# Controls execution trace logging for debugging and analysis
+
+output:
+  format: "jsonl"  # json or jsonl
+  directory: "memory/trajectory"
+  filename_pattern: "TRAJ_{session_id}_{turn_index:04d}.jsonl"
+  
+logging:
+  enabled: true
+  verbosity: "full"  # minimal, standard, full
+  capture:
+    llm_calls: true
+    tool_calls: true
+    errors: true
+    decisions: true
+    timing: true
+    
+retention:
+  max_files: 100
+  auto_cleanup: true
+  archive_after_days: 30
+
+privacy:
+  redact_sensitive: false  # Set true to auto-redact PII
+  exclude_patterns: []

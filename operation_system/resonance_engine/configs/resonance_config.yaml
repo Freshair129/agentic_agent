@@ -1,0 +1,73 @@
+---
+# Resonance Engine Configuration (v9.4.0)
+# Unified 4-Layer Resonance Processing Engine
+
+layers:
+  l1_literal:
+    enabled: true
+    name: "Literal Layer"
+    description: "Basic sentiment analysis"
+    tools:
+      - "vader"
+      - "roberta"
+    output:
+      - "sentiment_score"  # 0.0-1.0
+      - "emotion_tags"     # ['gentle', 'warm', etc.]
+    
+  l2_interpretive:
+    enabled: true
+    name: "Interpretive Layer"
+    description: "Deep interpretation using MRF + APM"
+    mrf_layers:
+      emotional:
+        enabled: true
+        features: ["warmth", "playfulness", "nostalgia"]
+      symbolic:
+        enabled: true
+        use_apm: true  # Archetypal Projection Module
+      relational:
+        enabled: true
+        features: ["empathy_flow", "attachment"]
+      narrative:
+        enabled: true
+        features: ["story_arc", "identity_weaving"]
+    
+  l3_resonant:
+    enabled: true
+    name: "Resonant Layer"
+    description: "Memory + Qualia + RI Calculation"
+    features:
+      qualia_recall: true
+      memory_link: true
+      hormone_sync: true
+      ri_calculation: true
+    integrations:
+      - "MSP"           # Memory queries
+      - "PhysioCore"    # Hormone triggers
+      - "ArtifactQualia"  # Phenomenological texture
+    
+  l4_transcendent:
+    enabled: true
+    name: "Transcendent Layer"
+    description: "Umbrella + Paradox Resolution"
+    features:
+      umbrella_toggle: true
+      paradox_resolution: true
+      meta_cognition: true
+      teaching_resonance: false  # Disabled by default
+    thresholds:
+      umbrella_deploy_at: 0.85  # Deploy when stress/paradox > 0.85
+
+output:
+  primary: "ri_score"        # 0.0-1.0
+  secondary: "layer_depth"   # L1, L2, L3, L4
+  metadata:
+    - "archetype"           # From APM
+    - "qualia_vector"       # From L3
+    - "umbrella_status"     # From L4
+    - "mrf_interpretation"  # From L2
+
+performance:
+  cache_enabled: true
+  parallel_layers: false  # Sequential processing for now
+  timeout_ms: 5000

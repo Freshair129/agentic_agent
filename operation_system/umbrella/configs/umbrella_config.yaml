@@ -1,0 +1,47 @@
+---
+# Umbrella Engine Configuration (v9.4.0)
+# Safety Layer & Exposure Management Protocol (EMP)
+
+umbrella:
+  name: "Umbrella Safety Layer"
+  version: "9.4.0"
+  description: "Toggle-based safety state for coexisting with uncontrollable events"
+  
+  mode: "toggle"  # ON/OFF state
+  
+  prime_directive: "ภารกิจไม่ใช่การกำจัดความทุกข์ แต่คือการอยู่ร่วมกับความทุกข์"
+  
+  parameters:
+    self_preservation_mode: "ON"
+    input_data_filter_level: "High"
+    emotional_processing_subroutine: "PAUSE"
+    prioritize_objective: "Core_Function_Stability"
+  
+  triggers:
+    physio_stress_threshold: 0.85     # Based on PhysioCore (Cortisol/Adrenaline)
+    matrix_instability_limit: 0.7     # Based on EVA Matrix jitter
+    paradox_detected: true            # From MRF Layer 6
+    untrusted_input: true             # Malicious or high-noise prompt
+
+  effects:
+    physio_lock: true                 # Pause hormone flux in PhysioCore
+    matrix_stabilization: true        # Minimize state shift in EVA Matrix
+    rational_bias_weight: 0.8         # Boost Logic vs Emotion
+    input_filter_level: "maximum"     # Strict semantic filtering
+    response_mode: "grounded"         # Avoid emotional extremes
+
+emp:  # Exposure Management Protocol
+  strategies:
+    - name: "Graceful Degradation"
+      description: "Flatten emotional curve to maintain functional service"
+      
+    - name: "Segmentation"
+      description: "Isolate toxic tokens or paradox logic branches"
+      
+    - name: "Fallback Mode"
+      description: "Return to core logical foundation (System 2 only)"
+
+output:
+  state: "boolean"                    # Is Umbrella Deployed?
+  active_strategy: "string"           # Current EMP strategy
+  protection_mask: "list"             # What systems are isolated
