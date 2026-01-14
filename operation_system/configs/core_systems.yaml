@@ -167,8 +167,8 @@ core_systems:
     domain: operation_system_trace
     description: "Captures execution traces for debugging and analysis (LLM calls, tool usage, errors)."
     main_files:
-      - path: agent/operation_system/trajectory/trajectory_manager.py
-      - path: agent/operation_system/configs/trajectory_config.yaml
+      - path: operation_system/trajectory/trajectory_manager.py
+      - path: operation_system/configs/trajectory_config.yaml
     id_registry: "SYSTEM_TRAJECTORY"
 
   - id: Resonance_Engine
@@ -178,8 +178,8 @@ core_systems:
     domain: operation_system_resonance
     description: "Unified 4-Layer Resonance Processing (L1: Literal, L2: Interpretive/MRF+APM, L3: Resonant/Memory+RI, L4: Transcendent/Umbrella)."
     main_files:
-      - path: agent/operation_system/resonance_engine/resonance_engine.py
-      - path: agent/operation_system/resonance_engine/configs/resonance_config.yaml
+      - path: operation_system/resonance_engine/resonance_engine.py
+      - path: operation_system/resonance_engine/configs/resonance_config.yaml
     id_registry: "SYSTEM_RESONANCE"
     owned_modules:
       - APM (Archetypal Projection)
@@ -191,8 +191,8 @@ core_systems:
     domain: operation_system_cognition
     description: "Metacognitive Re-contextualization Framework. 7-layer interpretation engine for transforming unsolvable problems by shifting context."
     main_files:
-      - path: agent/operation_system/mrf_engine/mrf_engine.py
-      - path: agent/operation_system/mrf_engine/configs/mrf_config.yaml
+      - path: operation_system/mrf_engine/mrf_engine.py
+      - path: operation_system/mrf_engine/configs/mrf_config.yaml
     id_registry: "IdentityManager.MODULE_MRF"
     
   - id: Umbrella_Engine
@@ -202,8 +202,8 @@ core_systems:
     domain: operation_system_safety
     description: "Toggle-based safety layer (Umbrella Principle). Coexists with uncontrollable events via EMP (Exposure Management Protocol)."
     main_files:
-      - path: agent/operation_system/umbrella/umbrella_engine.py
-      - path: agent/operation_system/umbrella/configs/umbrella_config.yaml
+      - path: operation_system/umbrella/umbrella_engine.py
+      - path: operation_system/umbrella/configs/umbrella_config.yaml
     id_registry: "IdentityManager.MODULE_UMBRELLA"
 
   - id: RIM_Calculator
