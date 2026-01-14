@@ -8,8 +8,8 @@ class RIMCalculator:
     Maps SLM emotional signals and salience anchors to numerical Resonance Impact (RIM) scores.
     """
     def __init__(self, config_path: Optional[str] = None):
-        self.base_path = Path(__file__).parent.parent
-        self.config_path = Path(config_path) if config_path else self.base_path / "operation_system/configs/RIM_configs.yaml"
+        self.base_path = Path(__file__).parent
+        self.config_path = Path(config_path) if config_path else self.base_path / "configs/RIM_configs.yaml"
         self.config = self._load_config()
         self.emotion_map = self.config.get("emotion_map", {})
         self.anchor_settings = self.config.get("anchor_settings", {})

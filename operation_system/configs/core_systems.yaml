@@ -47,6 +47,17 @@ core_systems:
       - SemanticMemoryModule (Dynamic Context)
       - SensoryMemoryModule (Qualia Storage)
 
+  - id: Engram_System
+    name: Engram_System
+    version: 1.0.0
+    role: system_module
+    domain: conditional_memory
+    description: "O(1) Scalable Lookup Cache (Conditional Memory) to bypass heavy inference."
+    main_files:
+      - path: capabilities/services/engram_system/engram_engine.py
+      - path: capabilities/services/engram_system/configs/engram_config.yaml
+    id_registry: "IdentityManager.SYSTEM_ENGRAM"
+
   # ----------------------------------------------------------
   # Biological & Psychological Mind
   # ----------------------------------------------------------
@@ -138,6 +149,27 @@ core_systems:
     main_files:
       - path: capabilities/services/vector_db/chroma_bridge.py
     id_registry: "IdentityManager.SYSTEM_VEC"
+
+  - id: Session_Manager
+    name: Session_Manager
+    version: 9.4.0
+    role: module
+    domain: orchestrator_lifecycle
+    description: "Manages session lifecycle and closing ceremony (Archival + TruthSeeker)."
+    main_files:
+      - path: agent/orchestrator/session_manager/session_manager.py
+    id_registry: "MODULE_SESSION_MGR"
+
+  - id: RIM_Calculator
+    name: RIM_Calculator
+    version: 9.1.0
+    role: central_module
+    domain: interpretation
+    description: "Resonance Impact Model. Maps sentiment to numerical scores."
+    main_files:
+      - path: operation_system/rim/rim_engine.py
+      - path: operation_system/rim/configs/RIM_configs.yaml
+    id_registry: "IdentityManager.SYSTEM_RIM"
 
   - id: PRN
     name: Prompt_Rule_Node

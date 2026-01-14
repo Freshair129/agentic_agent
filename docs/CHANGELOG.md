@@ -7,31 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [9.4.0-Refactor] - 2026-01-13
 
+## [9.4.1-Memory] - 2026-01-15
+
 ### Added
 
-- **System -> Module -> Node Hierarchy**: Formally established the standard directory and logic structure across all systems.
-- **Central Module & Sub-System Classification**: Defined new architectural layers for OS-direct modules and specialized internal sub-systems with restricted bus permissions.
-- **Read-Only State Access**: Implemented "Owner-Only" communication protocol for Sub-Systems to bypass bottlenecks while maintaining structural integrity.
-- **Doc-to-Code Workflow**: established `/doc_to_code` protocol where documentation and configuration MUST precede implementation.
-- **Archivist Workflow**: Added `/run_archivist` for synchronizing Agent context with Source of Truth.
-- **Checkpoint Workflow**: Added `/checkpoint` for automated doc-sync and git commitment.
-- **GKS JSON Alignment**: Reconstructed all Genesis Block JSON files to align perfectly with `GKS_Complete_Guide_V9.4.md`.
-  - **Master Block**: Updated to include authoritative definition (Metacognitive, Recontextualization, Umbrella, Empathy) and removed legacy entries.
-  - **Data Purge**: Removed unapproved legacy knowledge (Psychological Frameworks, Simulated Annealing, Letting Go) from Framework/Algorithm/Protocol/Parameter blocks.
-  - **Standardization**: Implemented `gks_standardizer.py` to enforce unified JSON schema across all GKS files.
+- **Engram System (Conditional Memory)**: Implemented O(1) Scalable Lookup Cache to bypass heavy inference for frequent high-confidence interactions.
+  - **Engine**: `capabilities/services/engram_system/engram_engine.py`
+  - **Concept**: `docs/systems/memory/Engram_Concept.md`
+- **Feature Integration Workflow**: Standardized protocol `integrate_feature.md` for adding new components with strict documentation and registration enforcement.
+- **RIM Refactor**: Standardized Resonance Impact Model into `operation_system/rim/` with dedicated config separation.
+- **Glossary Updates**: Added GKS and Engram definitions to `glossary.yaml`.
 
 ### Changed
 
-- **Memory Architecture (Facade Pattern)**: Refactored the monolithic `MSP` class into a facade that delegates responsibilities to specialized `Episodic`, `Semantic`, and `Sensory` memory modules.
-- **Config-Driven Development**: Eliminated hardcoded values throughout the MSP system by resolving all module/node parameters from `MSP_configs.yaml`.
-- **Documentation Hub (SSOT)**: Centralized all scattered documentation from module-local folders into a unified `agent/docs/` hierarchy.
-- **GKS Independence**: Decoupled GKS (The Knowledge Backbone) from MSP storage to allow for modular/tier-based (Paid/Free)知识库 plugins.
-- **EVA_Matrix & Artifact_Qualia**: Refactored to delegate logic to `MatrixPsychModule` and `QualiaIntegratorModule` respectively.
-- **PhysioCore Exemption**: Officially exempted PhysioCore from strict Module/Node refactoring due to its unique biological density, while maintaining its System Authority status.
+- **Permissions & Registration**: Updated `core_systems.yaml` and `permissions.yaml` to include Engram and RIM, ensuring full architectural consistency.
 
-### Fixed
+## [9.4.1-SystemRefactor] - 2026-01-15
 
-- **Architectural Drift**: Unified `core_systems.yaml` and `permissions.yaml` as the canonical Source of Truth for system registration and authority.
+### Added
+
+- **Truth Seeked Node**: Implemented `genesis_knowledge_system/grounding/truth_seeker_node.py` ("The Judge") to validate candidate facts against User Block, specifically detecting conflicts (e.g., Shrimp vs Allergy) using the "Grilled Shrimp" logic.
+- **Session Manager Module**: Implemented `orchestrator/session_manager/session_manager.py` ("The Boss") to decouple lifecycle management (/start, /stop, timeout) from the main Orchestrator loop.
+
+### Changed
+
+- **Orchestrator Logic**: Refactored `orchestrator.py` to delegate session control to `SessionManager`, significantly cleaning up the main inference loop.
+- **MSP Architecture**: Clarified `end_session` role as purely Storage/Archival, leveraging the new `SessionManager` to handle the validation business logic before/after storage.
+- **Documentation**: Updated `EVA_9.4_Architecture.md` to reflect the new `Grounding` Node and `SessionManager` Module structure.
 
 ## [9.2.0-C8] - 2026-01-11
 

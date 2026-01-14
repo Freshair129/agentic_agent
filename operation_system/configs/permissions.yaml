@@ -49,6 +49,7 @@ classification_criteria:
       - SLMBridge        # services/slm_bridge
       - VectorBridge     # services/vector_bridge
       - LLMBridge        # operation_system/llm_bridge
+      - RIM              # operation_system/rim (maps signals to impact)
     death_condition: "ขาดไปแล้ว 'ทำงานช้า' หรือ 'สูญเสียความสามารถบางอย่าง'"
 
   module:
@@ -66,6 +67,7 @@ classification_criteria:
       - NexusMind        # eva/genesis_knowledge_system/nexus_mind (parent: GKS)
       - APM              # eva/genesis_knowledge_system/archetypal_projection (parent: GKS)
       - MLL              # eva/genesis_knowledge_system/meta_learning_loop (parent: GKS)
+      - Engram           # capabilities/services/engram_system (parent: Orchestrator/OS)
     communication: "ต้องติดต่อผ่าน parent System เท่านั้น"
 
   node:
@@ -82,6 +84,7 @@ classification_criteria:
       - PRN              # orchestrator/cim/prompt_rule (parent: CIM)
       - Temporal         # orchestrator/temporal (parent: Orchestrator)
       - Grounding        # eva/genesis_knowledge_system/grounding (parent: GKS)
+      - TruthSeeker      # eva/genesis_knowledge_system/grounding/truth_seeker_node (parent: GKS)
     communication: "ต้องติดต่อผ่าน parent Module/System เท่านั้น"
 
 # ============================================================

@@ -1,0 +1,11 @@
+{
+  "54dc2f24bb23ac9d37d39142d375f9c46fa1e3ee90ec630c2984f1e603cc5699": {
+    "text": "Test Pattern Alpha",
+    "context_data": {
+      "intent": "test",
+      "response": "Cached Response"
+    },
+    "confidence": 0.99,
+    "hits": 0
+  }
+}

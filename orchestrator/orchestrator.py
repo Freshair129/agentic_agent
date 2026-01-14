@@ -52,8 +52,13 @@ from operation_system.llm_bridge.ollama_bridge import OllamaBridge
 from services.slm_bridge.slm_bridge import slm
 from services.vector_bridge.chroma_bridge import ChromaVectorBridge
 from services.vector_bridge.chroma_bridge import ChromaVectorBridge
-from operation_system.rim_calculator import rim_calc
+from services.vector_bridge.chroma_bridge import ChromaVectorBridge
+from operation_system.rim.rim_engine import rim_calc
 from eva.genesis_knowledge_system.gks_interface import gks_interface  # [NEW] V9.3.0G
+# [NEW] Engram System (Conditional Memory)
+from capabilities.services.engram_system.engram_engine import EngramEngine
+# [NEW] Session Manager
+from orchestrator.session_manager.session_manager import SessionManager
 
 class EVAOrchestrator:
     """
@@ -159,10 +164,13 @@ class EVAOrchestrator:
             self.physio = self.matrix = self.qualia = self.prn = None
 
         # --------------------------------------------------
-        # 3.5 Initialize Vector Store (Long-Term Memory)
+        # 3.5 Initialize Vector Store & Engram (Long-Term Memory)
         # --------------------------------------------------
         # Initialize AFTER basic setup but BEFORE CIM
         self.vector_db = ChromaVectorBridge()
+        
+        safe_print("  - Initializing Engram System (O(1) Memory)...")
+        self.engram = EngramEngine()
 
         # --------------------------------------------------
         # 4. Initialize Cognitive Layer (CIM)
@@ -189,6 +197,13 @@ class EVAOrchestrator:
         if hasattr(self.bus, 'current_session_id') and self.bus.current_session_id:
              self.session_id = self.bus.current_session_id
              
+        # [NEW] Session Manager (Delegate Lifecycle)
+        self.session_manager = SessionManager(
+            msp_engine=self.msp,
+            bus_system=self.bus,
+            gks_interface=gks_interface
+        )
+        
         self.pending_session_end = False # For confirmation flow
         self.last_interaction = datetime.now()
         self.session_start_time = datetime.now()
@@ -298,109 +313,24 @@ class EVAOrchestrator:
         """
         Main entry point: Dual-Phase One-Inference Flow (Resonance Aware)
         """
-        # --- Session Control Commands ---
-        cmd = user_input.strip().lower()
+        # --- [NEW] Session Control Delegation ---
+        session_response = self.session_manager.process_command(user_input)
+        if session_response:
+             # If SessionManager handled it (Start/Stop/Confirm), return immediately
+             return session_response
+        
+        # --- Timeout Check (Auto-Close) ---
+        if hasattr(self, 'last_interaction'):
+             timeout_response = self.session_manager.check_timeout(self.last_interaction)
+             if timeout_response:
+                 return timeout_response
 
-        # 1. Handle Pending Confirmation
-        if self.pending_session_end:
-            if any(word in cmd for word in ["y", "yes", "confirm", "ok", "ยืนยัน", "ครับ", "ค่ะ"]):
-                self.recording_active = False
-                self.pending_session_end = False
-                
-                # Perform Session Analysis (LLM-based) with closure reason
-                session_analysis = self._analyze_session_completion(self.session_id, closure_reason="user_command")
-                
-                # Finalize Session in MSP with analysis
-                digest = self.msp.end_session(self.session_id, session_analysis=session_analysis)
-                
-                # --- ARCHIVAL WORKFLOW ---
-                # 1. Collect referenced episodes (quotes + events)
-                referenced_eps = []
-                if digest:
-                    # Quotes
-                    referenced_eps.extend([q.get("episode_id") for q in digest.get("memorable_quotes", []) if q.get("episode_id")])
-                    # Events
-                    for evt in digest.get("event_classification", []):
-                        referenced_eps.extend(evt.get("episode_range", []))
-                
-                # 2. Trigger MSP Archival
-                archive_stats = self.msp.archive_processed_episodes(self.session_id, list(set(referenced_eps)))
-                safe_print(f"  ✓ Archival: {archive_stats.get('archived_count',0)} episodes moved to cold storage.")
-
-                safe_print(f"\nzzz [STOP] SESSION ENDED: {self.session_id}")
-                return {"final_response": "Session Closed. Recording Stopped, Compressed, and Archived.", "emotion_label": "Calm", "resonance_hash": "END"}
-            else:
-                self.pending_session_end = False
-                safe_print(f"\n🔄 [RESUME] Stop cancelled. Recording continues.")
-                return {"final_response": "Session Continuation Confirmed.", "emotion_label": "Alert", "resonance_hash": "RESUME"}
-
-        # Command Keywords
-        start_keywords = ["/start", "เริ่ม", "อัด", "rec", "start session"]
-        stop_keywords = ["/stop", "/end", "พอ", "หยุด", "จบ", "ปิดเซสชั่น", "quit session"]
-
-        if any(word in cmd for word in start_keywords):
-            self.recording_active = True
-            
-            # Start new session in MSP (Increments counters)
-            new_counters = self.msp.start_new_session()
-            
-            # Generate new session ID from updated counters
-            self.session_id = self._generate_session_id()
-            self.bus.current_session_id = self.session_id
-            
-            self.turn_count = 0
-            self.session_start_time = datetime.now()
-            safe_print(f"\n🔴 [REC] SESSION STARTED: {self.session_id}")
-            safe_print(f"  - Counters: Session {new_counters.get('session_seq')}, Core {new_counters.get('core_seq')}")
-            return {"final_response": f"Session Started. Recording Active. (ID: {self.session_id})", "emotion_label": "Alert", "resonance_hash": "INIT"}
-            
-        elif any(word in cmd for word in stop_keywords):
-            if not self.recording_active:
-                return {"final_response": "Recording is already OFF.", "emotion_label": "Neutral", "resonance_hash": "INFO"}
-            
-            # Generate Summary (ENRICHED)
-            now = datetime.now()
-            duration = now - getattr(self, 'session_start_time', now)
-            duration_minutes = duration.total_seconds() / 60
-            
-            summary = f"""
-            📝 SESSION SUMMARY ({self.session_id})
-            - Duration: {duration_minutes:.1f} minutes
-            - Episodes (Turns): {self.turn_count}
-            - Last Resonance Index: {self.bus.get_last_state_hash()[:8]}
-            - Semantic Events: {len(self.bus_log)} signals processed in last turn
-            """
-            safe_print(Text(summary, style="bold cyan"))
-            safe_print("\n⚠️  CONFIRM END SESSION? (y/n / ยืนยัน)")
-            
-            self.pending_session_end = True
-            return {"final_response": f"Session Summary Generated. Please confirm end of session (y/n).", "emotion_label": "Waiting", "resonance_hash": "WAIT"}
-
-        # --- Timeout Logic (e.g., 30 mins) ---
-        # --- Timeout Logic (Configurable) ---
-        time_diff = (datetime.now() - self.last_interaction).total_seconds()
-        if self.recording_active and time_diff > self.session_timeout:
-             self.recording_active = False
+        # --- Standard Orchestration Flow (Only if Recording Active) ---
+        if not self.session_manager.recording_active:
+             return {"final_response": "Recording Paused. Type '/start' to begin.", "emotion_label": "Neutral", "resonance_hash": "IDLE"}
              
-             # Finalize Session on Timeout
-             if hasattr(self, 'session_id') and self.session_id:
-                 try:
-                     analysis = self._analyze_session_completion(self.session_id, closure_reason="timeout")
-                     digest = self.msp.end_session(self.session_id, session_analysis=analysis)
-                     
-                     # Trigger Archival for Timeout
-                     referenced_eps = []
-                     if digest:
-                         referenced_eps.extend([q.get("episode_id") for q in digest.get("memorable_quotes", []) if q.get("episode_id")])
-                         for evt in digest.get("event_classification", []):
-                             referenced_eps.extend(evt.get("episode_range", []))
-                     
-                     self.msp.archive_processed_episodes(self.session_id, list(set(referenced_eps)))
-                 except Exception as e:
-                     print(f"  ⚠️ Timeout archival failed: {e}")
-                     self.msp.end_session(self.session_id)
-                 
-             safe_print(f"\n⚠️ [TIMEOUT] Session auto-closed due to inactivity (30m). Data compressed.")
+        # Update local session_id reference from manager
+        self.session_id = self.session_manager.session_id
         self.last_interaction = datetime.now()
 
         # Status Indicator
@@ -467,14 +397,21 @@ class EVAOrchestrator:
                 slm_result.get("emotional_signal", "neutral"),
                 slm_result.get("salience_anchor", "None")
             )
-            slm_result["rim_impact"] = slm_impact
+            slm_result["r_impact_score"] = slm_impact
             
             safe_print(f"    > Intent: {slm_result.get('intent')}")
             safe_print(f"    > Instinctual Signal: {slm_result.get('emotional_signal')} (Impact: {slm_impact:.2f})")
             safe_print(f"    > Salience Anchor: {slm_result.get('salience_anchor')}")
             
-            fast_mems = self.vector_db.query_memory(user_input, n_results=3)
-            safe_print(f"    > Fast Recall: Found {len(fast_mems)} memories")
+            # [NEW] Engram Lookup (Fast Path)
+            engram_hit = self.engram.lookup(user_input)
+            if engram_hit:
+                safe_print(f"    ⚡ [Engram] Hit! O(1) Memory retrieved (Conf: {engram_hit.get('confidence',0):.2f})")
+                fast_mems = [engram_hit] # Use cached memory
+                # Option: You could skip Vector Search entirely here
+            else:
+                fast_mems = self.vector_db.query_memory(user_input, n_results=3)
+                safe_print(f"    > Fast Recall: Found {len(fast_mems)} memories")
         except Exception as e:
             safe_print(f"    > ⚠️ Gateway Error: {e}")
             slm_result = {"intent": "unknown", "emotional_signal": "neutral", "salience_anchor": "None", "rim_impact": 0.0}
@@ -524,7 +461,7 @@ class EVAOrchestrator:
                     safe_print(f"  ✓ Reflection: LLM provided refined stimulus vector (Confidence: {confidence:.2f})")
                 
                 safe_print(f"  ✓ Stimulus extracted: '{stimulus.get('salience_anchor', 'N/A')}'")
-                safe_print(f"  ✓ RIM Impact: {stimulus.get('rim_impact', 0.5):.2f}")
+                safe_print(f"  ✓ RIM R-Impact: {stimulus.get('r_impact_score', 0.5):.2f}")
                 
                 # Partial write: Buffer user fragment
                 self.current_turn_user_fragment = {
@@ -532,7 +469,7 @@ class EVAOrchestrator:
                     "raw_text": user_input,
                     "salience_anchor": {
                         "phrase": stimulus.get("salience_anchor", "unknown"),
-                        "Resonance_impact": stimulus.get("rim_impact", 0.5)
+                        "Resonance_impact": stimulus.get("r_impact_score", 0.5)
                     },
                     "semantic_frames": stimulus.get("tags", []),
                     "affective_inference": {
@@ -709,6 +646,20 @@ class EVAOrchestrator:
                 },
                 memory_id=context_id
             )
+            
+            # [NEW] Engram Memorization (Conditional)
+            if ai_confidence > self.engram.min_conf:
+                 saved = self.engram.memorize(
+                     text=user_input, 
+                     context_data={
+                         "intent": stimulus.get("intent"),
+                         "response": final_text[:100], # Store brief response
+                         "emotion": bio_state.get("emotion_label")
+                     },
+                     confidence=ai_confidence
+                 )
+                 if saved:
+                     safe_print(f"    ⚡ [Engram] Memorized new pattern (Conf: {ai_confidence:.2f})")
 
         safe_print(f"  ✓ Episode archived (ID: {context_id[:8]}...)")
         

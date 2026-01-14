@@ -1,0 +1,11 @@
+engram_system:
+  version: 1.0
+  enabled: true
+  parameters:
+    min_confidence: 0.95  # Strict threshold for "truth" memorization
+    ngram_size: 4         # Sliding window for pattern detection
+    max_entries: 10000    # Prevent unlimited growth (LRU policy implied)
+    hash_algorithm: "sha256"
+  storage:
+    type: "json"          # Start simple, scalable to Redis later
+    path: "data/engram_store.json"

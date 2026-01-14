@@ -24,8 +24,8 @@ agent/
 │   │
 │   # === Memory (รู้ว่ามันมีอะไร / Awareness of What) ===
 │   ├── episodic_memory/      # [MSP owned] ความจำเหตุการณ์ → move to memory/session_memory when session end
-│   ├── semantic_memory/      # [GKS owned] ความจำความหมาย → move to GKS stores when session end
-│   ├── sensory_memory/       # [AQI owned] ความจำการรับรู้ (perceptual/phenomenological)
+│   ├── semantic_memory/      # [EVA owned] ความจำความหมาย → MSP moves to session_memory (Candidate for GKS)
+│   ├── sensory_memory/       # [EVA owned] ความจำการรับรู้ → MSP archives to Sensory Store
 │   │
 │   # === Capabilities (รู้ว่ามันทำอะไรได้ / Awareness of How) ===
 │   ├── tools/                # [SHORTCUTS] Interfaces to stateless tools (Read-Only)
@@ -44,6 +44,7 @@ agent/
 │   ├── services/             # [SHORTCUTS] Interfaces to external providers (Read-Only)
 │   │   ├── agentic_rag.lnk       # → /services/agentic_rag/
 │   │   ├── slm_bridge.lnk        # → /services/slm_bridge/
+│   │   ├── engram_system.lnk     # → /services/engram_system/
 │   │   ├── vector_search.lnk     # → /services/vector_bridge/
 │   │   └── ... (shortcuts to service inputs)
 │   │
@@ -62,6 +63,7 @@ agent/
 │   │   └── projection/       
 │   │
 │   └── services/             # Service wrappers
+│       ├── engram_system/    # [NEW] Conditional Memory (O(1) Lookup)
 │       ├── rag_engine/       
 │       ├── slm_core/         
 │       └── vector_db/        
@@ -75,7 +77,13 @@ agent/
 │   ├── context_store/        # [working buffers] CIM context
 │   ├── archival_memory/      # [frozen] Immutable archives (MSP owned)
 │   │
-│   # === GKS Blocks (moved from consciousness - read-only knowledge) ===
+    │   # === GKS Blocks (moved from consciousness - read-only knowledge) ===
+    ├── orchestrator/         # [SYSTEM] Main Orchestration Loop
+    │   ├── cim/              # [MODULE] Context Injection
+    │   ├── session_manager/  # [MODULE] Lifecycle & Grounding Handoff
+    │   └── orchestrator.py
+    │
+    │   # === GKS Blocks (moved from consciousness - read-only knowledge) ===
 │   ├── genesis_block/        # [read-only cache] Loaded from GKS stores
 │   ├── master_block/         # [read-only cache] Core knowledge (DNA)
 │   ├── safety_block/         # [read-only cache] Safety protocols
@@ -91,6 +99,7 @@ agent/
 │   ├── archetypal_projection/# [MODULE] Framework projection (APM)
 │   ├── meta_learning_loop/   # [MODULE] Pattern reinforcement (MLL)
 │   ├── grounding/            # [NODE] User conflict detection
+│   │   └── truth_seeker_node.py # [NEW] "Grilled Shrimp" Validation Logic
 │   ├── Algorithm_how_Genesis_Block_store/ 
 │   ├── concept_why_Genesis_Block_store/
 │   ├── framework_genesis_Block_store/ 
@@ -139,7 +148,9 @@ agent/
         ├── configs/              # OS configs
         ├── identity_manager.py   # Global ID Factory
         ├── resonance_bus.py      # Communication Backbone
-        └── rim_calculator.py     # RIM Logic
+        └── rim/                  # [MODULE] Resonance Impact Model
+            ├── configs/
+            └── rim_engine.py
 ```
 
 ---

@@ -24,6 +24,14 @@ glossary:
     full_name: Psychological Engine
     meaning: "9-Dimensional affective state model (5 Core + 2 Meta + 2 Categorical)."
 
+  - term: GKS
+    full_name: Genesis Knowledge System
+    meaning: "The static knowledge backbone managing Master Blocks (Truths) and Genesis Blocks (Frameworks)."
+
+  - term: Engram
+    full_name: Conditional Memory
+    meaning: "O(1) Scalable Lookup Cache for instant retrieval of frequent interaction patterns."
+
   - term: MSP
     full_name: Memory & Soul Passport
     meaning: "Unified memory management layer for episodic, semantic, and sensory persistence."
