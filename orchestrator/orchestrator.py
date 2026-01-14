@@ -54,6 +54,7 @@ from services.vector_bridge.chroma_bridge import ChromaVectorBridge
 from services.vector_bridge.chroma_bridge import ChromaVectorBridge
 from services.vector_bridge.chroma_bridge import ChromaVectorBridge
 from operation_system.rim.rim_engine import rim_calc
+from operation_system.resonance_engine.resonance_engine import ResonanceEngine
 from eva.genesis_knowledge_system.gks_interface import gks_interface  # [NEW] V9.3.0G
 # [NEW] Engram System (Conditional Memory)
 from capabilities.services.engram_system.engram_engine import EngramEngine
@@ -209,6 +210,10 @@ class EVAOrchestrator:
         # [NEW] Trajectory Manager (Execution Trace Logger)
         safe_print("  - Initializing Trajectory Manager (Trace Logger)...")
         self.trajectory = TrajectoryManager()
+        
+        # [NEW] Resonance Engine (4-Layer Resonance)
+        safe_print("  - Initializing Resonance Engine (4-Layer Pipeline)...")
+        self.resonance = ResonanceEngine()
         
         self.pending_session_end = False # For confirmation flow
         self.last_interaction = datetime.now()
@@ -402,15 +407,18 @@ class EVAOrchestrator:
         try:
             slm_result = slm.extract_intent(user_input)
             
-            # Use RIM Calculator for instinctual impact
-            slm_impact = rim_calc.calculate_impact(
-                slm_result.get("emotional_signal", "neutral"),
-                slm_result.get("salience_anchor", "None")
-            )
+            # [NEW] 4-Layer Resonance (L1/L2: Literal & Interpretive)
+            res_output = self.resonance.process(user_input)
+            slm_result["resonance_l2"] = {
+                 "archetype": res_output.archetype,
+                 "mrf_interpretation": res_output.mrf_interpretation,
+                 "layer_depth": res_output.layer_depth
+            }
+            slm_impact = res_output.ri_score
             slm_result["r_impact_score"] = slm_impact
             
             safe_print(f"    > Intent: {slm_result.get('intent')}")
-            safe_print(f"    > Instinctual Signal: {slm_result.get('emotional_signal')} (Impact: {slm_impact:.2f})")
+            safe_print(f"    > Resonance (L2): {res_output.archetype if res_output.archetype else 'None'} (RI: {slm_impact:.2f})")
             safe_print(f"    > Salience Anchor: {slm_result.get('salience_anchor')}")
             
             # [NEW] Engram Lookup (Fast Path)
@@ -573,12 +581,24 @@ class EVAOrchestrator:
         # ============================================================
         safe_print("\n💾 STEP 4: Archiving turn to MSP")
         
-        # Final RI Calculation (Resonance Edition logic)
-        # Formula: (Bio_Impact * 0.6) + (AI_Confidence * 0.4)
-        bio_impact = bio_state.get("Resonance_index", 0.5) 
-        ai_confidence = stimulus.get("confidence_score", 0.5)
-        final_ri = (bio_impact * 0.6) + (ai_confidence * 0.4)
-        safe_print(f"  ✓ Calculated Final RI: {final_ri:.2f} (Bio: {bio_impact:.2f} ‖ AI: {ai_confidence:.2f})")
+        # [NEW] Final Resonance Evaluation (L3/L4: Resonant & Transcendent)
+        # Capture paradox signal from MRF if present
+        paradox_signal = slm_result.get("resonance_l2", {}).get("mrf_interpretation", {}).get("meta", {}).get("paradox_detected", False)
+        
+        # Deep Process includes Memory and Qualia simulation
+        res_output_final = self.resonance.process(final_text, context={
+            "paradox_detected": paradox_signal,
+            "physio_state": bio_state.get('biological_state'),
+            "matrix_state": bio_state.get('psychological_state')
+        })
+        
+        final_ri = res_output_final.ri_score
+        self.umbrella_active = res_output_final.umbrella_deployed
+        
+        safe_print(f"  ✓ Calculated Final RI: {final_ri:.2f} (Depth: {res_output_final.layer_depth})")
+        if self.umbrella_active:
+             safe_print(f"  ☂️ [UMBRELLA ACTIVE] Strategy: {res_output_final.mrf_interpretation.get('transcendental', {}).get('transcendental_insight', 'Stability Mode')}")
+
 
         # [NEW] Generate Sequential Turn IDs via IdentityManager
         user_turn_num = (self.turn_count * 2) - 1

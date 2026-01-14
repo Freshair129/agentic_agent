@@ -73,13 +73,6 @@ class ResonanceEngine:
     def process(self, text: str, context: Optional[Dict] = None) -> ResonanceOutput:
         """
         Main processing pipeline.
-        
-        Args:
-            text: Input text to process
-            context: Optional context (user profile, session state, etc.)
-        
-        Returns:
-            ResonanceOutput with ri_score, layer_depth, and metadata
         """
         output = ResonanceOutput(ri_score=0.0, layer_depth="L1")
         
@@ -87,7 +80,9 @@ class ResonanceEngine:
         if self.l1_enabled:
             l1_result = self._process_l1_literal(text)
             output.ri_score = l1_result.get('sentiment_score', 0.0)
+            self.current_ri = output.ri_score
             output.layer_depth = "L1"
+            self.current_depth = "L1"
         
         # L2: Interpretive Layer (MRF + APM)
         if self.l2_enabled:
@@ -95,13 +90,16 @@ class ResonanceEngine:
             output.archetype = l2_result.get('archetype')
             output.mrf_interpretation = l2_result.get('mrf_layers')
             output.layer_depth = "L2"
+            self.current_depth = "L2"
         
         # L3: Resonant Layer (Memory + Qualia + RI)
         if self.l3_enabled:
             l3_result = self._process_l3_resonant(text, context)
             output.ri_score = l3_result.get('ri_score', output.ri_score)
+            self.current_ri = output.ri_score
             output.qualia_vector = l3_result.get('qualia_vector')
             output.layer_depth = "L3"
+            self.current_depth = "L3"
         
         # L4: Transcendent Layer (Umbrella + PRE)
         if self.l4_enabled:
@@ -109,6 +107,7 @@ class ResonanceEngine:
             output.umbrella_deployed = l4_result.get('umbrella_deployed', False)
             if l4_result.get('transcended'):
                 output.layer_depth = "L4"
+                self.current_depth = "L4"
         
         return output
     
@@ -160,10 +159,12 @@ class ResonanceEngine:
         """
         # TODO: Integrate with MSP for memory recall
         # TODO: Integrate with ArtifactQualia
-        # TODO: Calculate final RI score
+        
+        # Use existing RI from previous layers as baseline
+        baseline_ri = self.current_ri
         
         return {
-            "ri_score": 0.75,  # Placeholder
+            "ri_score": baseline_ri,  # Dynamically use L1/L2 score
             "qualia_vector": {},
             "memory_linked": False
         }

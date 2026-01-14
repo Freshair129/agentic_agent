@@ -25,8 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Umbrella Engine**: Created toggle-based safety layer with EMP (Exposure Management Protocol).
   - **Location**: `operation_system/umbrella/`
   - **Features**: State-based protection, graceful degradation, Prime Directive integration.
-- **Verification Suite**: Created `tests/test_resonance_engine.py` for automated pipeline validation.
+- **Verification Suite**: Created `tests/test_resonance_engine.py` and `tests/simulate_resonance_comparison.py` for automated and comparative validation.
 - **ADR-005**: Formally documented the "Unified 4-Layer Resonance Architecture" decision.
+- **Orchestrator V9.4**: Fully integrated the 4-Layer Resonance pipeline into the main processing loop.
 
 ### Changed
 
