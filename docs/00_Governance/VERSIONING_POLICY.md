@@ -50,7 +50,7 @@ Used to denote a specialized variant or a major knowledge injection that defines
 | **V** | **Vision** | Integration of Vision/Image processing capabilities. |
 | **R** | **Resonance** | Major update to the Emotional/Resonance engine. |
 | **Q** | **Quantum** | (Theoretical) Integration of non-deterministic/quantum logic. |
-| **Pre**| **Preview** | Unstable/Testing version. |
+| **Pre** | **Preview** | Unstable/Testing version. |
 
 ---
 

@@ -48,4 +48,6 @@
 - [**Archive**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/archive/): คลังเอกสารเก่าสำหรับการอ้างอิงย้อนหลัง
 
 ---
-*Created for EVA v9.4.3 Documentation Management*
+---
+
+**Created for EVA v9.4.3 Documentation Management**

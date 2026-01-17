@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD024 -->
 # Changelog
 
 All notable changes to the EVA Core project will be documented in this file.

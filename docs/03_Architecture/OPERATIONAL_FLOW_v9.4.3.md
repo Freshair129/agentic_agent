@@ -65,11 +65,13 @@ sequenceDiagram
 ## 🛠️ Runtime Hook Mapping
 
 | Phase | Component | File Reference | Action / Hook Points |
+
+| Step | System | File | Method Description |
 | :--- | :--- | :--- | :--- |
 | **0. Reflex** | Engram System | `engram_engine.py` | `lookup(text)` -> Return cached data if hit. |
 | **1. Perception** | SLM Gateway | `orchestrator.py` | `process_user_input` -> `slm.extract_intent()` |
 | **2. The Gap** | Physio & Matrix | `physio_core.py` | `process_stimulus()` -> Update HPA/ANS axis. |
-| **2.1 Association**| Agentic RAG | `agentic_rag.py` | `contextualize(state)` -> Fetch 7-stream memories. |
+| **2.1 Association** | Agentic RAG | `agentic_rag.py` | `contextualize(state)` -> Fetch 7-stream memories. |
 | **3. Reasoning** | CIM & LLM | `orchestrator.py` | `cim.inject()` -> `llm.generate()` (Phase 2). |
 | **4. Persistence** | MSP Engine | `msp_engine.py` | `archive_turn()` -> Save to semantic/episodic store. |
 
@@ -85,4 +87,6 @@ sequenceDiagram
 * **Engram**: หน่วยความจำรีเฟล็กซ์ที่ทำงานระดับ O(1)
 
 ---
-*Created for EVA v9.4.3 Implementation*
+---
+
+**Created for EVA v9.4.3 Implementation**
