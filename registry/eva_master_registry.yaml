@@ -23,9 +23,9 @@ policies:
 # 2. ROOT SLOT WHITE LIST (The Land)
 # ============================================================
 root_slots:
+  - .agent             # Agent rules, workflows, and subagent configs
   - registry
   - contracts
-  - configs
   - docs
   - operation_system
   - physio_core
@@ -40,6 +40,7 @@ root_slots:
   - consciousness     # Active State
   - data              # Static Assets
   - memory            # Archival Storage
+  - scripts           # Verification & utility scripts
   - tests             # Verification Suite
   - tools             # Technician Subagents
 
