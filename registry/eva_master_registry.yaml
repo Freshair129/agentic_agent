@@ -94,6 +94,20 @@ systems:
       bus_subscribe: []
       state_ownership: [physio_core_state.json]
     
+    # [Contracts: Data Flow] (User's 'input/from', 'output/deliver')
+    contracts:
+      inputs:
+        - data: "StimulusVector"
+          source: "Orchestrator" # from: {system_id}
+          channel: "BUS_PHYSICAL"
+      outputs:
+        - data: "HormonePanel"
+          target: "EVA_Matrix"   # deliver: {system_id}
+          channel: "BUS_PHYSICAL"
+        - data: "VitalsData"
+          target: "EVA_Matrix"
+          channel: "BUS_PHYSICAL"
+
     # [Dependencies: Needs]
     dependencies: [] # Foundational System (No external deps)
     
@@ -155,6 +169,19 @@ systems:
       bus_subscribe: [BUS_PHYSICAL]
       state_ownership: [eva_matrix_state.json]
     
+    contracts:
+      inputs:
+        - data: "HormonePanel"
+          source: "PhysioCore"
+          channel: "BUS_PHYSICAL"
+        - data: "VitalsData"
+          source: "PhysioCore"
+          channel: "BUS_PHYSICAL"
+      outputs:
+        - data: "EmotionalState (9D)"
+          target: "Orchestrator"
+          channel: "BUS_PSYCHOLOGICAL"
+
     dependencies:
       - system: PhysioCore # via BUS_PHYSICAL
     
@@ -238,7 +265,23 @@ systems:
       bus_publish: [BUS_OPERATIONAL]
       bus_subscribe: [BUS_ALL]
       state_ownership: [cim_state.json]
-      
+    
+    contracts:
+      inputs:
+        - data: "UserPrompt"
+          source: "User"
+          channel: "Direct"
+        - data: "EmotionalState"
+          source: "EVA_Matrix"
+          channel: "BUS_PSYCHOLOGICAL"
+      outputs:
+        - data: "StimulusVector"
+          target: "PhysioCore"
+          channel: "BUS_PHYSICAL"
+        - data: "FinalResponse"
+          target: "User"
+          channel: "Direct"
+
     dependencies:
       - system: PhysioCore
       - system: EVA_Matrix
