@@ -76,21 +76,21 @@ These systems are **EXEMPT** from v9.4.3 standard structure:
 
 **v9.4.3 Standard Structure**:
 
-```
+```text
 system_name/
 ├── Module/              # Integration layer
 │   └── ComponentX.py
 ├── Node/                # Pure logic
 │   ├── LogicA.py
 │   └── LogicB.py
-├── configs/             # System-specific only
+├── configs/             # System-specific settings ONLY
 │   └── system_config.yaml
-├── contracts/           # Interface definitions
-│   └── system_interface.yaml
 ├── schema/              # Data schemas
 │   └── system_schema.json
 └── system_name.py       # Main entry point
 ```
+
+**Note**: Contracts are **centralized** at `agent/contracts/`, not in system directories.
 
 **Benefits**:
 
@@ -98,6 +98,43 @@ system_name/
 - Easier onboarding
 - Automated tooling (Archivist, RIS)
 - Consistent import paths
+- SSOT for interfaces (agent/contracts/)
+
+---
+
+## 3.3 Contracts Centralization
+
+**Location**: `agent/contracts/` (SSOT for all public interfaces)
+
+**Structure**:
+
+```text
+agent/contracts/
+├── systems/         # System-level interfaces (5 files)
+│   ├── IPhysioSystem.py
+│   ├── IMatrixSystem.py
+│   ├── IMSPassport.py
+│   ├── IOrchestrator.py
+│   └── IResonanceBus.py
+└── modules/         # Module-level interfaces (4 files)
+    ├── ICognitiveGateway.py
+    ├── IKnowledgeAuthority.py
+    ├── IMemoryRetrieval.py
+    └── IMemoryStorage.py
+```
+
+**Rules**:
+
+1. **NO** `system_name/contracts/` directories (redundant)
+2. **All** public interfaces MUST be in `agent/contracts/`
+3. **Exception**: Internal contracts (used only within a system) can live in `system_name/internal/` if needed
+
+**Benefits**:
+
+- ✅ SSOT for all interfaces
+- ✅ Prevents interface duplication
+- ✅ Easier to find and update contracts
+- ✅ Follows Dependency Inversion Principle (SOLID "D")
 
 ---
 
