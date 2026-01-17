@@ -1,10 +1,11 @@
 schema: EVA-Glossary-v9
-version: 9.2.0
-updated: 2026-01-12
+version: 9.6.0
+updated: 2026-01-18
 
 description: >
-  Unified glossary for EVA 9.1.0 (Resonance Edition).
-  Updated to reflect current component names and the "Single-Session" architecture.
+  Unified glossary for EVA 9.6.0 (Resonance Refined).
+  Source of Truth for all acronyms and terminology.
+  DO NOT GUESS - Check this file first!
 
 glossary:
   # --- Core Components ---
@@ -61,4 +62,29 @@ glossary:
   - term: Doc-to-Code
     full_name: Ghost Key Protocol
     meaning: "Development methodology where config changes (SSOT) must precede code implementation."
+
+  # --- Development Philosophy ---
+  - term: GSD
+    full_name: Get Shit Done
+    meaning: "Practical development approach focusing on working code over structure. Use for simple components (<50 lines, <3 methods). NOT 'Goal-State Driven'."
+    references:
+      - adr: docs/adr/015_gsd_governance_scope.md
+      - source: https://github.com/Cars-10/get-shit-done-gemini
+  
+  - term: RMS
+    full_name: Resonance Memory System
+    meaning: "Automatic memory encoding system that captures interaction patterns and emotional resonance without LLM involvement."
+
+  # --- Deprecated Terms (DO NOT USE) ---
+  - term: CIN
+    status: DEPRECATED
+    full_name: Context Injection Node
+    replaced_by: CIM (Context Injection Module)
+    deprecated_since: 9.4.0
+  
+  - term: BDC
+    status: DEPRECATED  
+    full_name: Bio-Digital Core
+    replaced_by: PhysioCore
+    deprecated_since: 9.1.0
 
