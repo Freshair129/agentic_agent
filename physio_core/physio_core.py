@@ -1,6 +1,5 @@
 """
-PhysioCore
-Version: v1.0
+PhysioCore (Independent Version: 2.4.3)
 
 Role:
 - Orchestrate full physiological loop

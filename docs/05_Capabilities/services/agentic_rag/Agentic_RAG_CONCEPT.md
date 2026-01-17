@@ -1,6 +1,6 @@
 # Agentic RAG: Conceptual Overview
 
-**Component ID:** `SYS-ARAG-8.2` | **Version:** `8.2.0` | **Date:** 2026-01-05
+**Component ID:** `SYS-ARAG-1.1.0` | **Version:** `1.1.0` | **Date:** 2026-01-17
 
 ## 1. Core Philosophy: Embodied Memory Retrieval
 

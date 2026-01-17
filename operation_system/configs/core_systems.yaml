@@ -12,7 +12,7 @@ core_systems:
   # ----------------------------------------------------------
   - id: Resonance_Bus
     name: Resonance_Bus
-    version: 9.4.3
+    version: 2.4.3
     role: central_module
     domain: communication
     id_registry: "IdentityManager.BUS_*"
@@ -21,7 +21,7 @@ core_systems:
 
   - id: Identity_Manager
     name: Identity_Manager
-    version: 9.4.3
+    version: 2.4.3
     role: central_module
     domain: security
     description: "Central authority for ID generation and identity unification."
@@ -34,7 +34,7 @@ core_systems:
   # ----------------------------------------------------------
   - id: MSP
     name: Memory_Soul_Passport
-    version: 9.4.3
+    version: 1.1.0
     role: core_system
     domain: memory_persistence
     description: "Unified Memory OS. Manages Episodic (JSON), Semantic (ChromaDB), and Sensory (JSONL) memory."
@@ -63,7 +63,7 @@ core_systems:
   # ----------------------------------------------------------
   - id: PhysioCore
     name: Physiological_Core_Engine
-    version: 9.4.3
+    version: 2.4.3
     role: system_authority
     domain: biological_simulation
     description: "Full physiological pipeline. Orchestrates endocrine, blood, and vital signs."
@@ -82,7 +82,7 @@ core_systems:
 
   - id: EVA_Matrix
     name: Psychological_Engine
-    version: 9.4.3
+    version: 2.4.3
     role: core_system
     domain: psyche
     description: "9D Psychological State Engine (5 Core + 2 Meta + 2 Categorical axes)."
@@ -95,7 +95,7 @@ core_systems:
 
   - id: Artifact_Qualia
     name: Phenomenological_Experience_Engine
-    version: 9.4.3
+    version: 2.4.3
     role: core_system
     domain: phenomenology
     description: "Phenomenological experience integrator (Intensity, Tone, Coherence, Texture)."
@@ -111,7 +111,7 @@ core_systems:
   # ----------------------------------------------------------
   - id: CIM
     name: Context_Injection_Module
-    version: 9.4.3
+    version: 2.1.0
     role: core_system
     domain: orchestration
     description: "Dual-phase context builder for Single-Session One-Inference pattern."
@@ -121,7 +121,7 @@ core_systems:
 
   - id: AgenticRAG
     name: Agentic_RAG_Engine
-    version: 9.4.3
+    version: 1.1.0
     role: core_system
     domain: memory_retrieval
     description: "7-dimensional affective memory retrieval system."
@@ -132,7 +132,7 @@ core_systems:
 
   - id: SLM_Bridge
     name: SLM_Bridge
-    version: 9.4.3
+    version: 2.4.3
     role: cognitive_gateway
     domain: interpretation
     description: "Small Language Model bridge for intent extraction and gut feeling."
@@ -142,7 +142,7 @@ core_systems:
 
   - id: Vector_Bridge
     name: Vector_Bridge
-    version: 9.4.3
+    version: 2.4.3
     role: memory_index
     domain: storage
     description: "Vector database bridge for high-dimensional recall."
@@ -152,7 +152,7 @@ core_systems:
 
   - id: Session_Manager
     name: Session_Manager
-    version: 9.4.3
+    version: 2.4.3
     role: module
     domain: orchestrator_lifecycle
     description: "Manages session lifecycle and closing ceremony (Archival + TruthSeeker)."
@@ -162,7 +162,7 @@ core_systems:
 
   - id: Trajectory_Manager
     name: Trajectory_Manager
-    version: 9.4.3
+    version: 2.4.3
     role: system
     domain: operation_system_trace
     description: "Captures execution traces for debugging and analysis (LLM calls, tool usage, errors)."
@@ -173,7 +173,7 @@ core_systems:
 
   - id: Resonance_Engine
     name: Resonance_Engine
-    version: 9.4.3
+    version: 2.4.3
     role: system
     domain: operation_system_resonance
     description: "Unified 4-Layer Resonance Processing (L1: Literal, L2: Interpretive/MRF+APM, L3: Resonant/Memory+RI, L4: Transcendent/Umbrella)."
@@ -186,7 +186,7 @@ core_systems:
 
   - id: MRF_Engine
     name: MRF_Engine
-    version: 9.4.3
+    version: 2.4.3
     role: central_module
     domain: operation_system_cognition
     description: "Metacognitive Re-contextualization Framework. 7-layer interpretation engine for transforming unsolvable problems by shifting context."
@@ -197,7 +197,7 @@ core_systems:
     
   - id: Umbrella_Engine
     name: Umbrella_Engine
-    version: 9.4.3
+    version: 2.4.3
     role: central_module
     domain: operation_system_safety
     description: "Toggle-based safety layer (Umbrella Principle). Coexists with uncontrollable events via EMP (Exposure Management Protocol)."
@@ -208,7 +208,7 @@ core_systems:
 
   - id: RIM_Calculator
     name: RIM_Calculator
-    version: 9.1.0
+    version: 2.1.0
     role: central_module
     domain: interpretation
     description: "Resonance Impact Model. Maps sentiment to numerical scores."
@@ -219,7 +219,7 @@ core_systems:
 
   - id: PRN
     name: Prompt_Rule_Node
-    version: 9.4.3
+    version: 2.4.3
     role: core_system
     domain: behavioral_governance
     description: "Manages behavioral constraints and identity principles."
@@ -233,7 +233,7 @@ core_systems:
   # ----------------------------------------------------------
   - id: GKS
     name: Genesis_Knowledge_System
-    version: 9.4.3
+    version: 2.4.3
     role: knowledge_authority
     domain: epistemology
     description: "The static knowledge backbone. Manages Master Blocks and Genesis Blocks."
@@ -248,7 +248,7 @@ core_systems:
 
   - id: NexusMind
     name: NexusMind_Engine
-    version: 9.4.3
+    version: 2.4.3
     role: central_module  # Changed from cognitive_module - it's a mode controller
     domain: operation_system/cognitive_modes
     description: "Thinking Mode Controller. Executes decision matrices and switches cognitive strategies (analytical, intuitive, etc.)."
@@ -258,7 +258,7 @@ core_systems:
 
   - id: MLL
     name: Meta_Learning_Loop
-    version: 9.4.3
+    version: 2.4.3
     role: learning_module
     domain: genesis_knowledge_system/learning
     description: "Long-term pattern recognition and instinct refinement."
@@ -268,7 +268,7 @@ core_systems:
 
   - id: APM
     name: Archetypal_Projection_Module
-    version: 9.4.3
+    version: 2.4.3
     role: central_module  # Changed from identity_module to central_module
     domain: archetypal_projection
     description: "Maps internal state to archetypal templates (Hero, Caregiver, etc.). Independent module callable from multiple systems."
@@ -289,7 +289,7 @@ core_systems:
 
   - id: RMS
     name: Resonance_Memory_System
-    version: 9.4.3
+    version: 6.2.0
     role: sub_system
     owned_by: MSP
     domain: memory_resonance
@@ -300,7 +300,7 @@ core_systems:
 
   - id: Orchestrator
     name: EVA_Orchestrator
-    version: 9.4.3
+    version: 1.2.0
     role: system_authority
     domain: central_nervous_system
     description: "Main engine for 1-Inference Sequential Function Calling."

@@ -1,7 +1,6 @@
 """
-Agentic-RAG (Embodied Affective Retrieval System)
-Version: 8.1.0
-Date: 2025-12-31
+Agentic-RAG Engine (Independent Version: 1.1.0)
+7-dimensional memory retrieval system.
 
 The Agentic-RAG implements 7-dimensional memory retrieval for affective,
 emotion-congruent recall. It queries memories across multiple dimensions to find

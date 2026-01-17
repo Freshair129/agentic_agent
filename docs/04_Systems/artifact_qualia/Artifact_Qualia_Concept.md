@@ -3,7 +3,7 @@
 > **System**: Artifact Qualia (Phenomenology Core)
 > **Role**: System (Vital Organ)
 > **Parent**: Consciousness / Operation System
-> **Version**: 9.1.0
+> **Version**: 2.4.3
 
 ## 1. Philosophy
 

@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Documentation Master Index**: Created a unified entry point and reading order.
   - **Index**: `docs/00_Governance/INDEX.md`
 - **ADR-010**: Documented the "8-8-8 Memory Protocol and Documentation Reorganization" decision.
+- **Independent Component Versioning**: Implemented a decoupled versioning strategy to allow subsystems to evolve independently.
+  - **Standard**: Applied a legacy-based mapping rule (8->1, 9->2) to preserve historical context while shifting away from global v9.x numbering.
+  - **Artifacts**: Updated `core_systems.yaml`, all core system headers, and documentation headers.
+  - **ADR-011**: Documented the "Independent Component Versioning Standard" decision.
 
 ### Changed
 

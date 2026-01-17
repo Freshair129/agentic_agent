@@ -15,7 +15,7 @@ from .Module.psych_engine.matrix_psych_module import MatrixPsychModule
 
 class EVAMatrixSystem:
     """
-    System: EVA Matrix System
+    System: EVA Matrix System (Independent Version: 2.4.3)
     Role: Authority for Psychological State (9D Matrix)
     Responsibility: Owns state, manages persistence, and subscribes to Bus. Delegates logic to MatrixPsychModule.
     """

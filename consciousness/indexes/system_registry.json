@@ -1,10 +1,10 @@
 {
   "counters": {
-    "session_seq": 6,
-    "core_seq": 0,
+    "session_seq": 1,
+    "core_seq": 1,
     "sphere_seq": 0,
-    "total_sessions": 6,
+    "total_sessions": 9,
     "current_episode": 7
   },
-  "last_update": "2026-01-15T05:04:51.411240"
+  "last_update": "2026-01-17T18:31:03.912176"
 }

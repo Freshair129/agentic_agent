@@ -1,6 +1,6 @@
 # MSP Concepts & Integration Guide
 
-**Version:** 8.2.0-S1 | **Updated:** 2026-01-04
+**Version:** 1.1.0 | **Updated:** 2026-01-17
 
 > [!NOTE]
 > This document provides conceptual overview and integration patterns for MSP (Memory & Soul Passport).

@@ -1,14 +1,7 @@
 """
+Context Injection Module (CIM) (Independent Version: 2.1.0)
 
-Context Injection Module (CIM) - EVA 9.1.0
-
-Version: 9.1.0
-
-Date: 2026-01-07
-
-
-
-Dual-phase context builder & state manager for EVA 9.1.0 3-Phase Orchestrator.
+Dual-phase context builder for EVA Orchestrator.
 
 
 

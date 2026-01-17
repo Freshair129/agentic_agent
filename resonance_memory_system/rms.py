@@ -1,5 +1,5 @@
 # =============================================================================
-# RMS ENGINE v6.2 (Merged & Standardized)
+# RMS ENGINE v6.2.0 (Independent Version)
 # Resonance Memory System (EVA_Matrix–based)
 # =============================================================================
 
@@ -23,7 +23,7 @@ def smooth(prev: float, now: float, alpha: float = 0.7) -> float:
 
 class RMSEngineV6:
     """
-    Resonance Memory System v6.2
+    Resonance Memory System v6.2.0
     - Merged with logicupdate.py
     - Output aligned with Episodic Memory Schema
     - Aligned with 9D Axes

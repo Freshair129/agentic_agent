@@ -1,7 +1,5 @@
 """
-EVA 8.2.0-R1: Main Orchestrator (Resonance Edition)
-Refactor Date: 2026-01-04
-
+EVA Orchestrator (Independent Version: 1.2.0)
 Architecture:
     User Input
         ↓
@@ -73,7 +71,7 @@ class EVAOrchestrator:
         llm_backend: Optional[str] = None,  # "gemini" or "ollama"
         ollama_model: Optional[str] = None
     ):
-        safe_print(f"🚀 Initializing EVA 9.1.0 Orchestrator (Resonance Edition)...")
+        safe_print(f"🚀 Initializing EVA Orchestrator (v1.2.0)...")
 
         # --------------------------------------------------
         # 0. Load Unified Configuration
@@ -141,7 +139,7 @@ class EVAOrchestrator:
         # 3. Initialize Biological & Psychological Mind (The Gap)
         # --------------------------------------------------
         if self.enable_physio:
-            safe_print("  - Initializing PhysioCore (v9.1.0-C1)...")
+            safe_print("  - Initializing PhysioCore (v2.4.3)...")
             base_physio = Path(__file__).parent.parent / "physio_core" / "configs"
             self.physio = PhysioCore(
                 config_path=str(base_physio / "PhysioCore_configs.yaml"),
@@ -233,7 +231,7 @@ class EVAOrchestrator:
         if not self.session_manager.recording_active:
              self.session_manager._start_new_session()
 
-        print(f"✅ EVA 9.1.0 ready! (Session: {self.session_id})\n")
+        print(f"✅ EVA Orchestrator ready! (Session: {self.session_id})\n")
 
     def _execute_the_gap(self, stimulus: Dict[str, Any], query_text: str = "") -> Dict[str, Any]:
         """
@@ -895,7 +893,7 @@ class EVAOrchestrator:
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="EVA 9.1.0 Orchestrator")
+    parser = argparse.ArgumentParser(description="EVA Orchestrator (v1.2.0)")
     parser.add_argument("--ollama", action="store_true", help="Use Ollama backend")
     parser.add_argument("--model", type=str, default="llama3.2:3b", help="Ollama model name")
     args = parser.parse_args()

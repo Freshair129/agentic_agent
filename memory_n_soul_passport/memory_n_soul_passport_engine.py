@@ -1,7 +1,5 @@
 """
-
-EVA 8.1.0: MSP (Memory & Soul Passport) Engine with Local Filesystem Persistence
-
+MSP (Memory & Soul Passport) Engine (Independent Version: 1.1.0)
 Manages episodic memory using JSONL format + individual JSON files
 
 
@@ -117,9 +115,7 @@ class MSP:
     ):
 
         """
-
-        Initialize MSP Engine (v9.4.3 Resonance Refactored)
-
+        Initialize MSP Engine (Independent Version: 1.1.0)
         """
 
         # Resolve Root Path (Agent Root)
@@ -206,7 +202,7 @@ class MSP:
         self.episodes_llm_dir.mkdir(parents=True, exist_ok=True)
         self.active_state_dir.mkdir(parents=True, exist_ok=True)
 
-        safe_print(f"[MSP] ✅ Subconscious Facade Initialized (v9.4.3)")
+        safe_print(f"[MSP] ✅ Subconscious Facade Initialized (v1.1.0)")
 
     # ============================================================
     # 9.1.0 BRIDGE METHODS
