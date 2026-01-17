@@ -71,9 +71,35 @@ glossary:
       - adr: docs/adr/015_gsd_governance_scope.md
       - source: https://github.com/Cars-10/get-shit-done-gemini
   
+  - term: RAG
+    full_name: Retrieval Augmented Generation
+    meaning: "AI technique that enhances LLM responses by retrieving relevant context from a knowledge base before generating output."
+  
+  - term: AgenticRAG
+    full_name: Agentic Retrieval Augmented Generation
+    meaning: "EVA's intelligent memory retrieval module that performs heuristic-driven context search across multiple memory streams."
+    
   - term: RMS
     full_name: Resonance Memory System
     meaning: "Automatic memory encoding system that captures interaction patterns and emotional resonance without LLM involvement."
+
+  # --- System Architecture ---
+  - term: ANS
+    full_name: Autonomic Nervous System
+    meaning: "Biological subsystem within PhysioCore managing involuntary responses (heart rate, respiration, stress reflexes)."
+  
+  - term: CNS
+    full_name: Central Nervous System
+    meaning: "Domain classification for the Orchestrator - the central control system coordinating all EVA operations."
+  
+  - term: SSOT
+    full_name: Single Source of Truth
+    meaning: "Governance principle requiring one authoritative data source. In EVA: configs precede code, registry defines topology."
+  
+  - term: ADR
+    full_name: Architecture Decision Record
+    meaning: "Formal documentation of significant architectural decisions and their rationale. Located in docs/adr/."
+
 
   # --- Deprecated Terms (DO NOT USE) ---
   - term: CIN
