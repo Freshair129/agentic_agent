@@ -54,6 +54,24 @@ class TechnicianAgent:
         
         target_path = self.root / target
         
+        # 0. Handle Deletion
+        if task.get('action') == 'delete':
+            if target_path.exists():
+                try:
+                    if target_path.is_dir():
+                        # Simple recursive delete for directory
+                        import shutil
+                        shutil.rmtree(target_path)
+                        logger.info(f"Deleted directory: {target}")
+                    else:
+                        target_path.unlink()
+                        logger.info(f"Deleted file: {target}")
+                except Exception as e:
+                    logger.error(f"Failed to delete {target}: {e}")
+            else:
+                logger.warning(f"Deletion target not found: {target}")
+            return
+
         # 1. Handle File Creation
         if not target_path.exists():
             if task.get('create_if_missing', False):

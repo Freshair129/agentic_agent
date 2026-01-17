@@ -18,7 +18,7 @@ This workflow defines the standard procedure for "Checkpointing" the project. It
 - **Run Archivist:** Execute the `run_archivist` workflow to sync `.agent/rules/`.
 
    // turbo
-   python tools/subagents/archivist_subagent.py --sync-rules
+   python capabilities/tools/subagents/archivist_subagent.py --sync-rules
 
 ## 3. Git Snapshot
 

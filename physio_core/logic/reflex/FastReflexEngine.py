@@ -51,26 +51,28 @@ class FastReflexEngine:
     ) -> Dict[str, float]:
 
         new_surges: Dict[str, float] = {}
+        print(f"[FastReflex] Gland Status Keys: {list(gland_status.keys())}")
 
         for path in self.pathways:
             stim_type = path.get("stimulus_type")
             target_receptor = path.get("target_receptor")
-            modifier = path.get("gain_modifier", 1.0)
+            # modifier = path.get("gain_modifier", 1.0) # Moved inside else block
 
             intensity = stimuli.get(stim_type, 0.0)
             if intensity <= 0.0:
                 continue
 
             status = gland_status.get(target_receptor, {})
-            g_inv = status.get("G_inventory", 0.0)
-            g_max = status.get("G_max", 1.0)
-
+            # Use inventory_pct from gland status (Value is 0-100)
+            inv_pct = status.get("inventory_pct", 100.0) / 100.0
             threshold = self.tuning.get("Inhibition_Threshold", 0.05)
-            if (g_inv / max(1e-6, g_max)) < threshold:
+
+            if inv_pct < threshold:
                 surge = 0.0
             else:
+                modifier = path.get("gain_modifier", 1.0)
                 gain = self.tuning.get("Gain_Factor", 2.5) * modifier
-                surge = (g_inv / max(1e-6, g_max)) * intensity * gain
+                surge = inv_pct * intensity * gain
 
             surge = min(surge, self.tuning.get("Saturation_Cutoff", 1.2))
             new_surges[target_receptor] = new_surges.get(target_receptor, 0.0) + surge

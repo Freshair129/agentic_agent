@@ -52,6 +52,7 @@ from capabilities.services.vector_bridge.chroma_bridge import ChromaVectorBridge
 from operation_system.rim.rim_engine import rim_calc
 from operation_system.resonance_engine.resonance_engine import ResonanceEngine
 from genesis_knowledge_system.gks_interface import gks_interface  # [NEW] V9.3.0G
+from resonance_memory_system.rms import RMSEngineV6
 # [NEW] Engram System (Conditional Memory)
 from capabilities.services.engram_system.engram_engine import EngramEngine
 # [NEW] Session Manager
@@ -214,6 +215,10 @@ class EVAOrchestrator:
         # [NEW] Resonance Engine (4-Layer Resonance)
         safe_print("  - Initializing Resonance Engine (4-Layer Pipeline)...")
         self.resonance = ResonanceEngine()
+        # [NEW] RMS Activation (V9.4.3)
+        safe_print("  - Initializing RMS (Resonance Memory System v6.2.0)...")
+        self.rms = RMSEngineV6(config=self.config_data.get("rms", {}))
+
         
         self.pending_session_end = False # For confirmation flow
         self.last_interaction = datetime.now()
@@ -274,7 +279,20 @@ class EVAOrchestrator:
         unique_memories = self.agentic_rag.merge_results(quick_matches, deep_matches, user_query=query_text)
         
         # 4. RMS scan
-        safe_print(f"  - RMS: Scanning for '{emotion_label}' resonance chains...")
+        # 4. RMS Processing (Active)
+        safe_print(f"  - RMS: Processing Resonance Coloring for '{emotion_label}'...")
+        try:
+            rms_out = self.rms.process(
+                eva_matrix=matrix_snap,
+                rim_output={"impact_level": "medium"}, # Placeholder RIM linkage
+                reflex_state=physio_result.get("autonomic", {}),
+                ri_total=0.5
+            )
+            safe_print(f"    ✓ RMS Color: {rms_out.get('memory_color')} (Level: {rms_out.get('memory_encoding_level')})")
+            bio_state['rms_coloring'] = rms_out
+        except Exception as e:
+            safe_print(f"    ⚠️ RMS Failure: {e}")
+
         
         # 6. Format for LLM Continuation
         return {
@@ -909,3 +927,5 @@ if __name__ == "__main__":
         safe_print("\n[SYSTEM] Interrupted by user.")
     
     safe_print("\nSession ended. Goodbye.")
+
+from resonance_memory_system.rms import RMSEngineV6

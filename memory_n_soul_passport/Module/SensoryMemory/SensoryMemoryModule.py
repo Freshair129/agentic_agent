@@ -46,11 +46,6 @@ class SensoryMemoryModule(IMemoryRetrieval, IMemoryStorage):
                 break
         return matches
 
-                
-            if len(matches) >= limit:
-                break
-        return matches
-
     def retrieve_by_state_similarity(self, state_snapshot: Dict[str, Any], limit: int = 3) -> List[Dict[str, Any]]:
         """Retrieves sensory records matching a biological state."""
         # This would require complex mapping, returning empty for now

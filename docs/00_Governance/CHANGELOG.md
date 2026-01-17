@@ -23,6 +23,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Technician Subagent**: Implemented `technician_subagent.py` for token-optimized, large-scale file modifications via `task_order.yaml`.
 - **System Codification**: Formalized core laws into `.agent/rules/resonancestandard.md` and workflows into `.agent/workflows/`.
 
+### Verified
+
+- **Physio-Psych Coupling**: Completed functional audit of the `PhysioCore` <-> `EVAMatrix` link.
+  - **Reactivity**: Confirmed that biological stimuli ('threat') correctly trigger hormonal spikes and subsequent psychological axis shifts (Stress/Stability).
+  - **Feedback Loop**: Validated the autonomic resonance loop (Hormones -> BPM/RPM response).
+  - **Homeostasis**: Verified state decay toward baseline for both biological and psychological state variables.
+
+### Fixed
+
+- **AutonomicResponseEngine**: Corrected config key from `weights` to `hormone_weights` to align with SSL (System Specification Law).
+- **ReceptorUnit**: Resolved `max_density` vs `bmax` attribute collision, fixing a 100x signal amplification error.
+- **FastReflexEngine**: Updated schema to use `inventory_pct` from `EndocrineGland` reports, restoring reflex functionality.
+- **PhysioCore**: Fixed unit mismatch in Baseline Clamp logic (pg vs pg/mL) and resolved `core_vals` NameError in bus broadcast.
+
 ### Changed
 
 - **Orchestrator Refine**: Simplified `Orchestrator._execute_the_gap` to act as a trigger, relying on the Resonance Bus for signal propagation.

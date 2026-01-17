@@ -240,13 +240,11 @@ class PhysioCore:
 
         # ---- NEW: Baseline Clamp ----
         # Ensure hormone levels never fall below defined baseline.
-        dist_vol = float(self.blood_cfg.get("hormone_transport", {}).get("distribution_volume_ml", 5000))
         for h_id, gland in self.endocrine.glands.items():
             baseline_pg_ml = gland.baseline_pg_ml
-            baseline_pg = baseline_pg_ml * dist_vol
-            if blood_levels.get(h_id, 0.0) < baseline_pg:
-                blood_levels[h_id] = baseline_pg
-                self.blood.plasma[h_id] = baseline_pg
+            if blood_levels.get(h_id, 0.0) < baseline_pg_ml:
+                blood_levels[h_id] = baseline_pg_ml
+                self.blood.plasma[h_id] = baseline_pg_ml
 
         # 5. Fast Reflex
         reflex_surges = self.reflex.calculate_surges(eva_stimuli, self.endocrine.get_status_report(), dt)
@@ -265,7 +263,7 @@ class PhysioCore:
         # --- Broadcasting & Persistence ---
         physio_payload = {
             "autonomic": ans_state,
-            "blood": core_vals,
+            "blood": blood_levels,
             "vitals": vitals_state,
             "receptor_signals": receptor_signals,
             "timestamp": datetime.now().isoformat()

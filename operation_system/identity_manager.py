@@ -8,8 +8,8 @@ from datetime import datetime
 import time
 
 class IdentityManager:
-    # --- System & Bus Registry (V9.3.3 Resonance Edition) ---
-    # These constants prevent magic string errors across the codebase.
+    # --- System & Bus Registry (V9.5 Centralized Edition) ---
+    # Source: agent/registry/core_systems_v9.5.yaml
     
     # Core System IDs
     SYSTEM_MSP = "MSP"
@@ -22,12 +22,10 @@ class IdentityManager:
     SYSTEM_RAG = "AgenticRAG"
     SYSTEM_ORCH = "Orchestrator"
     
-    # Cognitive & Expansion Systems (V9.3.0G+)
+    # Cogntive & Infrastructure (V9.5)
     SYSTEM_GKS = "GKS"
-    SYSTEM_NEXUS = "NexusMind"
-    SYSTEM_APM = "APM"
-    SYSTEM_MLL = "MLL"
-    SYSTEM_TEMPORAL = "TemporalEngine"
+    SYSTEM_BUS = "Resonance_Bus"
+    SYSTEM_IDM = "Identity_Manager"
     
     # Sub-Systems (Temporal)
     SUBSYSTEM_PULSE = "PULSE"

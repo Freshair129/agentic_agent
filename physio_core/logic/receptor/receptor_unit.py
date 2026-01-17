@@ -13,7 +13,7 @@ class ReceptorUnit:
         self.s_id = system_id
 
         self.kd = config.get('kd', 50.0)
-        self.bmax = config.get('max_density', 100.0)
+        self.bmax = config.get('bmax', 1.0)
         self.efficacy = config.get('efficacy', 1.0)
         self.hill_n = config.get('hill_n', 1.0)
 

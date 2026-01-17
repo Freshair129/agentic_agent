@@ -26,7 +26,9 @@
 
 ### [04. Systems (ระบบอวัยวะ)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/04_Systems/)
 
-- คู่มือรายละเอียดของแต่ละระบบหลัก (PhysioCore, EVA Matrix, MSP, PRN, ฯลฯ)
+- [**PhysioCore (v2.4.3)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/04_Systems/physio_core/circulation_blood_physiology_overview.md): ระบบสรีรวิทยาพื้นฐาน (Verified Stable ✅)
+- [**EVA Matrix (v2.0.0)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/04_Systems/eva_matrix/matrix_logic_concept.md): ระบบประมวลผลสภาวะจิตใจ (Verified Coupled ✅)
+- คู่มือรายละเอียดของแต่ละระบบหลักเพิ่มเติม (MSP, PRN, ฯลฯ)
 
 ### [05. Capabilities (ทักษะและบริการ)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/05_Capabilities/)
 

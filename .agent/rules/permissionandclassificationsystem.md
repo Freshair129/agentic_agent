@@ -2,30 +2,31 @@
 trigger: always_on
 ---
 
-# EVA Permission & Classification System (v9.4.3)
+# EVA Permission & Classification System (v9.6.0)
 >
-> Sources: operation_system/configs/permissions.yaml, core_systems.yaml, ADR-011
+> Sources: registry/eva_master_registry.yaml, ADR-011
 
 ## 0. Versioning Law (ADR-011)
 
-- **Authoritative Source**: `operation_system/configs/core_systems.yaml`.
+- **Authoritative Source**: `registry/eva_master_registry.yaml`.
 - **Legacy Mapping**: `8.x.x` → `1.x.x`, `9.x.x` → `2.x.x`.
-- **Enforcement**: Code headers and CLI initialization MUST match the decoupled version in central config.
+- **Global Strategy**: v9.6.0 (Resonance Refined).
+- **Enforcement**: Code headers, CLI initialization, and Subagent Manifests MUST match the registry.
 
 ## 1. Classification & Hierarchy
 
-* **System** (e.g., PhysioCore, MSP): Vital organ. Owns State + Bus Authority.
-- **Central Module** (e.g., AgenticRAG): OS-adjacent. Limited Bus.
-- **Module** (e.g., CIM, NexusMind): Functional integrator. Parent-bound.
-- **Node** (e.g., PRN, Temporal): Logic provider. No State.
+- **System Authority** (e.g., PhysioCore, Orchestrator, RMS): Owns state and has broad bus rights.
+- **Core System** (e.g., EVA_Matrix, MSP, Artifact_Qualia): Essential for organism function; state-driven.
+- **Central Module** (e.g., Resonance_Bus, Identity_Manager, AgenticRAG): Infrastructure-level services; often stateless or root-presence false.
 
-## 2. System Inventory (Core Systems)
+## 2. System Inventory (Master Registry)
 
-- **Transport**: Resonance_Bus
-- **Memory**: MSP (Episodic/Semantic/Sensory Hub)
-- **Bio/Psych**: PhysioCore, EVA_Matrix, Artifact_Qualia
-- **Orchestration**: CIM, AgenticRAG, PRN, RMS, Orchestrator
-- **Knowledge**: GKS (Static Truth), NexusMind, MLL, APM, TemporalEngine
+- **Transport**: Resonance_Bus (Central Module)
+- **Memory**: MSP (Core System - Episodic/Semantic/Sensory)
+- **Bio/Psych**: PhysioCore (System Authority), EVA_Matrix (Core System)
+- **Phenomenology**: Artifact_Qualia (Core System)
+- **Orchestration**: Orchestrator (System Authority), CIM (Core System), RMS (System Authority)
+- **Epistemology**: GKS (Knowledge Authority), AgenticRAG (Central Module)
 
 ## 3. Authority Rules
 

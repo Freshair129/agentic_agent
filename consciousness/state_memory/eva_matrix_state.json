@@ -1,18 +1,18 @@
 {
   "axes_9d": {
-    "stress": 0.02,
-    "warmth": 0.02,
-    "drive": 0.02,
-    "clarity": 0.02,
-    "joy": 0.02,
-    "stability": 0.5,
-    "orientation": 0.5,
+    "stress": 0.358,
+    "warmth": 0.323,
+    "drive": 0.052,
+    "clarity": 0.331,
+    "joy": 0.331,
+    "stability": 0.465,
+    "orientation": 0.487,
     "primary": "stress",
-    "secondary": "warmth"
+    "secondary": "clarity"
   },
   "momentum": {
-    "intensity": 0.091
+    "intensity": 0.276
   },
-  "emotion_label": "Sadness",
-  "last_update": "2026-01-14T22:04:48.288449+00:00"
+  "emotion_label": "Calm",
+  "last_update": "2026-01-17T16:59:35.056175+00:00"
 }

@@ -1,0 +1,221 @@
+schema: EVA-MasterRegistry-v9.6
+version: 9.6.0
+updated: 2026-01-17
+description: >
+  The ULTIMATE Registry (The Map & The Law combined).
+  Defines Existence (Topology), Structure (Manifest), and Rights (Permissions).
+  Single Source of Truth for Subagent Auditing.
+
+# ============================================================
+# 1. GLOBAL POLICIES (The Constitution)
+# ============================================================
+policies:
+  governance:
+    root_slot_strictness: true    # Only root_slots allowed at agent/
+    manifest_enforcement: true    # Files must match manifest
+  
+  memory:
+    flow_direction: "Forward-Only"
+    archive_immutability: true
+    state_isolation: true
+
+# ============================================================
+# 2. ROOT SLOT WHITE LIST (The Land)
+# ============================================================
+root_slots:
+  - registry
+  - contracts
+  - configs
+  - docs
+  - operation_system
+  - physio_core
+  - eva_matrix
+  - memory_n_soul_passport
+  - orchestrator
+  - genesis_knowledge_system
+  - resonance_memory_system
+  - artifact_qualia
+  - api               # Web/Socket Layer
+  - capabilities      # Tools/Skills
+  - consciousness     # Active State
+  - data              # Static Assets
+  - memory            # Archival Storage
+  - tests             # Verification Suite
+  - tools             # Technician Subagents
+
+# ============================================================
+# 3. SYSTEMS REGISTRY (The Citizens)
+# ============================================================
+systems:
+  # ----------------------------------------------------------
+  # 1. BIOLOGICAL DOMAIN (PhysioCore)
+  # ----------------------------------------------------------
+  - id: PhysioCore
+    name: Physiological_Core
+    domain: biological
+    role: system_authority
+    
+    # [Manifest: Structure]
+    root_presence: true
+    manifest:
+      folders:
+        - physio_core/modules
+        - physio_core/utils
+      files:
+        - physio_core/physio_core.py
+        - physio_core/__init__.py
+    
+    # [Permissions: Rights]
+    permissions:
+      bus_publish: [BUS_PHYSICAL]
+      bus_subscribe: []
+      state_ownership: [physio_core_state.json]
+    
+    # [Components: Modules]
+    modules:
+      - id: Endocrine_Engine
+        type: functional_module
+        domain: biological.endocrine
+        dependencies:
+          - system: PhysioCore
+        communication:
+          publishes: [BUS_PHYSICAL]
+
+  # ----------------------------------------------------------
+  # 2. PSYCHOLOGICAL DOMAIN (Matrix)
+  # ----------------------------------------------------------
+  - id: EVA_Matrix
+    name: EVA_Matrix
+    domain: psychological
+    role: core_system
+    
+    root_presence: true
+    manifest:
+      folders: [eva_matrix/modules]
+      files: [eva_matrix/eva_matrix.py]
+      
+    permissions:
+      bus_publish: [BUS_PSYCHOLOGICAL]
+      bus_subscribe: [BUS_PHYSICAL]
+      state_ownership: [eva_matrix_state.json]
+      
+    modules:
+      - id: MatrixPsychModule
+        type: logic_node
+        dependencies: [system: EVA_Matrix]
+
+  # ----------------------------------------------------------
+  # 3. MEMORY DOMAIN (MSP)
+  # ----------------------------------------------------------
+  - id: MSP
+    name: Memory_Soul_Passport
+    domain: memory_persistence
+    role: core_system
+    
+    root_presence: true
+    manifest:
+      folders: [memory_n_soul_passport/modules]
+      files: [memory_n_soul_passport/memory_n_soul_passport_engine.py]
+      
+    permissions:
+      bus_publish: []
+      bus_subscribe: [BUS_ALL] # Special right
+      state_ownership: []      # MSP owns storage, not state
+      
+    modules:
+      - id: Episodic_Memory
+        type: storage_module
+        dependencies: [system: MSP]
+      - id: Semantic_Memory
+        type: storage_module
+        dependencies: [system: MSP, service: ChromaBridge]
+
+  # ----------------------------------------------------------
+  # 4. ORCHESTRATION DOMAIN (CNS)
+  # ----------------------------------------------------------
+  - id: Orchestrator
+    name: EVA_Orchestrator
+    domain: central_nervous_system
+    role: system_authority
+    
+    root_presence: true
+    manifest:
+      folders: [orchestrator/cim, orchestrator/session_manager]
+      files: [orchestrator/orchestrator.py]
+      
+    permissions:
+      bus_publish: [BUS_OPERATIONAL]
+      bus_subscribe: [BUS_ALL]
+      state_ownership: [cim_state.json]
+      
+    modules:
+      - id: CIM
+        type: core_system
+        dependencies: [system: Orchestrator]
+
+  # ----------------------------------------------------------
+  # 5. INFRASTRUCTURE & KNOWLEDGE
+  # ----------------------------------------------------------
+  - id: GKS
+    name: Genesis_Knowledge_System
+    domain: epistemology
+    role: knowledge_authority
+    root_presence: true
+    permissions:
+      bus_publish: [BUS_KNOWLEDGE]
+      state_ownership: [] # Static Knowledge
+
+  - id: RMS
+    name: Resonance_Memory_System
+    domain: memory_filtration
+    role: system_authority
+    root_presence: true
+    manifest:
+      folders: [resonance_memory_system/configs, resonance_memory_system/contract]
+      files: [resonance_memory_system/rms.py]
+    permissions:
+      bus_subscribe: [BUS_ALL]
+      state_ownership: [rms_state.json]
+
+  - id: Artifact_Qualia
+    name: Artifact_Qualia
+    domain: phenomenology
+    role: core_system
+    root_presence: true
+    manifest:
+      folders: [artifact_qualia/Module, artifact_qualia/configs]
+      files: [artifact_qualia/artifact_qualia.py]
+    permissions:
+      bus_publish: [BUS_PHENOMENOLOGICAL]
+      state_ownership: [artifact_qualia_state.json]
+
+  - id: AgenticRAG
+    name: AgenticRAG
+    domain: knowledge_retrieval
+    role: central_module
+    root_presence: false
+    permissions:
+      bus_subscribe: [BUS_KNOWLEDGE]
+
+  - id: Resonance_Bus
+    name: Resonance_Bus
+    domain: transport
+    role: central_module
+    root_presence: false # Lives in operation_system
+    manifest:
+      files: [operation_system/resonance_bus.py]
+    channels:
+      - BUS_PHYSICAL
+      - BUS_PSYCHOLOGICAL
+      - BUS_PHENOMENOLOGICAL
+      - BUS_KNOWLEDGE
+
+  - id: Identity_Manager
+    name: Identity_Manager
+    domain: security
+    role: central_module
+    root_presence: false # Lives in operation_system
+    manifest:
+      files: [operation_system/identity_manager.py]
+
+

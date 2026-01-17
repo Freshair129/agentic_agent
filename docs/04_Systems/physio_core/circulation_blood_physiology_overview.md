@@ -1,5 +1,9 @@
 # Circulation & Blood Physiology (v2.4.3) — Overview
 
+> [!IMPORTANT]
+> **Status**: VERIFIED STABLE (v9.4.3 Audit Complete)
+> **Verification**: Verified endocrine spikes, metabolic decay, and vitals loop feedback via `verify_physio_loop.py`.
+
 ## 1. Purpose
 
 Circulation & Blood Physiology is the **foundational physiology engine** of EVA.

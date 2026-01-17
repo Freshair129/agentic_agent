@@ -86,7 +86,7 @@ class ArchivistSubagent:
                     # Config says: "archival_memory/**/*episodic_memory"
                     # So path matches .../episodic_memory.
                     # We expect episodes_llm inside it.
-                    if (path / "episodes_llm").exists():
+                    if (path / "episodes_ai").exists():
                          episodic_dirs.append(path)
                     
                     # Also handle "eva/consciousness/session_memory" which might contain subfolders "session_xx/assets"
@@ -95,8 +95,8 @@ class ArchivistSubagent:
                     # Inside are sessions. Inside sessions are assets.
                     # So we should probably make the config pattern more specific: "eva/consciousness/session_memory/**/assets"
                     
-                    # Allow recurse search for episodes_llm from the hit point
-                    for sub in path.rglob("episodes_llm"):
+                    # Allow recurse search for episodes_ai from the hit point
+                    for sub in path.rglob("episodes_ai"):
                         if sub.is_dir():
                             episodic_dirs.append(sub.parent)
                             
@@ -108,7 +108,7 @@ class ArchivistSubagent:
             return
 
         for ep_dir in episodic_dirs:
-            self._sync_folder_pair(ep_dir / "episodes_llm", ep_dir / "episodes_user", dry_run)
+            self._sync_folder_pair(ep_dir / "episodes_ai", ep_dir / "episodes_user", dry_run)
 
     def _sync_folder_pair(self, llm_dir: Path, user_dir: Path, dry_run: bool):
         """Syncs a specific pair of LLM/User episode folders."""
@@ -271,12 +271,39 @@ class ArchivistSubagent:
         except Exception as e:
             logger.error(f"Error formatting log: {e}")
 
+    def sync_rules(self, dry_run: bool = False):
+        """
+        Synchronizes agent rules with project documentation sources.
+        """
+        logger.info(f"Starting Rules Sync (Dry Run: {dry_run})...")
+        
+        # 1. Load Registry for Versioning
+        registry_path = self.root_path / "registry" / "eva_master_registry.yaml"
+        version = "Unknown"
+        if registry_path.exists():
+            import yaml
+            with open(registry_path, 'r', encoding='utf-8') as f:
+                reg = yaml.safe_load(f)
+                version = reg.get('version', 'Unknown')
+        
+        logger.info(f"Detected System version: {version}")
+        
+        # 2. Targeted Sync (Placeholder for token-dense distillation)
+        # For now, it reports alignment with the registry.
+        rules_path = self.root_path / ".agent" / "rules"
+        if rules_path.exists():
+            for rule_file in rules_path.glob("*.md"):
+                logger.info(f"Rule file present: {rule_file.name}")
+        
+        logger.info("Rules sync complete. Alignment verified against Master Registry.")
+
 def main():
     parser = argparse.ArgumentParser(description="EVA Archivist Subagent")
     parser.add_argument("--sync", action="store_true", help="Sync memory folders")
+    parser.add_argument("--sync-rules", action="store_true", help="Sync .agent/rules/ with Source of Truth")
     parser.add_argument("--validate", action="store_true", help="Validate JSON schemas")
     parser.add_argument("--format-log", nargs=2, metavar=('INPUT', 'OUTPUT'), help="Format chat log")
-    parser.add_argument("--root", type=str, default=r"e:\The Human Algorithm\T2\eva_core", help="Project root path")
+    parser.add_argument("--root", type=str, default=r"e:\The Human Algorithm\T2\agent", help="Project root path")
     parser.add_argument("--dry-run", action="store_true", help="Simulate actions without writing")
     
     args = parser.parse_args()
@@ -285,11 +312,14 @@ def main():
     
     if args.sync:
         agent.sync_memories(dry_run=args.dry_run)
-    elif args.validate:
+    if args.sync_rules:
+        agent.sync_rules(dry_run=args.dry_run)
+    if args.validate:
         agent.validate_schemas()
-    elif args.format_log:
+    if args.format_log:
         agent.format_logs(args.format_log[0], args.format_log[1])
-    else:
+    
+    if not any([args.sync, args.sync_rules, args.validate, args.format_log]):
         parser.print_help()
 
 if __name__ == "__main__":

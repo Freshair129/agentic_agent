@@ -15,7 +15,7 @@ def clamp(x, lo, hi):
 class AutonomicResponseEngine:
     def __init__(self, config: dict):
         self.cfg = config
-        self.weights = config.get("weights", {})
+        self.weights = config.get("hormone_weights", {})
         self.state = {
             "sympathetic": 0.0,
             "parasympathetic": 0.0

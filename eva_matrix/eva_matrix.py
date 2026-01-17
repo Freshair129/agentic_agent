@@ -71,7 +71,7 @@ class EVAMatrixSystem:
             # safe_print(f"  [EVA Matrix] Signal Received: {len(receptor_signals)} receptors.")
             self.process_signals(signals=receptor_signals)
     
-    def process_signals(self, signals: Dict[str, float] = None) -> Dict[str, Any]:
+    def process_signals(self, signals: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Process neural signals via Psych Module and update System state.
         """
@@ -79,8 +79,20 @@ class EVAMatrixSystem:
         if signals is None and self.msp:
             signals = self.msp.get_active_state("neural_signals") or {}
 
-        # 2. Delegate Calculation to Module
-        result = self.psych_module.process_signals(self.axes_9d, self.momentum, signals or {})
+        # 2. Flatten Signals (Physio produced {system: {hormone: val}})
+        flat_signals = {}
+        if isinstance(signals, dict):
+            for s_id, h_map in signals.items():
+                if isinstance(h_map, dict):
+                    for h_id, val in h_map.items():
+                        # Take max impact across systems for each hormone
+                        flat_signals[h_id] = max(flat_signals.get(h_id, 0.0), val)
+                else:
+                    # Fallback for already flat or malformed
+                    flat_signals[s_id] = h_map
+
+        # 3. Delegate Calculation to Module
+        result = self.psych_module.process_signals(self.axes_9d, self.momentum, flat_signals)
 
         # 3. Update internal state (System Authority)
         self.axes_9d = result.get("axes_9d", {})
