@@ -63,12 +63,31 @@ Configuration files are currently scattered across multiple systems:
 
 These systems are **EXEMPT** from v9.4.3 standard structure:
 
-| System | Reason | Current Structure |
-| :--- | :--- | :--- |
-| **PhysioCore** | Verified Stable, Performance Critical (30Hz) | `logic/` directory |
-| **MSP** | Legacy, Verified Stable | Custom structure |
+| System | Reason | Current Structure | Complexity |
+| :--- | :--- | :--- | :--- |
+| **PhysioCore** | Performance Critical (30Hz loop), 22 files | `logic/` directory | 305 lines + logic/ |
+| **MSP** | Legacy memory engine, Verified Stable | Custom structure | 2454 lines |
+| **Orchestrator** | Central control, highly coupled to all systems | `cim/` + `session_manager/` | 931 lines + 49 CIM files |
+| **GKS** | JSON-based knowledge system, data-centric design | Flat JSON structure | JSON files + modules |
 
+**Audit Date**: 2026-01-18  
 **Reference**: ADR-015 (GSD Governance Scope)
+
+**Why These Systems**:
+
+- **PhysioCore**: 30Hz performance loop cannot tolerate refactoring overhead
+- **MSP**: 2454-line memory engine with complex state management
+- **Orchestrator**: Orchestrates PhysioCore, Matrix, MSP, AgenticRAG - changing structure breaks integration
+- **GKS**: Knowledge representation via JSON is more appropriate than code structure
+
+**NOT Exceptions** (Must follow v9.4.3):
+
+- EVA_Matrix ✅ (has Module/, needs Node/)
+- Artifact_Qualia ✅ (has Module/, needs Node/)
+- RMS (simple 184-line single file, easy to migrate)
+- AgenticRAG
+- Resonance_Bus
+- Identity_Manager
 
 ### 3.2 Required Standard Structure (All Other Systems)
 

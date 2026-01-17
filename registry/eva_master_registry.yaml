@@ -103,9 +103,12 @@ systems:
     domain: psychological
     role: core_system
     
+    structure_standard: v9.4.3
     root_presence: true
     manifest:
-      folders: [eva_matrix/modules]
+      follows_standard: true
+      config_location: local
+      folders: [eva_matrix/Module]  # Note: Module/ exists, Node/ needed
       files: [eva_matrix/eva_matrix.py]
       
     permissions:
@@ -127,8 +130,14 @@ systems:
     domain: memory_persistence
     role: core_system
     
+    # NOTE: MSP is a STRUCTURAL EXCEPTION (ADR-015, ADR-017)
+    # Reason: Legacy system, 2454 lines, memory engine complexity, Verified Stable
+    structure_standard: exception
+    exception_reason: "Legacy memory engine (2454 lines), Verified Stable, ADR-015"
     root_presence: true
     manifest:
+      follows_standard: false
+      config_location: local
       folders: [memory_n_soul_passport/modules]
       files: [memory_n_soul_passport/memory_n_soul_passport_engine.py]
       
@@ -159,8 +168,14 @@ systems:
     domain: central_nervous_system
     role: system_authority
     
+    # NOTE: Orchestrator is a STRUCTURAL EXCEPTION (ADR-017)
+    # Reason: Central control (931 lines + 49 CIM files), 3-Phase flow complexity, tightly coupled
+    structure_standard: exception
+    exception_reason: "Central control system (931 lines + 49 CIM files), highly coupled to all systems"
     root_presence: true
     manifest:
+      follows_standard: false
+      config_location: local
       folders: [orchestrator/cim, orchestrator/session_manager]
       files: [orchestrator/orchestrator.py]
       
@@ -182,7 +197,15 @@ systems:
     version: 2.0.0  # Maps from EVA 9.0.0 (introduced in v9)
     domain: epistemology
     role: knowledge_authority
+    
+    # NOTE: GKS is a STRUCTURAL EXCEPTION (ADR-017)
+    # Reason: JSON-based flat structure, knowledge-focused, not code-heavy, stable
+    structure_standard: exception
+    exception_reason: "JSON-based knowledge system, flat structure appropriate for data-centric design"
     root_presence: true
+    manifest:
+      follows_standard: false
+      config_location: local
     permissions:
       bus_publish: [BUS_KNOWLEDGE]
       state_ownership: [] # Static Knowledge
@@ -205,9 +228,13 @@ systems:
     version: 2.4.3  # Updated from 2.3.0 (matches code)
     domain: phenomenology
     role: core_system
+    
+    structure_standard: v9.4.3
     root_presence: true
     manifest:
-      folders: [artifact_qualia/Module, artifact_qualia/configs]
+      follows_standard: true
+      config_location: local
+      folders: [artifact_qualia/Module, artifact_qualia/configs]  # Module/ exists, Node/ needed
       files: [artifact_qualia/artifact_qualia.py]
     permissions:
       bus_publish: [BUS_PHENOMENOLOGICAL]
