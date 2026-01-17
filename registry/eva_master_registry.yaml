@@ -178,7 +178,7 @@ systems:
 
   - id: RMS
     name: Resonance_Memory_System
-    version: 2.4.0  # Maps from EVA 9.4.0 (activated in v9.4)
+    version: 6.2.0  # Independent versioning (not mapped from EVA)
     domain: memory_filtration
     role: system_authority
     root_presence: true
