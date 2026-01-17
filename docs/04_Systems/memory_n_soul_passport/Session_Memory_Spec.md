@@ -94,4 +94,5 @@ session_memory/{session_id}/
 
 ---
 
+<!-- markdownlint-disable-next-line MD036 -->
 **Directed by "The Human Algorithm" v9.4.3 Principles**
