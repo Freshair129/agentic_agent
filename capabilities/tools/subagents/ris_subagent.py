@@ -1,10 +1,11 @@
 """
 Resonance Integrity Subagent (RIS)
 Role: Architect & Health Auditor
-Version: 1.0.0
+Version: 1.1.0
 
 Capabilities:
 1. Config Auditor: Validates synchronization between YAML configs and Python code.
+2. Structure Auditor: Validates file system against Master Registry SSOT.
 """
 
 import os
@@ -22,6 +23,10 @@ logging.basicConfig(
     datefmt="%H:%M:%S"
 )
 logger = logging.getLogger("RIS")
+
+# Force UTF-8 for Windows terminals
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
 
 class ConfigAuditorNode:
     def __init__(self):
@@ -122,17 +127,120 @@ class ConfigAuditorNode:
         else:
             print("[OK] Integrity Check Passed: All keys appear to be referenced.")
             
+
+class StructureAuditorNode:
+    def __init__(self):
+        pass
+
+    def audit(self, registry_path: str, project_root: str):
+        """Audits the file system against the Master Registry."""
+        reg_path = Path(registry_path)
+        root_path = Path(project_root)
+        
+        print("\n" + "="*60)
+        print("  RIS STRUCTURE AUDIT REPORT")
+        print("="*60)
+        print(f"Registry: {reg_path.name}")
+        print(f"Root:     {root_path}")
+        print("-" * 60)
+
+        if not reg_path.exists():
+            logger.error(f"Registry not found: {reg_path}")
+            return
+
+        try:
+            with open(reg_path, 'r', encoding='utf-8') as f:
+                registry = yaml.safe_load(f)
+        except Exception as e:
+            logger.error(f"Failed to load Registry: {e}")
+            return
+
+        errors = []
+        warnings = []
+
+        # 1. Check Root Slots
+        print("\n[1] Checking Root Slots...")
+        root_slots = registry.get('root_slots', [])
+        for slot in root_slots:
+            slot_path = root_path / slot
+            if not slot_path.exists():
+                errors.append(f"[ROOT] Missing root slot: {slot}")
+                print(f"  ❌ {slot} (Missing)")
+            else:
+                print(f"  ✅ {slot}")
+
+        # 2. Check System Manifests
+        print("\n[2] Checking System Manifests...")
+        systems = registry.get('systems', [])
+        for system in systems:
+            sys_id = system.get('id', 'Unknown')
+            manifest = system.get('manifest', {})
+            
+            print(f"  > Auditing {sys_id}...")
+            
+            # Check Root Presence
+            if system.get('root_presence', False):
+                # Assuming system folder name matches ID or is implicitly the first folder in manifest
+                # But typically systems have a primary folder. 
+                # Let's rely on manifest 'folders' and 'files' for now.
+                pass
+
+            # Check Folders
+            for folder in manifest.get('folders', []):
+                f_path = root_path / folder
+                if not f_path.exists():
+                    errors.append(f"[{sys_id}] Missing folder: {folder}")
+                    print(f"    ❌ Folder Missing: {folder}")
+                # else:
+                #     print(f"    ✅ {folder}")
+
+            # Check Files
+            for file in manifest.get('files', []):
+                f_path = root_path / file
+                if not f_path.exists():
+                    errors.append(f"[{sys_id}] Missing file: {file}")
+                    print(f"    ❌ File Missing: {file}")
+                # else:
+                #     print(f"    ✅ {file}")
+                    
+            # Check Chains (for GKS, etc.)
+            chains = system.get('chains', {})
+            for folder in chains.get('folders', []):
+                f_path = root_path / folder
+                if not f_path.exists():
+                    errors.append(f"[{sys_id}] Missing chain folder: {folder}")
+                    print(f"    ❌ Chain Folder Missing: {folder}")
+            
+            for file in chains.get('files', []):
+                f_path = root_path / file
+                if not f_path.exists():
+                    errors.append(f"[{sys_id}] Missing chain file: {file}")
+                    print(f"    ❌ Chain File Missing: {file}")
+
+        print("-" * 60)
+        if errors:
+            print(f"❌ AUDIT FAILED: Found {len(errors)} discrepancies.")
+            for e in errors:
+                print(f"  - {e}")
+        else:
+            print("✅ AUDIT PASSED: Structure matches Registry.")
+        print("="*60)
+
 def main():
     parser = argparse.ArgumentParser(description="Resonance Integrity Subagent (RIS)")
     parser.add_argument("--audit-config", nargs=2, metavar=('CONFIG_PATH', 'SOURCE_DIR'), 
                         help="Check if config keys are used in the source code")
+    parser.add_argument("--audit-structure", nargs=2, metavar=('REGISTRY_PATH', 'PROJECT_ROOT'),
+                        help="Validate file system against Master Registry")
     
     args = parser.parse_args()
     
-    node = ConfigAuditorNode()
-    
     if args.audit_config:
+        node = ConfigAuditorNode()
         node.audit(args.audit_config[0], args.audit_config[1])
+    elif args.audit_structure:
+        node = StructureAuditorNode()
+        node.audit(args.audit_structure[0], args.audit_structure[1])
     else:
         parser.print_help()
 

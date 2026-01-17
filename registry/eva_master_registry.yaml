@@ -305,3 +305,60 @@ systems:
       files: [operation_system/identity_manager.py]
 
 
+
+# ============================================================
+# 4. CAPABILITIES REGISTRY (The Skills)
+# ============================================================
+capabilities:
+  services:
+    - id: AgenticRAG
+      active: true
+      domain: knowledge_retrieval
+      path: capabilities/services/agentic_rag
+      description: "Autonomous RAG service with tool use"
+
+    - id: Engram_System
+      active: true
+      domain: memory_optimization
+      path: capabilities/services/engram_system
+      description: "O(1) high-frequency memory cache"
+
+    - id: SLM_Bridge
+      active: true
+      domain: cognitive_interface
+      path: capabilities/services/slm_bridge
+      description: "Small Language Model interface (Qwen/Llama)"
+
+    - id: Vector_Bridge
+      active: true
+      domain: memory_storage
+      path: capabilities/services/vector_bridge
+      description: "ChromaDB vector store interface"
+
+    - id: Graph_Bridge
+      active: false
+      domain: knowledge_representation
+      path: capabilities/services/graph_bridge
+      description: "Knowledge graph interface (Future)"
+
+  tools:
+    - id: Archivist
+      active: true
+      type: subagent
+      domain: maintenance
+      path: capabilities/tools/subagents/archivist_subagent.py
+      description: "System maintenance and rule synchronization"
+
+    - id: RIS
+      active: true
+      type: subagent
+      domain: audit
+      path: capabilities/tools/subagents/ris_subagent.py
+      description: "Resonance Integrity Subagent (Structure/Config Auditor)"
+
+    - id: Technician
+      active: true
+      type: subagent
+      domain: development
+      path: capabilities/tools/subagents/technician_subagent.py
+      description: "Mass code modification specialist"
