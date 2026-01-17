@@ -1,4 +1,6 @@
+<!-- markdownlint-disable MD024 -->
 ---
+
 description: Check and validate system/module versions against registry (SSOT)
 ---
 
@@ -22,7 +24,7 @@ EVA uses **independent component versioning** where internal system versions fol
 
 The **authoritative** version source is:
 
-```
+```text
 File: registry/eva_master_registry.yaml
 ```
 
@@ -42,7 +44,7 @@ Check that the version in Python file headers matches the registry.
 
 ### Example Locations
 
-```
+```text
 physio_core/physio_core.py
 eva_matrix/eva_matrix.py
 memory_n_soul_passport/memory_n_soul_passport_engine.py
