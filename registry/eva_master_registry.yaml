@@ -71,6 +71,8 @@ systems:
     version: 2.4.3  # Maps from EVA 9.4.3 (9.x -> 2.x per ADR-011)
     domain: biological
     role: system_authority
+    runtime:
+      sequence: 3
     
     # [Manifest: Structure]
     # NOTE: PhysioCore is a STRUCTURAL EXCEPTION (ADR-015, ADR-017)
@@ -128,7 +130,9 @@ systems:
           - system: PhysioCore
         communication:
           publishes: [BUS_PHYSICAL]
-      
+        runtime:
+          sequence: "3_ASYNC_A"
+
       - id: Blood_Engine
         type: functional_module
         domain: biological.blood
@@ -137,6 +141,8 @@ systems:
           - system: PhysioCore
         communication:
           publishes: [BUS_PHYSICAL]
+        runtime:
+          sequence: "3_ASYNC_B"
 
       - id: ANS_Engine
         type: functional_module
@@ -146,6 +152,8 @@ systems:
           - system: PhysioCore
         communication:
           publishes: [BUS_PHYSICAL]
+        runtime:
+          sequence: "3_ASYNC_C"
 
       - id: Vitals_Engine
         type: functional_module
@@ -204,6 +212,9 @@ systems:
         permissions:
           bus_subscribe: [BUS_PHYSICAL]
           bus_publish: [BUS_PSYCHOLOGICAL]
+        runtime:
+          sequence: 4 
+
 
   # ----------------------------------------------------------
   # 3. MEMORY DOMAIN (MSP)
@@ -213,6 +224,8 @@ systems:
     version: 2.1.0  # Updated from 1.1.0 (2026-01-18: Version Control Baseline)
     domain: memory_persistence
     role: core_system
+    runtime:
+      sequence: 5
     
     # NOTE: MSP is a STRUCTURAL EXCEPTION (ADR-015, ADR-017)
     # Reason: Legacy system, 2454 lines, memory engine complexity, Verified Stable
@@ -241,12 +254,16 @@ systems:
         type: storage_module
         criticality: L1 # Identity Storage
         dependencies: [system: MSP]
+        runtime:
+          sequence: "5_ASYNC_A"
       - id: Semantic_Memory
         type: storage_module
         criticality: L1 # Knowledge Storage
         dependencies: [system: MSP, service: ChromaBridge]
         permissions:
           fs_write: [memory/semantic_memory]
+        runtime:
+          sequence: "5_ASYNC_B"
 
     chains:
       folders: [memory_n_soul_passport/memory]
@@ -261,6 +278,8 @@ systems:
     version: 1.2.0  # Independent versioning (legacy system)
     domain: central_nervous_system
     role: system_authority
+    runtime:
+      sequence: 9
     
     # NOTE: Orchestrator is a STRUCTURAL EXCEPTION (ADR-017)
     # Reason: Central control (931 lines + 49 CIM files), 3-Phase flow complexity, tightly coupled
@@ -310,6 +329,8 @@ systems:
         dependencies: [system: Orchestrator]
         permissions:
           bus_publish: [BUS_OPERATIONAL]
+        runtime:
+          sequence: 9
 
   # ----------------------------------------------------------
   # 5. INFRASTRUCTURE & KNOWLEDGE
@@ -319,6 +340,8 @@ systems:
     version: 2.0.0  # Maps from EVA 9.0.0 (introduced in v9)\n    domain: epistemology
     role: knowledge_authority
     criticality: L2 # Ignorant (Cant access wisdom)
+    runtime:
+      sequence: 6
     
     structure_standard: v9.4.3
     
@@ -354,6 +377,8 @@ systems:
     domain: memory_filtration
     role: system_authority
     criticality: L2 # Unfiltered (Raw input/output)
+    runtime:
+      sequence: 7
     root_presence: true
     manifest:
       folders: [resonance_memory_system/configs, resonance_memory_system/contract]
