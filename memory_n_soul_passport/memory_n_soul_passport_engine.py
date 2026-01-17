@@ -57,10 +57,10 @@ from pathlib import Path
 
 # Add root to path for tools and engines
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from tools.logger import safe_print
+from capabilities.tools.logger import safe_print
 from operation_system.identity_manager import IdentityManager
-from eva.resonance_memory_system.rms import RMSEngineV6
-from eva.memory_n_soul_passport.user_registry_manager import UserRegistryManager
+from resonance_memory_system.rms import RMSEngineV6
+from memory_n_soul_passport.user_registry_manager import UserRegistryManager
 
 import json
 import hashlib
@@ -164,6 +164,20 @@ class MSP:
         self.identity_config_file = self.root_path / "consciousness/indexes/identity_config.json"
         self.system_registry_file = self.root_path / "consciousness/indexes/system_registry.json"
         
+        self.identity_config = {}
+        if self.identity_config_file.exists():
+            try:
+                with open(self.identity_config_file, 'r', encoding='utf-8') as f:
+                    self.identity_config = json.load(f)
+            except: pass
+            
+        self.system_registry = {}
+        if self.system_registry_file.exists():
+            try:
+                with open(self.system_registry_file, 'r', encoding='utf-8') as f:
+                    self.system_registry = json.load(f)
+            except: pass
+        
         # Registry Managers
         registry_path = self.root_path / "memory" / "user_registry.json"
         self.user_registry = UserRegistryManager(str(registry_path))
@@ -177,7 +191,19 @@ class MSP:
         ep_formats = ep_cfg.get("formats", {})
         log_name = ep_formats.get("stream_log", {}).get("filename", "episodic_log.jsonl")
         self.episodic_log = self.episodic_dir / log_name
+        self.episodes_user_dir = self.episodic_dir / "episodes_user"
+        self.episodes_llm_dir = self.episodic_dir / "episodes_ai"
         self.active_state_dir = self.state_dir / "active_state"
+        
+        # [NEW] Index & Counter Reference (Unified v9.4.0)
+        self.memory_index_file = self.root_path / "consciousness/indexes/memory_index.json"
+        self.consciousness_history = self.root_path / "consciousness/indexes/consciousness_history.jsonl"
+        self.episode_counter_file = self.root_path / "consciousness/indexes/episode_counter.json"
+        self.memory_index_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Ensure subdirs exist
+        self.episodes_user_dir.mkdir(parents=True, exist_ok=True)
+        self.episodes_llm_dir.mkdir(parents=True, exist_ok=True)
         self.active_state_dir.mkdir(parents=True, exist_ok=True)
 
         safe_print(f"[MSP] ✅ Subconscious Facade Initialized (v9.4.0)")

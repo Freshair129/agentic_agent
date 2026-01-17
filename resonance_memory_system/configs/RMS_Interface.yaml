@@ -1,0 +1,48 @@
+# Resonance Memory System (RMS) Interface
+schema: EVA-Interface-v8.2 (Standard)
+version: 8.2.0-S1
+updated: 2026-01-05
+bus_id: RMS_ENCODER_01
+
+component: RMSSystem
+role: "Experiential Memory Encoding"
+
+# ==========================================================
+# BUS BINDINGS (Resonance Bus)
+# ==========================================================
+bindings:
+  # RMS listens to all core latching streams to build a complete picture of the current state.
+  - subscribe: "bus:physical"
+    action: "process_signal"
+    description: "Receives biological signals from Physio Core."
+    
+  - subscribe: "bus:psychological"
+    action: "process_signal"
+    description: "Receives psychological state from EVA Matrix."
+
+  - subscribe: "bus:phenomenological"
+    action: "process_signal"
+    description: "Receives phenomenological experience from Artifact Qualia."
+
+  # RMS publishes the final encoded memory snapshot.
+  - publish: "bus:knowledge"
+    action: "get_episodic_snapshot"
+    mapping:
+      payload: "episodic_snapshot"
+    description: "Publishes the final encoded episodic memory snapshot for MSP and RAG to consume."
+
+# ==========================================================
+# RUNTIME HOOK (System Integration)
+# ==========================================================
+runtime_hook:
+  component: "RMSSystem"
+  module_path: "resonance_memory_system.resonance_memory_system_engine"
+  class_name: "RMSEngine" # Assuming this is the main class
+  
+  initialization:
+    args:
+      config_path: "resonance_memory_system/configs/RMS_configs.yaml"
+    
+  lifecycle:
+    on_startup: "load_models()"
+    on_shutdown: "clear_cache()"

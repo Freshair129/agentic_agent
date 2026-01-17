@@ -1,0 +1,21 @@
+{
+  "context_id": "ctx_5_EVA_EP2.md",
+  "current_context_id": "ctx_5_EVA_EP2.md",
+  "turn_index": 6,
+  "timestamp": "2026-01-15T05:03:30.048546",
+  "physio_state": {},
+  "eva_matrix_state": {},
+  "qualia_state": {},
+  "cognitive_state": {},
+  "conversation_history": [
+    {
+      "turn_index": 5,
+      "user_input": "Hello EVA, how are you feeling today?",
+      "eva_response": "I understand the situation. I will maintain stability.",
+      "salience_anchor": "hello",
+      "timestamp": "2026-01-15T05:03:30.048380"
+    }
+  ],
+  "self_note": "",
+  "previous_turn_data": {}
+}

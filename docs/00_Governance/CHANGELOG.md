@@ -5,7 +5,25 @@ All notable changes to the EVA Core project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [9.4.0-Refactor] - 2026-01-13
+## [9.4.3-MemoryProtocolRefactor] - 2026-01-17
+
+### Added
+
+- **8-8-8 Memory Synthesis Protocol**: Implemented a tiered distillation architecture for long-term wisdom.
+  - **Philosophy**: Redefined Consciousness as the Awareness Domain (Functional Buffer), while Session, Core, and Sphere represent the tiered distillation hierarchy.
+  - **Concept**: `docs/01_Philosophies/MEM_PHILOSOPHY_888.md`
+- **Documentation Master Index**: Created a unified entry point and reading order.
+  - **Index**: `docs/00_Governance/INDEX.md`
+- **ADR-010**: Documented the "8-8-8 Memory Protocol and Documentation Reorganization" decision.
+
+### Changed
+
+- **Documentation Reorganization**: Numbered all major documentation folders into a logical hierarchy (00_Governance → 09_Archive) to improve navigability and RAG performance.
+  - **Governance**: Moved CHANGELOG, README, and INDEX to `docs/00_Governance/`.
+  - **Philosophies**: Created `docs/01_Philosophies/` for core principles.
+  - **Requirements**: Moved specs to `docs/02_Requirements/`.
+  - **Architecture**: Consolidated all architectural diagrams and flows into `docs/03_Architecture/`.
+- **Architecture Sync**: Updated `EVA_9.4_Architecture.md` and `MSP_System_Storage_ERD.md` to align with the 8-8-8 nomenclature.
 
 ## [9.4.2-ArchitectureConsolidation] - 2026-01-15
 

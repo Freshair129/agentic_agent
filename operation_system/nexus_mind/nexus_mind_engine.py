@@ -14,12 +14,12 @@ from pathlib import Path
 # V9.2.0 Core Imports
 from operation_system.identity_manager import IdentityManager
 from operation_system.llm_bridge.llm_bridge import LLMBridge
-from eva.genesis_knowledge_system.gks_loader import GKSLoader
+from genesis_knowledge_system.gks_loader import GKSLoader
 import logging
 
 try:
-    from eva.genesis_knowledge_system.archetypal_projection.apm_engine import ArchetypalProjectionModule
-    from eva.genesis_knowledge_system.meta_learning_loop.mll_engine import MetaLearningLoop
+    from genesis_knowledge_system.archetypal_projection.apm_engine import ArchetypalProjectionModule
+    from genesis_knowledge_system.meta_learning_loop.mll_engine import MetaLearningLoop
     from orchestrator.temporal.temporal_engine import TemporalEngine
 except ImportError:
     # Build fallback stubs if files missing during migration

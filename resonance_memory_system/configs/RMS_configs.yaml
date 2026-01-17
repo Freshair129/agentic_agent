@@ -1,0 +1,146 @@
+# ============================================================
+# EVA MODULE SPECIFICATION (SSOT)
+# Module: Resonance Memory System (RMS)
+# Version: 8.2.0-S1
+# Updated: 2026-01-04
+# Description: Unified configuration for experiential memory encoding and affective tagging.
+# ============================================================
+
+schema: EVA-RMS-Configs-v8.2-Standard
+version: 8.2.0-S1
+
+# ============================================================
+# 1. GLOBAL SETTINGS & LOGIC PARAMETERS
+# ============================================================
+global:
+  module_name: "Resonance Memory System"
+  role: "Experiential Memory Encoding"
+  analogy: "Memory Formation & Emotional Tagging"
+  status: "Active"
+
+logic:
+  # Encoding Parameters
+  texture_dimensions: 5
+  trauma_threshold: 0.85
+  decay_rate: 0.05
+  
+  # Temporal Smoothing (EMA)
+  smoothing:
+    color_axes_alpha: 0.65  # 65% old + 35% new
+    intensity_alpha: 0.70    # 70% old + 30% new
+  
+  # Trauma Protection Effects (When threat > 0.85)
+  trauma_protection:
+    color_dim_factor: 0.55
+    intensity_reduction: 0.50
+    force_level: "L4_trauma"
+
+  # Resonance Thresholds
+  thresholds:
+    high_resonance: 0.85
+    medium_resonance: 0.65
+    low_resonance: 0.40
+    semantic_match_weight: 0.6
+    texture_match_weight: 0.4
+
+  # Color Mapping (Emotive Signatures)
+  core_color_mapping:
+    joy: "#FFD700"
+    stress: "#FF4500"
+    warmth: "#FF69B4"
+    clarity: "#00BFFF"
+    neutral: "#808080"
+
+# ============================================================
+# 2. RUNTIME HOOK (System Integration)
+# ============================================================
+runtime_hook:
+  component: "RMSSystem"
+  module_path: "resonance_memory_system.rms_v6"
+  class_name: "RMSSystem"
+  
+  initialization:
+    args:
+      config_path: "resonance_memory_system/configs/RMS_configs.yaml"
+    
+  bus_bindings:
+    - subscribe: "bus:physical"
+    - subscribe: "bus:psychological"
+    - subscribe: "bus:phenomenological"
+    - publish: "bus:knowledge" # Publishes the episodic snapshot
+      mapping:
+        payload: "episodic_snapshot"
+
+  resources:
+    configs: "resonance_memory_system/configs/"
+    contract: "resonance_memory_system/configs/RMS_configs.yaml"
+
+# ============================================================
+# 3. INTERFACE (Bus Position & Flow)
+# ============================================================
+interface:
+  bus_id: "RMS_ENCODER_01"
+  description: >
+    RMS encodes phenomenological experience into authoritative memory signals.
+    It integrates EVA Matrix state, RIM Impact, and Reflex state into a unified 
+    Episodic Memory Snapshot for Hept-Stream RAG.
+
+  position:
+    upstream_streams:
+      - "physical (PhysioController/Reflex)"
+      - "psychological (EVA Matrix)"
+      - "phenomenological (Artifact Qualia)"
+    downstream_targets:
+      - "MSP (Memory & Soul Passport)"
+      - "Hept-Stream RAG (Salience/Sensory/Emotion)"
+
+  execution_order:
+    - Receive signals from Bus
+    - Detect Trauma/Threat levels
+    - Generate Color Axes (9D -> 5D)
+    - Calculate Affective Intensity
+    - Apply Protective Dimming (if trauma)
+    - Perform Temporal Smoothing (EMA)
+    - Encode final Hex Color and Level
+    - Publish Episodic Snapshot to Bus
+
+# ============================================================
+# 4. DATA CONTRACTS (Input/Output/Validation)
+# ============================================================
+contracts:
+  inputs:
+    eva_matrix_state:
+      description: "9D psychological state (stress, warmth, drive, etc.)"
+      required: true
+    resonance_state:
+      description: "RIM impact level and trend"
+      required: true
+    reflex_state:
+      description: "Threat level [0.0 - 1.0]"
+      required: true
+    qualia_state:
+      description: "Phenomenological intensity and 5D texture"
+      required: true
+
+  outputs:
+    episodic_snapshot:
+      properties:
+        memory_encoding_level: { type: "enum", values: [L0_trace, L1_light, L2_standard, L3_deep, L4_trauma] }
+        memory_color: { type: "hex_string", description: "Emotive signature color" }
+        resonance_texture: { type: "vector_5d", axes: [stress, warmth, clarity, drive, ambient] }
+        resonance_index: { type: "float", range: [0.0, 1.0] }
+        trauma_flag: { type: "boolean" }
+
+  validation_rules:
+    - "ECL_Integrity_Lock: LLM cannot spoof RMS metrics."
+    - "Deterministic Truth: RMS provides the Authoritative biological reality."
+    - "Trauma Primacy: High threat must override positive valence in color/level."
+    - "Guarantees latency < 5ms per process."
+
+# ============================================================
+# 5. PERSISTENCE SETTINGS
+# ============================================================
+persistence:
+  auto_encode_on_response: true
+  enable_texture_vectors: true
+  vector_engine: "local_faiss"

@@ -10,10 +10,10 @@ sys.path.append(str(root_path))
 
 # Core imports
 from operation_system.resonance_bus import ResonanceBus
-from eva.memory_n_soul_passport.memory_n_soul_passport_engine import MSP
-from eva.physio_core.physio_core import PhysioCore
-from eva.eva_matrix.eva_matrix import EVAMatrixSystem
-from eva.artifact_qualia.artifact_qualia import ArtifactQualiaSystem
+from memory_n_soul_passport.memory_n_soul_passport_engine import MSP
+from physio_core.physio_core import PhysioCore
+from eva_matrix.eva_matrix import EVAMatrixSystem
+from artifact_qualia.artifact_qualia import ArtifactQualiaSystem
 
 def verify_resonance_loop():
     print("[ROOT VERIFICATION] Starting Resonance Loop Audit...")

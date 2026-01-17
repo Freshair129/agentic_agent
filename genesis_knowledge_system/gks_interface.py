@@ -4,8 +4,8 @@ Unified API for accessing Genesis Knowledge System and NexusMind Engine.
 """
 
 from typing import Dict, Any, Optional, List
-from eva.genesis_knowledge_system.gks_loader import GKSLoader
-from eva.genesis_knowledge_system.EVA_NexusMind_Engine import NexusMindEngine
+from genesis_knowledge_system.gks_loader import GKSLoader
+from genesis_knowledge_system.nexus_mind.nexus_mind_engine import NexusMindEngine
 
 class GKSInterface:
     def __init__(self):

@@ -1,0 +1,23 @@
+# ENV Secrets
+.env
+.env.*
+.env.api
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Data & Logs
+logs/
+*.log
+data/engram_store.json
+memory/users/
+system_state/
+
+# IDE
+.vscode/
+.idea/

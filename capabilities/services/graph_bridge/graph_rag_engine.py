@@ -7,7 +7,7 @@ Integrates Semantic Search (Chroma), Graph Traversal (Neo4j), and Bio-State Reso
 import logging
 from typing import Dict, List, Any, Optional
 from datetime import datetime
-from services.graph_bridge.graph_client import EVAGraphClient
+from capabilities.services.graph_bridge.graph_client import EVAGraphClient
 # Assuming VectorBridge interface exists or we use the client directly
 # from services.vector_bridge.chroma_bridge import ChromaVectorBridge 
 

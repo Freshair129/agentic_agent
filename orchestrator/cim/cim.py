@@ -43,7 +43,7 @@ import os
 import json
 
 import yaml
-from tools.logger import safe_print
+from capabilities.tools.logger import safe_print
 print = safe_print
 
 from datetime import datetime
@@ -422,7 +422,7 @@ class ContextInjectionModule:
 
         # 4. Context Storage Path & Persistence (Granular Structure)
         # Using root storage directory instead of single file
-        self.storage_root = self.base_path / "eva" / "consciousness" / "context_storage"
+        self.storage_root = self.base_path / "consciousness" / "context_storage"
         self._load_context_persistence()
 
         # 5. Token Counting setup & Allocation Logic
@@ -450,7 +450,7 @@ class ContextInjectionModule:
         Load the biological stimulus catalog.
         Source of Truth: hormone_spec_ml.yaml (Inverted mapping)
         """
-        spec_path = self.base_path / "eva" / "physio_core" / "configs" / "hormone_spec_ml.yaml"
+        spec_path = self.base_path / "physio_core" / "configs" / "hormone_spec_ml.yaml"
         
         if not spec_path.exists():
             print(f"[CIM] ⚠️ Master hormone spec not found at {spec_path}. Catalog empty.")
@@ -772,8 +772,8 @@ class ContextInjectionModule:
         { "current_state": {...}, "recent_history": [...] }
         """
         try:
-            # Hot cache path: eva/consciousness/state_memory/eva_matrix_state.json
-            hot_cache_path = self.base_path / "eva" / "consciousness" / "state_memory" / "eva_matrix_state.json"
+            # Hot cache path: consciousness/state_memory/eva_matrix_state.json
+            hot_cache_path = self.base_path / "consciousness" / "state_memory" / "eva_matrix_state.json"
             hot_cache_path.parent.mkdir(parents=True, exist_ok=True)
 
             current_matrix = self.full_state.get("matrix", {})

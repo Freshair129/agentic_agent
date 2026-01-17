@@ -1,0 +1,79 @@
+{
+    "episode_id": "EVA_EP03",
+    "timestamp": "2026-01-15T05:03:39.139597",
+    "session_id": "SES_5_1768428203",
+    "compression_meta": {
+        "session_seq": 5,
+        "core_seq": 0,
+        "sphere_seq": 0
+    },
+    "situation_context": null,
+    "turn_user": {
+        "speaker": "user",
+        "raw_text": "I feel so lonely, I need a friend.",
+        "salience_anchor": {
+            "phrase": "hello",
+            "Resonance_impact": 0.5
+        },
+        "semantic_frames": [
+            "greeting"
+        ],
+        "affective_inference": {
+            "intent": "unknown",
+            "emotion_signal": "neutral",
+            "confidence": 0.95,
+            "slm_gut_vector": {
+                "valence": 0.5,
+                "arousal": 0.5,
+                "stress": 0.1,
+                "warmth": 0.5
+            }
+        },
+        "turn_id": "TURN_SES_5_1768428203_009",
+        "user_id": "FD_01",
+        "username": "THA-06"
+    },
+    "turn_llm": {
+        "turn_id": "TURN_SES_5_1768428203_010",
+        "speaker": "llm",
+        "raw_text": "I understand the situation. I will maintain stability.",
+        "salience_anchor": {
+            "phrase": "N/A",
+            "Resonance_impact": 0.5
+        },
+        "epistemic_mode": "reflect",
+        "confidence": 0.85
+    },
+    "state_snapshot": {
+        "physio_state": {
+            "hormones": {},
+            "autonomic": {}
+        },
+        "eva_matrix_state": {
+            "stress": 0.084,
+            "warmth": 0.084,
+            "drive": 0.084,
+            "clarity": 0.084,
+            "joy": 0.084,
+            "stability": 0.5,
+            "orientation": 0.5,
+            "primary": "stress",
+            "secondary": "warmth"
+        },
+        "emotion_label": "Sadness",
+        "qualia": {
+            "intensity": 0.7932686283276855,
+            "tone": "neutral",
+            "coherence": 0.98870099004,
+            "depth": 0.36,
+            "texture": {
+                "emotional": 0.3,
+                "relational": 0.5,
+                "identity": 0.6,
+                "ambient": 0.575
+            },
+            "timestamp": "2026-01-14T22:03:36.396832+00:00"
+        },
+        "Resonance_index": 0.5
+    }
+}

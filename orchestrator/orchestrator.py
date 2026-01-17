@@ -26,7 +26,7 @@ import yaml
 # Add root directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tools.logger import safe_print
+from capabilities.tools.logger import safe_print
 from operation_system.identity_manager import IdentityManager
 import time
 
@@ -37,25 +37,23 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from operation_system.resonance_bus import bus
 
 # Biological & Psychological Systems
-from eva.physio_core.physio_core import PhysioCore
-from eva.eva_matrix.eva_matrix import EVAMatrixSystem
-from eva.artifact_qualia.artifact_qualia import ArtifactQualiaSystem
+from physio_core.physio_core import PhysioCore
+from eva_matrix.eva_matrix import EVAMatrixSystem
+from artifact_qualia.artifact_qualia import ArtifactQualiaSystem
 from orchestrator.cim.prompt_rule.prompt_rule_node import PromptRuleNode
 
 # Cognitive & Memory
 from orchestrator.cim.cim import ContextInjectionModule
-from services.agentic_rag.agentic_rag_engine import AgenticRAG
-from eva.memory_n_soul_passport.memory_n_soul_passport_engine import MSP
+from capabilities.services.agentic_rag.agentic_rag_engine import AgenticRAG
+from memory_n_soul_passport.memory_n_soul_passport_engine import MSP
 from operation_system.llm_bridge.llm_bridge import LLMBridge, SYNC_BIOCOGNITIVE_STATE_TOOL, PROPOSE_EPISODIC_MEMORY_TOOL
 from operation_system.llm_bridge.ollama_bridge import OllamaBridge
 # [NEW] Bridges
-from services.slm_bridge.slm_bridge import slm
-from services.vector_bridge.chroma_bridge import ChromaVectorBridge
-from services.vector_bridge.chroma_bridge import ChromaVectorBridge
-from services.vector_bridge.chroma_bridge import ChromaVectorBridge
+from capabilities.services.slm_bridge.slm_bridge import slm
+from capabilities.services.vector_bridge.chroma_bridge import ChromaVectorBridge
 from operation_system.rim.rim_engine import rim_calc
 from operation_system.resonance_engine.resonance_engine import ResonanceEngine
-from eva.genesis_knowledge_system.gks_interface import gks_interface  # [NEW] V9.3.0G
+from genesis_knowledge_system.gks_interface import gks_interface  # [NEW] V9.3.0G
 # [NEW] Engram System (Conditional Memory)
 from capabilities.services.engram_system.engram_engine import EngramEngine
 # [NEW] Session Manager
@@ -144,7 +142,7 @@ class EVAOrchestrator:
         # --------------------------------------------------
         if self.enable_physio:
             safe_print("  - Initializing PhysioCore (v9.1.0-C1)...")
-            base_physio = Path(__file__).parent.parent / "eva" / "physio_core" / "configs"
+            base_physio = Path(__file__).parent.parent / "physio_core" / "configs"
             self.physio = PhysioCore(
                 config_path=str(base_physio / "PhysioCore_configs.yaml"),
                 msp=self.msp,
@@ -189,7 +187,11 @@ class EVAOrchestrator:
         )
 
         print(f"  - Initializing LLM Bridge ({self.llm_backend.upper()})...")
-        if self.llm_backend.lower() == "ollama":
+        if self.mock_mode:
+            from tests.mock_llm import MockLLM
+            self.llm = MockLLM()
+            safe_print("  ⚠️ [MOCK MODE] LLM Bridge replaced with MockLLM.")
+        elif self.llm_backend.lower() == "ollama":
             ollama_ctx = orch_params.get("ollama_context_window", 32768)
             self.llm = OllamaBridge(model=ollama_model, context_window=ollama_ctx)
         else:
@@ -226,6 +228,10 @@ class EVAOrchestrator:
         self.turn_count = last_context.get("turn_index", 0) + 1
 
         self.current_turn_user_fragment: Optional[Dict] = None
+
+        # [AUTO-START] Ensure session is active by default for API usage
+        if not self.session_manager.recording_active:
+             self.session_manager._start_new_session()
 
         print(f"✅ EVA 9.1.0 ready! (Session: {self.session_id})\n")
 
@@ -593,13 +599,15 @@ class EVAOrchestrator:
         })
         
         final_ri = res_output_final.ri_score
-        self.umbrella_active = res_output_final.umbrella_deployed
         
         safe_print(f"  ✓ Calculated Final RI: {final_ri:.2f} (Depth: {res_output_final.layer_depth})")
         if self.umbrella_active:
              safe_print(f"  ☂️ [UMBRELLA ACTIVE] Strategy: {res_output_final.mrf_interpretation.get('transcendental', {}).get('transcendental_insight', 'Stability Mode')}")
 
-
+        # [NEW] Archival Data Preparation
+        ai_confidence = slm_result.get("confidence", 0.85)
+        stimulus_ref = slm_result # Use SLM data as primary stimulus reference if sync tool wasn't called
+        
         # [NEW] Generate Sequential Turn IDs via IdentityManager
         user_turn_num = (self.turn_count * 2) - 1
         llm_turn_num = (self.turn_count * 2)
@@ -621,7 +629,7 @@ class EVAOrchestrator:
             "raw_text": final_text,
             "salience_anchor": {
                 "phrase": memory_proposal.get("llm_fragment_proposal", {}).get("turn_llm", {}).get("salience_anchor", {}).get("phrase", "N/A"),
-                "Resonance_impact": stimulus.get("rim_impact", 0.5)
+                "Resonance_impact": stimulus_ref.get("rim_impact", 0.5)
             },
             "epistemic_mode": memory_proposal.get("llm_fragment_proposal", {}).get("turn_llm", {}).get("epistemic_mode", "reflect"),
             "confidence": ai_confidence
@@ -865,6 +873,13 @@ class EVAOrchestrator:
         except Exception as e:
              safe_print(f"  ⚠️ Session analysis failed: {e}")
              return {}
+
+    @property
+    def umbrella_active(self) -> bool:
+        """Check if Umbrella (Transcendent Layer) is active."""
+        if hasattr(self, 'resonance') and self.resonance:
+            return self.resonance.umbrella_active
+        return False
 
     def _generate_session_id(self): 
         """Generate session ID aligned with session memory naming"""

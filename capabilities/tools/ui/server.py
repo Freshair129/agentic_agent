@@ -16,7 +16,7 @@ ROOT_DIR = Path(__file__).parent.parent.parent
 sys.path.append(str(ROOT_DIR))
 
 from orchestrator.orchestrator import EVAOrchestrator
-from tools.logger import safe_print
+from capabilities.tools.logger import safe_print
 
 from fastapi.middleware.cors import CORSMiddleware
 

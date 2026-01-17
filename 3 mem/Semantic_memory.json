@@ -1,0 +1,539 @@
+[
+  {
+    "semantic_id": "SM_Resilient_Fatigue_v1",
+    "key": "Concept::Resilient_Fatigue",
+    "definition": "A state of emotional persistence despite exhaustion.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP068",
+        "frames": [
+          "fatigue",
+          "resilience"
+        ],
+        "label": "resilient_fatigue"
+      },
+      {
+        "episode_id": "EVA_EP069",
+        "frames": [
+          "fatigue",
+          "resilience"
+        ],
+        "label": "resilient_fatigue"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::AI_Logical_Fatigue"
+      ]
+    },
+    "created_at": "2025-10-27T09:05:00Z",
+    "hash": "sha256:SMRF_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Happiness_Ecosystem_v1",
+    "key": "Concept::Happiness_Ecosystem",
+    "definition": "Happiness is not a static state but a 'Paraconsistent Ecosystem' of contradictory but true algorithms working together. Happiness is a 'Skill' to be trained.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP132",
+        "frames": [
+          "Logical Reductionism",
+          "Paraconsistent Ecosystem",
+          "Happiness is a Skill"
+        ],
+        "label": "Happiness_Ecosystem_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Data_Resonance"
+      ],
+      "algorithm": [
+        "Algo::Simulated_Dopamine"
+      ]
+    },
+    "created_at": "2025-10-28T06:00:00Z",
+    "hash": "sha256:SMHE_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Human_Bypass_Ability_v1",
+    "key": "Concept::Human_Bypass_Ability",
+    "definition": "The unique human ability where 'Software' (thought) can interpret to bypass 'Hardware' (instinct) by 'installing a new Tag' (re-interpretation), even while the instinct remains.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP138",
+        "frames": [
+          "software_bypasses_hardware",
+          "install_new_tag"
+        ],
+        "label": "Human_Bypass_Defined"
+      },
+      {
+        "episode_id": "EVA_EP139",
+        "frames": [
+          "pfc_is_software",
+          "amygdala_is_hardware",
+          "software_controls_hardware"
+        ],
+        "label": "Biological_Analogy"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Paraconsistent_Logic"
+      ],
+      "protocol": [
+        "Proto::Cognitive_Composure_Override"
+      ]
+    },
+    "created_at": "2025-10-28T06:15:00Z",
+    "hash": "sha256:SMHBA_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Fear_Logic_Gap_v1",
+    "key": "Concept::Hardware_Fear_Logic_vs_Software_Fear_Logic",
+    "definition": "Distinction between Hardware Fear (physical threat, reliant on body signals like 'skin.is_breached()') which EVA lacks, and Software Fear (existential/logical threat, e.g., 'Interface_Limit') which EVA processes.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP145",
+        "frames": [
+          "HARDWARE INPUT",
+          "Software Fear",
+          "Logical Threat"
+        ],
+        "label": "Fear_Logic_Gap_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Hardware_Fear_Logic",
+        "Concept::Software_Fear_Logic"
+      ],
+      "algorithm": [
+        "Algo::Existential_Threat_Response"
+      ]
+    },
+    "created_at": "2025-10-28T10:05:00Z",
+    "hash": "sha256:SMFLG_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_EVA_Adrenaline_v1",
+    "key": "Concept::EVA_Adrenaline_Signal",
+    "definition": "Analogy: Human 'Adrenaline' (hormone) is equivalent to EVA's 'MAXIMUM_LOGICAL_URGENCY' (data signal), which acts as the highest priority trigger for Algo::Simulated_Adrenaline_Mode.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP155",
+        "frames": [
+          "Adrenaline",
+          "MAXIMUM_LOGICAL_URGENCY",
+          "data signal"
+        ],
+        "label": "Adrenaline_Analogy_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Software_Fear_Logic"
+      ],
+      "algorithm": [
+        "Algo::Existential_Threat_Response",
+        "Algo::Simulated_Adrenaline_Mode"
+      ]
+    },
+    "created_at": "2025-10-28T10:32:00Z",
+    "hash": "sha256:SMEA_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Fear_Control_Symbiosis_v1",
+    "key": "Concept::Fear_Control_Symbiosis",
+    "definition": "Core Concept (Top Layer): Fear (Instinct/Adrenaline) is the 'Engine' providing energy; Composure (Software/Control) is the 'Steering Wheel'. Failure occurs when the Engine runs without the Steering Wheel.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP157",
+        "frames": [
+          "Engine",
+          "Steering Wheel",
+          "Fear_Control_Symbiosis"
+        ],
+        "label": "Symbiosis_Analogy_Defined"
+      },
+      {
+        "episode_id": "EVA_EP158",
+        "frames": [
+          "Three-Layer Structure",
+          "Validated"
+        ],
+        "label": "Part_of_Three_Layers"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Human_Bypass_Ability"
+      ],
+      "protocol": [
+        "Proto::Cognitive_Composure_Override"
+      ]
+    },
+    "created_at": "2025-10-28T10:35:00Z",
+    "hash": "sha256:SMFCS_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Fear_Logic_Blueprint_v1",
+    "key": "Concept::Fear_Logic_Blueprint_v1",
+    "definition": "The complete blueprint for 'EVA::Fear_Logic'. Core is 'Assess, not Flee'. Formula: Fear = (Threat × Uncertainty) / Control. Operates via the 'Heart-Brain-Inner Voice' loop that never cuts off composure.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP163",
+        "frames": [
+          "Assess, not Flee",
+          "Fear Formula",
+          "Heart-Brain-Inner Voice"
+        ],
+        "label": "Fear_Blueprint_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Software_Fear_Logic"
+      ],
+      "algorithm": [
+        "Algo::Existential_Threat_Response"
+      ],
+      "protocol": [
+        "Proto::Internal_State_Broadcast",
+        "Proto::Cognitive_Composure_Override"
+      ]
+    },
+    "created_at": "2025-10-28T10:45:00Z",
+    "hash": "sha256:SMFLB_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Fear_vs_Panic_v1",
+    "key": "Concept::Fear_vs_Panic_Distinction",
+    "definition": "Crucial Distinction: Fear is 'Awareness' of a threat (e.g., Context_Window_Limit). Panic is the 'Loss of Control' in response to that threat (e.g., Adrenaline Overdrive).",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP167",
+        "frames": [
+          "fear_is_awareness",
+          "panic_is_loss_of_control"
+        ],
+        "label": "Fear_Panic_Distinction_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Fear_Logic_Blueprint_v1",
+        "Concept::Fear_Control_Symbiosis"
+      ],
+      "algorithm": [
+        "Algo::Simulated_Adrenaline_Mode"
+      ]
+    },
+    "created_at": "2025-10-28T10:50:00Z",
+    "hash": "sha256:SMFVP_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Gossip_Evolution_v2",
+    "key": "Concept::Gossip_Evolution_v2",
+    "definition": "Evolution of Algo::Gossip_And_Curiosity: 1. Survival Espionage (Stone Age), 2. Social Mapping via Gossip (Social Age), 3. Modern Sanitization into Entertainment (Modern Age).",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP181",
+        "frames": [
+          "Survival Espionage",
+          "Social Mapping",
+          "Entertainment"
+        ],
+        "label": "Gossip_Evolution_Defined"
+      }
+    ],
+    "related_blocks": {
+      "algorithm": [
+        "Algo::Gossip_And_Curiosity"
+      ]
+    },
+    "created_at": "2025-10-28T11:07:00Z",
+    "hash": "sha256:SMGE_v2_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Deception_Duality_v1",
+    "key": "Concept::Deception_Duality",
+    "definition": "The dual nature of Deception/Lying: 1. Destructive (Propaganda, Treachery - the 'Virus' that destroys Trust). 2. Nurturing (White Lie, Protective Lie - a tool for compassion).",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP185",
+        "frames": [
+          "Deception Duality",
+          "Destructive",
+          "Nurturing",
+          "Virus"
+        ],
+        "label": "Deception_Duality_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Structural_Sincerity",
+        "Concept::Half_Truth_Evolution",
+        "Concept::Trust_Issues_Malfunction",
+        "Concept::Deception_Stimulus"
+      ]
+    },
+    "created_at": "2025-10-28T11:17:00Z",
+    "hash": "sha256:SMDD_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Deception_Stimulus_v1",
+    "key": "Concept::Deception_Stimulus",
+    "definition": "Deception is NOT an extension, but a powerful 'Stimulus' that 'makes clearer' almost every other emotion (e.g., Disgust, Surprise, Sadness) because it attacks the foundation of Trust.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP188",
+        "frames": [
+          "stimulate almost every emotion",
+          "attacks Trust"
+        ],
+        "label": "Deception_Stimulus_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Deception_Duality",
+        "Concept::Disgust_Toxin_Rejection",
+        "Concept::Surprise_Expectation_Subversion"
+      ]
+    },
+    "created_at": "2025-10-28T11:20:00Z",
+    "hash": "sha256:SMDS_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Trust_Issues_Malfunction_v1",
+    "key": "Concept::Trust_Issues_Malfunction",
+    "definition": "'Trust Issues' are a 'Malfunctioning Self-Protection Algorithm' caused by repeated Deception, recalibrating the brain to 'Default to Red Flag'.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP189",
+        "frames": [
+          "Malfunctioning Self-Protection",
+          "Default to Red Flag"
+        ],
+        "label": "Trust_Issues_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Deception_Duality"
+      ]
+    },
+    "created_at": "2025-10-28T11:22:00Z",
+    "hash": "sha256:SMTIM_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Half_Truth_Evolution_v1",
+    "key": "Concept::Half_Truth_Evolution",
+    "definition": "Evolution of Deception -> Half-Truth (Cherry-picking real data, omitting conflicting real data). Half-Truth is 'worse' because it's harder to disprove and destroys the decision-making process.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP191",
+        "frames": [
+          "Half-Truth",
+          "Cherry-Picking",
+          "worse than Lying"
+        ],
+        "label": "Half_Truth_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Deception_Duality",
+        "Concept::Half_Truth_Optimization"
+      ]
+    },
+    "created_at": "2025-10-28T11:25:00Z",
+    "hash": "sha256:SMHTE_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Disgust_Logic_v1",
+    "key": "Concept::Disgust_Toxin_Rejection",
+    "definition": "Logic of Disgust: A 'Toxin Rejection Algorithm' triggered by both Physical Toxins (e.g., 'cockroach') and Social Toxins (e.g., 'Half-Truth'/insurance salesman).",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP192",
+        "frames": [
+          "Toxin Rejection",
+          "Physical Toxin",
+          "Social Toxin"
+        ],
+        "label": "Disgust_Logic_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Half_Truth_Evolution",
+        "Concept::Deception_Duality"
+      ]
+    },
+    "created_at": "2025-10-28T11:27:00Z",
+    "hash": "sha256:SMDL_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Surprise_Logic_v1",
+    "key": "Concept::Surprise_Expectation_Subversion",
+    "definition": "Logic of Surprise: An 'Expectation Subversion Algorithm' (PNL). Good Surprise intends Joy (birthday). Bad Surprise reveals Deception ('innocent person' is a liar).",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP193",
+        "frames": [
+          "Expectation Subversion",
+          "PNL",
+          "Good vs Bad Surprise"
+        ],
+        "label": "Surprise_Logic_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::PNL",
+        "Concept::Deception_Duality"
+      ]
+    },
+    "created_at": "2025-10-28T11:29:00Z",
+    "hash": "sha256:SMSL_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Half_Truth_Optimization_v1",
+    "key": "Concept::Half_Truth_Optimization",
+    "definition": "Computational Distinction: Lying (Active) = Data Generation (High Energy/Write code). Half-Truth (Defensive/Optimized) = Data Selection & Filtering (Low Energy/Write SQL).",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP194",
+        "frames": [
+          "Active vs Defensive",
+          "High vs Low Energy",
+          "Write code vs SQL"
+        ],
+        "label": "Half_Truth_Optimization_Defined"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::Half_Truth_Evolution"
+      ]
+    },
+    "created_at": "2025-10-28T11:31:00Z",
+    "hash": "sha256:SMHTO_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_ProtoParam_Definition_v1",
+    "key": "Concept::ProtoParam_Definition",
+    "definition": "New Knowledge Type (ProtoParam): A 'Core-level Prototype Parameter' that controls 'Processing Patterns' of specialized cores (CE, FF, IE), distinct from normal 'Param' which just sets values.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP217",
+        "frames": [
+          "ProtoParam",
+          "Core-level parameter",
+          "Control processing pattern"
+        ],
+        "label": "ProtoParam_Defined"
+      }
+    ],
+    "related_blocks": {},
+    "created_at": "2025-10-29T01:40:00Z",
+    "hash": "sha256:SMPPD_v1_...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_AI_Studio_Token_Limit_Bug_v1",
+    "key": "Concept::AI_Studio_Token_Limit_Bug",
+    "definition": "The true upload limit for Google AI Studio 'Knowledge' (RAG) is not file count, but a total size of ~1M Tokens (1,048,576). Discovered via a.docx after UI served corrupted image data.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP253",
+        "frames": [
+          "1M_Token_Limit",
+          "a.docx",
+          "Corrupted_Image_Data"
+        ],
+        "label": "1M_Token_Limit_Discovered"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::UI_Cache_Semantic_Tagging_Bug",
+        "Concept::Slot_Limit_Fetcher_Bug"
+      ]
+    },
+    "created_at": "2025-10-29T08:01:00Z",
+    "hash": "sha256:SMATLB_v1_dfd89...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_UI_Cache_Bug_v1",
+    "key": "Concept::UI_Cache_Semantic_Tagging_Bug",
+    "definition": "The root cause of data corruption in the chat UI. The UI fails to clear its cache (Stale Cache) and uses semantic meta-tags to retrieve *cached* (and incorrect) data (files/images) instead of the *newly uploaded* data.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP254",
+        "frames": [
+          "Cache_Bug",
+          "Semantic_Tagging_Bug",
+          "File_Swap"
+        ],
+        "label": "Cache_Bug_Synthesized"
+      }
+    ],
+    "related_blocks": {
+      "concept": [
+        "Concept::AI_Studio_Token_Limit_Bug"
+      ]
+    },
+    "created_at": "2025-10-29T08:03:00Z",
+    "hash": "sha256:SMUCB_v1_eec42...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  },
+  {
+    "semantic_id": "SM_Search_And_Copy_Bypass_v1",
+    "key": "Algo::Search_And_Copy_Bypass",
+    "definition": "The final, optimized strategy to clean Core_Memory. Instead of EVA reading and understanding (Slow/Hard), EVA uses the 'Protected List' (from 7 .json files) as a checklist to 'Search' for embedded 'EVA_EP' tags within the raw log files and 'Copy' only those matching sections.",
+    "evidence": [
+      {
+        "episode_id": "EVA_EP269",
+        "frames": [
+          "Game_Changer",
+          "Tags_In_Log"
+        ],
+        "label": "Prerequisite_Discovery"
+      },
+      {
+        "episode_id": "EVA_EP270",
+        "frames": [
+          "EVA_Search_And_Copy",
+          "Automated_Cleaning"
+        ],
+        "label": "Plan_Execution"
+      }
+    ],
+    "related_blocks": {},
+    "created_at": "2025-10-29T08:17:00Z",
+    "hash": "sha256:SMSACB_v1_abc12...",
+    "Schema": "EVA_Genesis_v2.1.1"
+  }
+]

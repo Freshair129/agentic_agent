@@ -85,7 +85,7 @@ stream_groups:
 infrastructure:
   vector_db:
     type: "local_faiss"
-    path: "consciousness/02_Semantic_memory/faiss_index"
+    path: "data/resume_knowledge_base"
     embedding_model: "text-embedding-3-small"
     dimensions: 1536
   graph_db:

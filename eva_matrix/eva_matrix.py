@@ -7,7 +7,7 @@ from typing import Dict, Any, List
 
 # Add root to path for tools
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from tools.logger import safe_print
+from capabilities.tools.logger import safe_print
 from operation_system.identity_manager import IdentityManager
 
 # Import Logic Module
@@ -25,11 +25,12 @@ class EVAMatrixSystem:
         self.bus = bus
         
         # 1. Load Configuration
-        self.config_path = self.base_path / "eva/eva_matrix/configs/EVA_Matrix_configs.yaml"
+        self.config_path = self.base_path / "eva_matrix/configs/EVA_Matrix_configs.yaml"
         self.config = self._load_config()
         
         # 2. Setup Files
-        self.state_file = self.base_path / Path(self.config["runtime_hook"]["persistence_file"])
+        persistence_subpath = self.config.get("runtime_hook", {}).get("persistence_file", "consciousness/state_memory/eva_matrix_state.json")
+        self.state_file = self.base_path / Path(persistence_subpath)
         
         # 3. Owned State
         self.axes_9d = {

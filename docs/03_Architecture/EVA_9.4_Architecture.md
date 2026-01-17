@@ -68,14 +68,14 @@ agent/
 │       ├── slm_core/         
 │       └── vector_db/        
 │
-├── memory/                   # [STORAGE] ความทรงจำที่เก็บรักษา - LLM Read-only (via MSP) (Locked)
-│   ├── session_memory/       # [past sessions] Short-term memory
-│   ├── core_memory/          # [long-term] Deep identity markers
-│   ├── sphere_memory/        # [structured] Social & environmental maps
-│   ├── user_profile/         # [user modeling]
-│   ├── state_store/          # [system state] PhysioCore, Matrix, RMS state (LLM read-only)
-│   ├── context_store/        # [working buffers] CIM context
-│   ├── archival_memory/      # [frozen] Immutable archives (MSP owned)
+├── memory/                   # [STORAGE] Subconscious Domain - LLM Read-only (via MSP)
+│   ├── session_memory/       # [Working Memory] Raw snapshot of consciousness layers
+│   ├── core_memory/          # [Short-term Memory] 8-Session Distillation
+│   ├── sphere_memory/        # [Long-term Memory] 8-Core Distillation (Wisdom)
+│   ├── user_profile/         # [User Modeling]
+│   ├── state_store/          # [System State] PhysioCore, Matrix, RMS static state
+│   ├── context_store/        # [Runtime Buffers] CIM dynamic context
+│   ├── archival_memory/      # [Frozen] Immutable logs (MSP owned)
 │   │
     │   # === GKS Blocks (moved from consciousness - read-only knowledge) ===
     ├── orchestrator/         # [SYSTEM] Main Orchestration Loop
@@ -225,21 +225,19 @@ agent/
 
 ## 🧠 Memory Architecture (v9.4.0)
 
-> [!NOTE]
-> **Philosophy:** "Active Consciousness (LLM) writes to Working Memory. Subconscious (MSP) consolidates to Long-Term Memory."
+> [!IMPORTANT]
+> **Philosophy:** "Active Consciousness (LLM) creates experience in the Awareness Domain; Subconscious (MSP) distills Wisdom via the 8-8-8 Protocol."
+> **Full Guide:** See [MEM_PHILOSOPHY_888.md](file:///e:/The%20Human%20Algorithm/T2/agent/docs/architecture/MEM_PHILOSOPHY_888.md)
 
-### 1. MSP (Memory & Soul Passport) - **The Subconscious Storage**
-- **Role:** Centralized Storage Hub for all acquired experiences.
-- **Responsibility:**
-    - **Episodic:** User-AI interaction logs.
-    - **Semantic (Dynamic):** Context/Facts learned *during* sessions (Situation Grounding).
-    - **Sensory:** Qualia patterns associated with episodes.
-- **Why?** Ensures unified time-stamping and conflict resolution (e.g., "Shrimp vs Seafood Allergy" logic) before updating static knowledge.
+### 1. Memory Layers (Redefined)
+- **Consciousness (Buffer)**: The "Awareness Domain" where the LLM lives and has full R/W authority.
+- **Session (Working Memory)**: Raw logs and snapshots of finished interactions.
+- **Core (Short-Term)**: 8-session distillation (Clean, Summary, Index, Relation).
+- **Sphere (Long-Term)**: 8-core / 64-session wisdom (Identity DNA).
 
-### 2. GKS (Genesis Knowledge System) - **The Innate Knowledge**
-- **Role:** Static Knowledge Provider (Algorithm/Frameworks).
-- **Responsibility:** "Read-Only" reference for deep logic.
-- **Independence:** Can be unplugged/downgraded without breaking MSP's storage (Plug-and-play).
+### 2. MSP (Memory & Soul Passport) - **The Subconscious Governor**
+- **Role:** Central authority for persistence and the 8-8-8 synthesis engine.
+- **Independence:** Decouples active consciousness (Active State) from long-term storage data structures.
 
 ---
 *Generated for EVA v9.4.0 Implementation*

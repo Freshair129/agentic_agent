@@ -1,0 +1,13 @@
+{
+  "context_id": "ctx_1_EVA_EP1.md",
+  "current_context_id": "ctx_1_EVA_EP1.md",
+  "turn_index": 1,
+  "timestamp": "2026-01-15T04:59:23.049220",
+  "physio_state": {},
+  "eva_matrix_state": {},
+  "qualia_state": {},
+  "cognitive_state": {},
+  "conversation_history": [],
+  "self_note": "",
+  "previous_turn_data": {}
+}

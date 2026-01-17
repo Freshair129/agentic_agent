@@ -45,6 +45,15 @@ class TrajectoryManager:
         # Ensure directory exists
         self.output_dir = Path(self.config['output']['directory'])
         self.output_dir.mkdir(parents=True, exist_ok=True)
+
+    @property
+    def current_turn(self) -> Dict[str, Any]:
+        """Return the current turn's trajectory data."""
+        return {
+            "session_id": self.current_session_id,
+            "turn_index": self.current_turn_index,
+            "steps": self.trajectory_buffer
+        }
     
     def start_turn(self, session_id: str, turn_index: int):
         """Initialize a new turn for trajectory logging."""

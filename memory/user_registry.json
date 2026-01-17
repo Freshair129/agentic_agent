@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "users": {
+    "FD_01": {
+      "user_id": "FD_01",
+      "username": "THA-06",
+      "display_name": "THA-06",
+      "aliases": [
+        "บอส",
+        "Boss",
+        "THA"
+      ],
+      "role": "primary_admin",
+      "level": "Founder / Dev",
+      "priority": 1,
+      "registration_date": "2026-01-15T03:59:48.778743",
+      "last_seen": "2026-01-15T05:04:51.411556",
+      "interaction_count": 17,
+      "trust_level": 1.0
+    }
+  },
+  "active_user": "FD_01",
+  "auto_register": true
+}

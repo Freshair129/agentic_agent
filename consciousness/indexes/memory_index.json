@@ -1,0 +1,120 @@
+{
+  "episodes": [
+    {
+      "episode_id": "EVA_EP02",
+      "timestamp": "2026-01-15T05:03:30.006033",
+      "session_id": "SES_5_1768428203",
+      "event_label": null,
+      "episode_tag": "mock_test",
+      "summary_user": null,
+      "tags": [
+        "greeting"
+      ],
+      "salience_anchor": {
+        "phrase": "hello",
+        "Resonance_impact": 0.5
+      },
+      "speaker_1": "user",
+      "summary_eva": null,
+      "speaker_2": "llm",
+      "resonance_index": 0.5
+    },
+    {
+      "episode_id": "EVA_EP03",
+      "timestamp": "2026-01-15T05:03:39.139597",
+      "session_id": "SES_5_1768428203",
+      "event_label": null,
+      "episode_tag": "mock_test",
+      "summary_user": null,
+      "tags": [
+        "greeting"
+      ],
+      "salience_anchor": {
+        "phrase": "hello",
+        "Resonance_impact": 0.5
+      },
+      "speaker_1": "user",
+      "summary_eva": null,
+      "speaker_2": "llm",
+      "resonance_index": 0.5
+    },
+    {
+      "episode_id": "EVA_EP04",
+      "timestamp": "2026-01-15T05:03:48.734969",
+      "session_id": "SES_5_1768428203",
+      "event_label": null,
+      "episode_tag": "mock_test",
+      "summary_user": null,
+      "tags": [
+        "paradox",
+        "logic"
+      ],
+      "salience_anchor": {
+        "phrase": "false and true",
+        "Resonance_impact": 0.5
+      },
+      "speaker_1": "user",
+      "summary_eva": null,
+      "speaker_2": "llm",
+      "resonance_index": 0.5
+    },
+    {
+      "episode_id": "EVA_EP05",
+      "timestamp": "2026-01-15T05:04:31.425662",
+      "session_id": "SES_6_1768428261",
+      "event_label": null,
+      "episode_tag": "mock_test",
+      "summary_user": null,
+      "tags": [
+        "greeting"
+      ],
+      "salience_anchor": {
+        "phrase": "hello",
+        "Resonance_impact": 0.5
+      },
+      "speaker_1": "user",
+      "summary_eva": null,
+      "speaker_2": "llm",
+      "resonance_index": 0.5
+    },
+    {
+      "episode_id": "EVA_EP06",
+      "timestamp": "2026-01-15T05:04:41.737601",
+      "session_id": "SES_6_1768428261",
+      "event_label": null,
+      "episode_tag": "mock_test",
+      "summary_user": null,
+      "tags": [
+        "greeting"
+      ],
+      "salience_anchor": {
+        "phrase": "hello",
+        "Resonance_impact": 0.5
+      },
+      "speaker_1": "user",
+      "summary_eva": null,
+      "speaker_2": "llm",
+      "resonance_index": 0.5
+    },
+    {
+      "episode_id": "EVA_EP07",
+      "timestamp": "2026-01-15T05:04:51.411115",
+      "session_id": "SES_6_1768428261",
+      "event_label": null,
+      "episode_tag": "mock_test",
+      "summary_user": null,
+      "tags": [
+        "paradox",
+        "logic"
+      ],
+      "salience_anchor": {
+        "phrase": "false and true",
+        "Resonance_impact": 0.5
+      },
+      "speaker_1": "user",
+      "summary_eva": null,
+      "speaker_2": "llm",
+      "resonance_index": 0.5
+    }
+  ]
+}

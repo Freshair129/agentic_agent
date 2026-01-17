@@ -13,8 +13,8 @@ if sys.platform == 'win32':
     except AttributeError:
         sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
 
-from eva.memory_n_soul_passport.memory_n_soul_passport_engine import MSP
-from services.agentic_rag.agentic_rag_engine import AgenticRAG
+from memory_n_soul_passport.memory_n_soul_passport_engine import MSP
+from capabilities.services.agentic_rag.agentic_rag_engine import AgenticRAG
 
 def verify_retrieval():
     print("[RETRIEVAL VERIFICATION] Testing AgenticRAG + MSP integration...")

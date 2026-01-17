@@ -1,0 +1,16 @@
+{
+    "episode_id": "EVA_EP07",
+    "timestamp": "2026-01-15T05:04:51.411115",
+    "turn_llm": {
+        "turn_id": "TURN_SES_6_1768428261_036",
+        "speaker": "llm",
+        "raw_text": "I understand the situation. I will maintain stability.",
+        "salience_anchor": {
+            "phrase": "N/A",
+            "Resonance_impact": 0.5
+        },
+        "epistemic_mode": "reflect",
+        "confidence": 0.85
+    },
+    "confidence": 0.85
+}

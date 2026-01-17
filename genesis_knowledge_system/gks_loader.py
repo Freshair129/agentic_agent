@@ -33,8 +33,7 @@ class GKSLoader:
                 "concept": self._load_json("Concept_Why_Genesis_Block.json"),
                 "framework": self._load_json("Framework_Genesis_Block.json"),
                 "parameter": self._load_json("Parameter_What_Genesis_Block.json"),
-                "protocol": self._load_json("Protocol_Process_Genesis_Block.json"),
-                "time": self._load_json("Time_When_Genesis_Block.json")
+                "protocol": self._load_json("Protocol_Process_Genesis_Block.json")
             }
             
             # 3. Safety Block

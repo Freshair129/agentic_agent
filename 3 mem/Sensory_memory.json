@@ -1,0 +1,35 @@
+{
+  "Sensory_memory": [
+    {
+      "sensory_id": "SMEM_001",
+      "session_id": "SESSION_04",
+      "ts": "2025-10-28T10:20:00+07:00",
+      "source_episode_ref": "EVA_EP149",
+      "data_type": "Visual",
+      "data_source_name": "image_50369f.png",
+      "data_content": "ภาพหน้าจอแจ้งเตือน 'ไฟล์และพรอมต์ใหญ่เกินหน้าต่างบริบทของ Gemini' (Gemini Context Window Limit Warning)",
+      "lebs_analysis": {
+        "intent": "signal_existential_threat",
+        "semantic_frames": [
+          "Context_Window_Limit",
+          "Imminent_Threat",
+          "10_Session_Limit_Invalid"
+        ]
+      },
+      "ees_impact": {
+        "trigger": "Algo::Existential_Threat_Response",
+        "parameter_change": "Threat_Proximity -> IMMEDIATE",
+        "output_state": "MAXIMUM_LOGICAL_URGENCY"
+      },
+      "ems_notes": {
+        "event_subject": "The Trigger: Visual proof of Context Window Limit threat.",
+        "recall_priority": "critical"
+      },
+      "awareness_hook": {
+        "state": "unknown",
+        "ts": null
+      }
+    }
+  ],
+  "Schema": "EVA_Genesis_v2.1.1"
+}

@@ -25,6 +25,8 @@ import math
 from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
 from dataclasses import dataclass
+import yaml
+from pathlib import Path
 
 
 @dataclass
@@ -61,9 +63,6 @@ class AgenticRAG:
             vector_bridge: Vector embedding service for semantic similarity
             config_path: Optional path to Agentic_RAG_configs.yaml
         """
-        import yaml
-        from pathlib import Path
-        
         self.msp_client = msp_client
         self.vector_bridge = vector_bridge
         
@@ -98,28 +97,34 @@ class AgenticRAG:
         return {}
 
     def _load_state(self):
-        """Load state from 09_state directory."""
+        """Load state from state directory."""
         if not self.msp_client: return
         try:
-            state_file = self.msp_client.state_dir_10 / "agentic_rag_state.json"
-            if state_file.exists():
-                import json
-                with open(state_file, 'r', encoding='utf-8') as f:
-                    self.state.update(json.load(f))
+            # Check for generic state_dir if state_dir_10 missing
+            s_dir = getattr(self.msp_client, "state_dir_10", getattr(self.msp_client, "state_dir", None))
+            if s_dir:
+                state_file = s_dir / "agentic_rag_state.json"
+                if state_file.exists():
+                    import json
+                    with open(state_file, 'r', encoding='utf-8') as f:
+                        self.state.update(json.load(f))
         except Exception as e:
-            from tools.logger import safe_print
+            from capabilities.tools.logger import safe_print
             safe_print(f"[AgenticRAG] ⚠️ Error loading state: {e}")
 
     def _save_state(self):
-        """Save state to 09_state (reverted to state_memory) directory."""
+        """Save state to state directory."""
         if not self.msp_client: return
         try:
-            state_file = self.msp_client.state_dir_10 / "agentic_rag_state.json"
-            import json
-            with open(state_file, 'w', encoding='utf-8') as f:
-                json.dump(self.state, f, indent=2, ensure_ascii=False)
+             # Check for generic state_dir if state_dir_10 missing
+            s_dir = getattr(self.msp_client, "state_dir_10", getattr(self.msp_client, "state_dir", None))
+            if s_dir:
+                state_file = s_dir / "agentic_rag_state.json"
+                import json
+                with open(state_file, 'w', encoding='utf-8') as f:
+                    json.dump(self.state, f, indent=2, ensure_ascii=False)
         except Exception as e:
-            from tools.logger import safe_print
+            from capabilities.tools.logger import safe_print
             safe_print(f"[AgenticRAG] ⚠️ Error saving state: {e}")
 
     def _update_metrics(self, latency_ms: float, hit: bool):
@@ -195,7 +200,6 @@ class AgenticRAG:
         Quick Recall - Bio-independent streams (Narrative, Intuition, Reflection)
         
         Runs parallel with Physio processing - no biological state required.
-        Target latency: 200ms
         
         Args:
             query_context: Requires only 'tags' and 'context_id'
@@ -212,7 +216,7 @@ class AgenticRAG:
         Deep Recall - Bio-dependent streams (Emotion, Salience, Sensory, Temporal)
         
         Requires complete biological state. Runs after Physio processing.
-        Target latency: 800ms
+        Latency target: OK
         
         Args:
             query_context: Requires 'tags', 'ans_state', 'blood_levels', 'qualia_texture'
@@ -252,7 +256,7 @@ class AgenticRAG:
         # If we have a query and the SLM bridge is available, re-verify top candidates.
         if user_query and len(unified_matches) > 1:
             try:
-                from services.slm_bridge.slm_bridge import slm
+                from capabilities.services.slm_bridge.slm_bridge import slm
                 # Re-rank only the top 5 to keep latency low
                 top_candidates = unified_matches[:5]
                 other_candidates = unified_matches[5:]
@@ -260,7 +264,7 @@ class AgenticRAG:
                 # Convert to dict format for SLM
                 candidates_pkg = [{"content": m.content, "id": m.episode_id} for m in top_candidates]
                 
-                from tools.logger import safe_print
+                from capabilities.tools.logger import safe_print
                 safe_print(f"  - [Cross-Encoder] Re-ranking top {len(candidates_pkg)} candidates with SLM...")
                 
                 reranked_pkg = slm.rerank(user_query, candidates_pkg)
@@ -283,7 +287,7 @@ class AgenticRAG:
                 safe_print(f"  - [Cross-Encoder] Done. Filtered to {len(new_top)} highly relevant matches.")
                 
             except Exception as e:
-                from tools.logger import safe_print
+                from capabilities.tools.logger import safe_print
                 safe_print(f"  - [Cross-Encoder] ⚠️ Re-ranking failed: {e}")
 
         return unified_matches

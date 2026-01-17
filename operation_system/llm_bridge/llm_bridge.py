@@ -3,7 +3,7 @@ import json
 import re
 from typing import Dict, List, Any, Optional
 from datetime import datetime
-from tools.logger import safe_print
+from capabilities.tools.logger import safe_print
 print = safe_print
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -30,8 +30,10 @@ class LLMBridge:
     Supports Dual-Phase One-Inference with Function Calling.
     """
 
-    def __init__(self, model_name: str = "gemini-2.0-flash-exp", api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("GOOGLE_API_KEY", "AIzaSyAdIuP9WVnPhv0xDIUh37NAr8-54xYYyqY")
+    def __init__(self, model_name: str = "gemini-2.0-flash-lite-preview-02-05", api_key: Optional[str] = None):
+        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
+        if not self.api_key:
+            print("⚠️ [LLM] No API Key found! Set GOOGLE_API_KEY in .env")
         genai.configure(api_key=self.api_key)
         
         self.model_name = model_name
@@ -44,9 +46,20 @@ class LLMBridge:
     def _initialize_chat(self, tools: Optional[List[Dict]] = None):
         """Initialize or re-initialize chat session with tools, preserving history."""
         print(f"[LLM] Initializing chat with {len(tools) if tools else 0} tools...")
+        
+        # Disabling safety filters to ensure stable response flow for resume chatbot
+        self.safety_settings = [
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_CIVIC_INTEGRITY", "threshold": "BLOCK_NONE"}
+        ]
+        
         self.model = genai.GenerativeModel(
             model_name=self.model_name,
-            tools=tools
+            tools=tools,
+            safety_settings=self.safety_settings
         )
         print("[LLM] Model created, starting chat...")
         # Preserve history if session exists
@@ -78,6 +91,7 @@ class LLMBridge:
             response = self.chat_session.send_message(
                 prompt, 
                 generation_config=generation_config,
+                safety_settings=self.safety_settings, # Pass explicitly
                 request_options={"timeout": 60}
             )
             print(f"[LLM] ✓ Received response from Gemini")
@@ -86,22 +100,34 @@ class LLMBridge:
             tool_calls = []
             
             # Debug: Inspect response structure
-            print(f"[DEBUG] Response has {len(response.candidates)} candidate(s)")
-            if response.candidates and response.candidates[0].content.parts:
-                print(f"[DEBUG] First candidate has {len(response.candidates[0].content.parts)} part(s)")
-                for i, part in enumerate(response.candidates[0].content.parts):
-                    print(f"[DEBUG] Part {i}: has_text={bool(part.text)}, has_function_call={bool(part.function_call)}")
-                    if part.text:
-                        text += part.text
-                        print(f"[DEBUG] Text snippet: {part.text[:100]}...")
-                    if part.function_call:
-                        print(f"[DEBUG] Function call detected: {part.function_call.name}")
-                        args = {k: v for k, v in part.function_call.args.items()}
-                        tool_calls.append(ToolCall(
-                            name=part.function_call.name,
-                            args=args
-                        ))
+            if response.candidates:
+                print(f"[DEBUG] Response has {len(response.candidates)} candidate(s)")
+                # If no parts or blocked, this might raise/be empty
+                try:
+                    parts = response.candidates[0].content.parts
+                    if parts:
+                        print(f"[DEBUG] First candidate has {len(parts)} part(s)")
+                        for i, part in enumerate(parts):
+                            print(f"[DEBUG] Part {i}: has_text={bool(part.text)}, has_function_call={bool(part.function_call)}")
+                            if part.text:
+                                text += part.text
+                            if part.function_call:
+                                print(f"[DEBUG] Function call detected: {part.function_call.name}")
+                                args = {k: v for k, v in part.function_call.args.items()}
+                                tool_calls.append(ToolCall(
+                                    name=part.function_call.name,
+                                    args=args
+                                ))
+                except (AttributeError, IndexError) as e:
+                    print(f"⚠️ [LLM] Response candidate empty or blocked: {e}")
+                    # finish_reason check
+                    reason = response.candidates[0].finish_reason if response.candidates else "unknown"
+                    print(f"[DEBUG] Finish Reason: {reason}")
             
+            # Safety fallback for empty text but no tool calls
+            if not text and not tool_calls:
+                text = "[System Error: Gemini returned an empty response. This might be due to safety filters even with BLOCK_NONE, or a temporary API glitch.]"
+
             print(f"[DEBUG] Extracted {len(tool_calls)} tool call(s), text length: {len(text)}")
             
             return LLMResponse(

@@ -12,7 +12,7 @@ from dataclasses import dataclass
 
 # Add root to path for tools
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from tools.logger import safe_print
+from capabilities.tools.logger import safe_print
 from operation_system.identity_manager import IdentityManager
 
 # Import Logic Module
@@ -43,11 +43,11 @@ class ArtifactQualiaSystem:
         self.base_path = base_path or Path(".")
         self.msp = msp
         self.bus = bus
-        self.state_file = self.base_path / "eva/system_state/artifact_qualia_state.json"
+        self.state_file = self.base_path / "system_state/artifact_qualia_state.json"
         
         # Load Configuration (SSOT)
         self.config = {}
-        target_cfg = config_path or "eva/artifact_qualia/configs/Artifact_Qualia_configs.yaml"
+        target_cfg = config_path or "artifact_qualia/configs/Artifact_Qualia_configs.yaml"
         full_cfg_path = self.base_path / target_cfg
         
         if full_cfg_path.exists():

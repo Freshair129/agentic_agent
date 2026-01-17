@@ -76,11 +76,19 @@ class ChromaVectorBridge:
 
         mid = memory_id or str(uuid.uuid4())
         
+        # Normalize metadata (Chroma doesn't support lists)
+        clean_metadata = {}
+        for k, v in metadata.items():
+            if isinstance(v, (list, tuple)):
+                clean_metadata[k] = ", ".join(map(str, v))
+            else:
+                clean_metadata[k] = v
+
         try:
             self.collection.add(
                 documents=[text],
                 embeddings=[vector],
-                metadatas=[metadata],
+                metadatas=[clean_metadata],
                 ids=[mid]
             )
         except Exception as e:

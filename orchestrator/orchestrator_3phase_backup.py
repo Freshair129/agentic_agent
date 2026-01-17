@@ -26,7 +26,7 @@ import yaml
 # Add root directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tools.logger import safe_print
+from capabilities.tools.logger import safe_print
 
 # Add root directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -35,15 +35,15 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from operation_system.resonance_bus import bus
 
 # Biological & Psychological Systems
-from eva.physio_core.physio_core import PhysioCore
-from eva.eva_matrix.eva_matrix import EVAMatrixSystem
-from eva.artifact_qualia.artifact_qualia import ArtifactQualiaSystem
+from physio_core.physio_core import PhysioCore
+from eva_matrix.eva_matrix import EVAMatrixSystem
+from artifact_qualia.artifact_qualia import ArtifactQualiaSystem
 from orchestrator.cim.prompt_rule.prompt_rule_node import PromptRuleNode
 
 # Cognitive & Memory
 from orchestrator.cim.cim import ContextInjectionModule
 from services.agentic_rag.agentic_rag_engine import AgenticRAG
-from eva.memory_n_soul_passport.memory_n_soul_passport_engine import MSP
+from memory_n_soul_passport.memory_n_soul_passport_engine import MSP
 from operation_system.llm_bridge.llm_bridge import LLMBridge, SYNC_BIOCOGNITIVE_STATE_TOOL, PROPOSE_EPISODIC_MEMORY_TOOL
 from operation_system.llm_bridge.ollama_bridge import OllamaBridge
 

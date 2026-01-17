@@ -1,0 +1,33 @@
+{
+    "episode_id": "EVA_EP04",
+    "timestamp": "2026-01-15T05:03:48.734969",
+    "turn_user": {
+        "speaker": "user",
+        "raw_text": "This statement is false and true.",
+        "salience_anchor": {
+            "phrase": "false and true",
+            "Resonance_impact": 0.5
+        },
+        "semantic_frames": [
+            "paradox",
+            "logic"
+        ],
+        "affective_inference": {
+            "intent": "unknown",
+            "emotion_signal": "neutral",
+            "confidence": 0.95,
+            "slm_gut_vector": {
+                "valence": 0.5,
+                "arousal": 0.5,
+                "stress": 0.1,
+                "warmth": 0.5
+            }
+        },
+        "turn_id": "TURN_SES_5_1768428203_015",
+        "user_id": "FD_01",
+        "username": "THA-06"
+    },
+    "metrics": {
+        "resonance_index": 0.5
+    }
+}

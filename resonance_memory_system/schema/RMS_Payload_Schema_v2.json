@@ -1,0 +1,67 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EVA RMS Output Payload Schema",
+    "description": "Strict specification for memory encoding signals published to bus:knowledge in EVA 8.2.0 Architecture.",
+    "type": "object",
+    "required": [
+        "episodic_snapshot",
+        "timestamp",
+        "state_hash_ref"
+    ],
+    "properties": {
+        "timestamp": {
+            "type": "number",
+            "description": "Unix timestamp of the memory encoding event."
+        },
+        "state_hash_ref": {
+            "type": "string",
+            "pattern": "^S1-",
+            "description": "Hash of the system state this payload refers to."
+        },
+        "episodic_snapshot": {
+            "type": "object",
+            "required": [
+                "memory_encoding_level",
+                "memory_color",
+                "resonance_texture",
+                "resonance_index",
+                "trauma_flag"
+            ],
+            "properties": {
+                "memory_encoding_level": {
+                    "type": "string",
+                    "enum": ["L0_trace", "L1_light", "L2_standard", "L3_deep", "L4_trauma"],
+                    "description": "The determined depth of the memory encoding."
+                },
+                "memory_color": {
+                    "type": "string",
+                    "pattern": "^#[0-9a-fA-F]{6}$",
+                    "description": "The hex color code representing the memory's emotive signature."
+                },
+                "resonance_texture": {
+                    "type": "object",
+                    "description": "A 5D vector representing the memory's texture.",
+                    "properties": {
+                        "stress": {"type": "number", "minimum": 0, "maximum": 1},
+                        "warmth": {"type": "number", "minimum": 0, "maximum": 1},
+                        "clarity": {"type": "number", "minimum": 0, "maximum": 1},
+                        "drive": {"type": "number", "minimum": 0, "maximum": 1},
+                        "ambient": {"type": "number", "minimum": 0, "maximum": 1}
+                    },
+                    "required": ["stress", "warmth", "clarity", "drive", "ambient"]
+                },
+                "resonance_index": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "The global 'vibe score' of the system at the time of encoding."
+                },
+                "trauma_flag": {
+                    "type": "boolean",
+                    "description": "Indicates if the memory was encoded during a high-threat state."
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

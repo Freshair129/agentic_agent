@@ -8,6 +8,12 @@
 		},
 		{
 			"path": "../EVA V2.0G-E"
+		},
+		{
+			"path": "../../../resume-web"
 		}
-	]
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "resume-web"
+	}
 }

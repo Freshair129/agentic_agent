@@ -4,7 +4,7 @@ import json
 import hashlib
 from typing import Dict, List, Any, Callable, Optional
 from datetime import datetime
-from tools.logger import safe_print
+from capabilities.tools.logger import safe_print
 from operation_system.identity_manager import IdentityManager
 print = safe_print
 

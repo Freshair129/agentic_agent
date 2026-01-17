@@ -1,0 +1,18 @@
+{
+  "axes_9d": {
+    "stress": 0.02,
+    "warmth": 0.02,
+    "drive": 0.02,
+    "clarity": 0.02,
+    "joy": 0.02,
+    "stability": 0.5,
+    "orientation": 0.5,
+    "primary": "stress",
+    "secondary": "warmth"
+  },
+  "momentum": {
+    "intensity": 0.091
+  },
+  "emotion_label": "Sadness",
+  "last_update": "2026-01-14T22:04:48.288449+00:00"
+}
