@@ -1,4 +1,4 @@
-# Resonance Engine Concept (v9.4.0)
+# Resonance Engine Concept (v9.4.3)
 >
 > **System ID:** `SYSTEM_RESONANCE` | **Domain:** `operation_system` | **Status:** Operational
 
@@ -182,3 +182,4 @@ See `operation_system/resonance_engine/configs/resonance_config.yaml` for:
 - **New RI** (Resonance L3): Deep calculation (Memory + Qualia + Context)
 
 **RIM** is kept as a **fallback** for lightweight contexts where full Resonance Engine is not needed.
+

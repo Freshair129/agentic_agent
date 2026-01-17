@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Architecture**: Consolidated all architectural diagrams and flows into `docs/03_Architecture/`.
 - **Architecture Sync**: Updated `EVA_9.4_Architecture.md` and `MSP_System_Storage_ERD.md` to align with the 8-8-8 nomenclature.
 
-## [9.4.2-ArchitectureConsolidation] - 2026-01-15
+## [9.4.3-ArchitectureConsolidation] - 2026-01-15
 
 ### Added
 
@@ -66,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **permissions.yaml**: Added TrajectoryManager to System examples
 - **EVA_9.4_Architecture.md**: Updated directory mappings for relocated modules
 
-## [9.4.1-SystemRefactor] - 2026-01-15
+## [9.4.3-SystemRefactor] - 2026-01-15
 
 ### Added
 
@@ -130,3 +130,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Phase 3 Prediction:** Removed standalone Prediction Phase to simplify the cognitive loop.
 - **Split Context Logs:** Stopped generating `context_phase2.json` and `context_phase3.json`; merged all reasoning data into Episodic Memory.
+

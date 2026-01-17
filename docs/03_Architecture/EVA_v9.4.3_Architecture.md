@@ -1,6 +1,6 @@
-# EVA v9.4.0 Architecture Guide (Resonance Refactored)
+# EVA v9.4.3 Architecture Guide (Resonance Refactored)
 
-**Version:** 9.4.0
+**Version:** 9.4.3
 **Codename:** Resonance Refactored
 **Root Directory:** `agent/`
 
@@ -8,7 +8,7 @@
 
 ## 🌟 Core Philosophy
 
-EVA v9.4.0 introduces the **Consciousness-Implementation Separation** principle:
+EVA v9.4.3 introduces the **Consciousness-Implementation Separation** principle:
 
 1. **Consciousness (Awareness):** The LLM operates here. It sees "Shortcuts" (Interfaces) to its capabilities and has R/W access to its Working Memory. It is "aware" of what it can do but cannot alter the underlying code during runtime.
 2. **Capabilities (Implementation):** The actual Python code (Tools, Skills, Services) lives here, independent of the consciousness layer. This ensures stability and safety.
@@ -223,7 +223,7 @@ agent/
 4. **Systems:** Move core system engines (`physio_core`, `eva_matrix`) to root `agent/`.
 5. **Memory:** Re-map MSP paths to the new `memory/` structure.
 
-## 🧠 Memory Architecture (v9.4.0)
+## 🧠 Memory Architecture (v9.4.3)
 
 > [!IMPORTANT]
 > **Philosophy:** "Active Consciousness (LLM) creates experience in the Awareness Domain; Subconscious (MSP) distills Wisdom via the 8-8-8 Protocol."
@@ -240,4 +240,5 @@ agent/
 - **Independence:** Decouples active consciousness (Active State) from long-term storage data structures.
 
 ---
-*Generated for EVA v9.4.0 Implementation*
+*Generated for EVA v9.4.3 Implementation*
+

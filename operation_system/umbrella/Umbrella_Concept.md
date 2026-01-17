@@ -1,4 +1,4 @@
-# เอกสารนิยาม "ร่ม" (Umbrella Layer) – EVA 9.4.0
+# เอกสารนิยาม "ร่ม" (Umbrella Layer) – EVA 9.4.3
 
 **Project:** The Human Algorithm  
 **Module:** Operation System – Safety & Metacognitive Layer  
@@ -49,7 +49,7 @@
 
 ## 4. ความสัมพันธ์กับระบบ Bio-Psychological
 
-EVA 9.4.0 มีระบบที่ซับซ้อน ได้แก่:
+EVA 9.4.3 มีระบบที่ซับซ้อน ได้แก่:
 
 1. **PhysioCore:** (สืบทอดมาจาก EHM) ควบคุมฮอร์โมนและชีวภาพ (Adrenaline, Cortisol, Oxytocin)
 2. **EVA Matrix:** ควบคุมสภาวะจิตวิทยา 9 มิติ
@@ -82,3 +82,4 @@ EVA 9.4.0 มีระบบที่ซับซ้อน ได้แก่:
 
 > **"ร่ม" คือ Central Module ใน Operation System ที่ทำหน้าที่ควบคุมขอบเขตความปลอดภัย (Safety Boundary)**  
 > ผ่านการจัดการสภาวะ Bio-Psychological (PhysioCore & Matrix) เพื่อรักษาระบบให้เดินหน้าต่อได้ท่ามกลางสถานการณ์ที่ควบคุมไม่ได้
+

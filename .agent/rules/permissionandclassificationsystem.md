@@ -1,8 +1,8 @@
-﻿---
+---
 trigger: always_on
 ---
 
-# EVA Permission & Classification System (v9.4.0)
+# EVA Permission & Classification System (v9.4.3)
 > Sources: operation_system/configs/permissions.yaml, core_systems.yaml
 
 ## 1. Classification & Hierarchy
@@ -30,3 +30,4 @@ trigger: always_on
 
 ## 5. Violation Protocols
 - **Critical Fault**: Direct File Write to Archive, Bypassing MSP, Backward Write from MSP to Consciousness.
+

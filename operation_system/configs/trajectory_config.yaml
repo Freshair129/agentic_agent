@@ -1,5 +1,5 @@
 ---
-# Trajectory Manager Configuration (v9.4.0)
+# Trajectory Manager Configuration (v9.4.3)
 # Controls execution trace logging for debugging and analysis
 
 output:
@@ -25,3 +25,4 @@ retention:
 privacy:
   redact_sensitive: false  # Set true to auto-redact PII
   exclude_patterns: []
+

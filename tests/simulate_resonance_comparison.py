@@ -1,5 +1,5 @@
 """
-Simulation: Legacy RIM vs. Unified Resonance Engine (v9.4.0)
+Simulation: Legacy RIM vs. Unified Resonance Engine (v9.4.3)
 Purpose: Verify functional continuity and show improvements in interpretation.
 """
 
@@ -71,3 +71,4 @@ def simulate_comparison():
 
 if __name__ == "__main__":
     simulate_comparison()
+

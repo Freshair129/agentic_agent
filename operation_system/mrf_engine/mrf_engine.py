@@ -1,6 +1,6 @@
 """
 MRF Engine (Metacognitive Re-contextualization Framework)
-Version: 9.4.0
+Version: 9.4.3
 
 Purpose:
 Transform unsolvable problems by shifting context/meaning rather than
@@ -209,3 +209,4 @@ class MRFEngine:
             "transcendental_insight": "Paradox accepted. Transitioning to meta-stability.",
             "wisdom_extracted": True if umbrella_deployed else False
         }
+

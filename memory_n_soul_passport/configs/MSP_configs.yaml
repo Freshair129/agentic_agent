@@ -1,12 +1,12 @@
 # ============================================================
 # EVA MODULE SPECIFICATION (SSOT)
 # Module: MSP (Memory & Soul Passport)
-# Version: 9.4.0 (Resonance Refactored)
+# Version: 9.4.3 (Resonance Refactored)
 # Updated: 2026-01-13
 # Description: Single Source of Truth for Persistence, Interface, and Policy.
 # ============================================================
-schema: EVA-MSP-Configs-v9.4.0-SSOT
-version: 9.4.0
+schema: EVA-MSP-Configs-v9.4.3-SSOT
+version: 9.4.3
 # ============================================================
 # 1. GLOBAL SETTINGS & DATABASES
 # ============================================================
@@ -205,3 +205,4 @@ performance:
   cache_size: 50
   batch_write_interval_ms: 500
   compression_threshold_episodes: 8
+

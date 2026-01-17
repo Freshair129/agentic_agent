@@ -22,7 +22,7 @@ class EpisodicMemoryModule:
         
     def consolidate_interaction(self, episode_data: Dict[str, Any], system_meta: Dict[str, Any], user_registry: Any) -> str:
         """
-        Standard v9.4.0 consolidation flow.
+        Standard v9.4.3 consolidation flow.
         """
         episode_id = episode_data.get("episode_id")
         timestamp = episode_data.get("timestamp") or datetime.now().isoformat()
@@ -89,3 +89,4 @@ class EpisodicMemoryModule:
         self.journal.append_to_log(summary)
         
         return episode_id
+

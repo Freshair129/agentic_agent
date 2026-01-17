@@ -71,7 +71,7 @@ from typing import Dict, List, Any, Optional
 import math
 import re
 
-# v9.4.0 Module Delegation
+# v9.4.3 Module Delegation
 from .Module.EpisodicMemory import EpisodicMemoryModule
 from .Module.SemanticMemory import SemanticMemoryModule
 from .Module.SensoryMemory import SensoryMemoryModule
@@ -118,7 +118,7 @@ class MSP:
 
         """
 
-        Initialize MSP Engine (v9.4.0 Resonance Refactored)
+        Initialize MSP Engine (v9.4.3 Resonance Refactored)
 
         """
 
@@ -195,7 +195,7 @@ class MSP:
         self.episodes_llm_dir = self.episodic_dir / "episodes_ai"
         self.active_state_dir = self.state_dir / "active_state"
         
-        # [NEW] Index & Counter Reference (Unified v9.4.0)
+        # [NEW] Index & Counter Reference (Unified v9.4.3)
         self.memory_index_file = self.root_path / "consciousness/indexes/memory_index.json"
         self.consciousness_history = self.root_path / "consciousness/indexes/consciousness_history.jsonl"
         self.episode_counter_file = self.root_path / "consciousness/indexes/episode_counter.json"
@@ -206,7 +206,7 @@ class MSP:
         self.episodes_llm_dir.mkdir(parents=True, exist_ok=True)
         self.active_state_dir.mkdir(parents=True, exist_ok=True)
 
-        safe_print(f"[MSP] ✅ Subconscious Facade Initialized (v9.4.0)")
+        safe_print(f"[MSP] ✅ Subconscious Facade Initialized (v9.4.3)")
 
     # ============================================================
     # 9.1.0 BRIDGE METHODS
@@ -2864,4 +2864,5 @@ if __name__ == "__main__":
     print("\n✅ All tests completed!")
 
     print(f"\nData stored in: {msp.root_path}")
+
 

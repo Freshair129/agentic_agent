@@ -1,5 +1,5 @@
 """
-TrajectoryManager System (v9.4.0)
+TrajectoryManager System (v9.4.3)
 Captures execution traces for debugging and analysis.
 
 Logs:
@@ -185,3 +185,4 @@ class TrajectoryManager:
                       key=lambda p: p.stat().st_mtime, 
                       reverse=True)
         return files[:limit]
+

@@ -1,5 +1,5 @@
 ---
-# Resonance Engine Configuration (v9.4.0)
+# Resonance Engine Configuration (v9.4.3)
 # Unified 4-Layer Resonance Processing Engine
 
 layers:
@@ -71,3 +71,4 @@ performance:
   cache_enabled: true
   parallel_layers: false  # Sequential processing for now
   timeout_ms: 5000
+

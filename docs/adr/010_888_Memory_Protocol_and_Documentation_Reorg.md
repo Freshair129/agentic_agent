@@ -5,7 +5,7 @@
 
 ## Context
 
-As EVA v9.4.0 matures into a state-dominant informational organism, the volume of conversational data and architectural documentation has grown. This led to two challenges:
+As EVA v9.4.3 matures into a state-dominant informational organism, the volume of conversational data and architectural documentation has grown. This led to two challenges:
 
 1. **Memory Efficiency**: Raw logs alone do not scale. A tiered distillation process is needed to extract long-term wisdom from short-term episodes.
 2. **Navigability**: Documentation was scattered across root and subfolders, making onboarding and retrieval difficult for both humans and AI.
@@ -29,3 +29,4 @@ As EVA v9.4.0 matures into a state-dominant informational organism, the volume o
   - Simplified onboarding for new developers/AI agents via `INDEX.md`.
 - **Neutral**:
   - Requires automated background agents (MSP / TruthSeeker) to perform periodic synthesis tasks.
+

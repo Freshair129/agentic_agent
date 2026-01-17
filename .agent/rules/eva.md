@@ -106,7 +106,7 @@ This structure separates **Interface (Consciousness)** from **Implementation (Ca
 
 ## Core Architecture (1-Inference)
 
-EVA 9.4.0 uses a **Single-Session** architecture to maintain continuous cognitive state.
+EVA 9.4.3 uses a **Single-Session** architecture to maintain continuous cognitive state.
 Legacy logic involving "Phase 1 Call -> Stop -> Phase 2 Call" is **DEPRECATED**.
 
 ### The Flow (Sequential)
@@ -157,3 +157,4 @@ Legacy logic involving "Phase 1 Call -> Stop -> Phase 2 Call" is **DEPRECATED**.
     2. **Ghost Stage:** Run `tools/subagents/ris_subagent.py` -> See "Ghost Key" (Missing Implementation).
     3. **Code Stage:** Implement code to satisfy the Config/Doc.
     4. **Verify Stage:** Run RIS -> Ghost disappears.
+

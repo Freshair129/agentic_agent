@@ -1,6 +1,6 @@
 """
 Test Script for Resonance Engine (4-Layer Integration)
-Version: 9.4.0
+Version: 9.4.3
 """
 
 import sys
@@ -45,3 +45,4 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[FAIL] Test Failed: {str(e)}")
         sys.exit(1)
+

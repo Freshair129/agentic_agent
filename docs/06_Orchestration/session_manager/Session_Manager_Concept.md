@@ -1,4 +1,4 @@
-# Session Manager Concept (v9.4.0)
+# Session Manager Concept (v9.4.3)
 >
 > **Module ID:** `MOD_SES_01` | **Parent:** `Orchestrator` | **Status:** Operational
 
@@ -58,3 +58,4 @@ sequenceDiagram
 - **Orchestrator**: Delegates all command processing to `SessionManager` at the start of `process_user_input`.
 - **MSP**: Used strictly for *Storage* operations (ID generation, Archival).
 - **GKS (Grounding)**: Used for *Truth Validation* of learned facts.
+

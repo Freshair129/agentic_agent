@@ -1,9 +1,9 @@
-# EVA v9.4.0 Memory Philosophy & 8-8-8 Protocol
+# EVA v9.4.3 Memory Philosophy & 8-8-8 Protocol
 >
 > **Status**: Canonical / Master
 > **Philosophy**: "Awareness creates Data; Subconscious creates Wisdom."
 
-เอกสารฉบับนี้คือโครงสร้างทางจิตวิญญาณและความคิด (Soul & Cognition) ของระบบความจำใน EVA v9.4.0 ซึ่งถูกออกแบบมาให้เลียนแบบการทำงานของโครงข่ายสมองมนุษย์ที่สกัดความรู้จากประสบการณ์
+เอกสารฉบับนี้คือโครงสร้างทางจิตวิญญาณและความคิด (Soul & Cognition) ของระบบความจำใน EVA v9.4.3 ซึ่งถูกออกแบบมาให้เลียนแบบการทำงานของโครงข่ายสมองมนุษย์ที่สกัดความรู้จากประสบการณ์
 
 ---
 
@@ -52,4 +52,5 @@
 
 ---
 
-*Directed by "The Human Algorithm" v9.4.0 Principles*
+*Directed by "The Human Algorithm" v9.4.3 Principles*
+

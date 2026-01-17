@@ -1,5 +1,5 @@
 """
-Resonance Engine (v9.4.0)
+Resonance Engine (v9.4.3)
 Unified 4-Layer Resonance Processing System
 
 Consolidates:
@@ -197,3 +197,4 @@ class ResonanceEngine:
             "layer_depth": self.current_depth,
             "umbrella_active": self.umbrella_active
         }
+

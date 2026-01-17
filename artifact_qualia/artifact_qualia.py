@@ -1,5 +1,5 @@
 """
-Artifact Qualia System Engine (v9.4.0)
+Artifact Qualia System Engine (v9.4.3)
 Phenomenological Experience Integrator with State Bus support.
 """
 
@@ -188,4 +188,5 @@ class ArtifactQualiaSystem:
                     safe_print(f"[Artifact Qualia] Loaded state (Intensity: {data.get('last_intensity', 'N/A')})")
             except Exception as e:
                 safe_print(f"[Artifact Qualia] Warning: Could not load state: {e}")
+
 

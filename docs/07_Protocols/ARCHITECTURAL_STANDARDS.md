@@ -1,14 +1,14 @@
 # EVA Architectural Standards (V9)
 
-**Status:** Canonical | **Version:** 9.4.0 | **Policy ID:** ARCH-LAW-001
+**Status:** Canonical | **Version:** 9.4.3 | **Policy ID:** ARCH-LAW-001
 
-This document outlines the "Laws of Composition" and structural standards for the EVA 9.4.0 organism. Adherence is mandatory under the **Doc-to-Code Protocol**.
+This document outlines the "Laws of Composition" and structural standards for the EVA 9.4.3 organism. Adherence is mandatory under the **Doc-to-Code Protocol**.
 
 ---
 
 ## 🏗️ 1. Structural Hierarchy
 
-EVA 9.4.0 follows a strict hierarchical separation of concerns:
+EVA 9.4.3 follows a strict hierarchical separation of concerns:
 
 1. **System (ระบบหลัก/อวัยวะ):** Autonomous unit with its own state. The foundation of life.
 2. **Central Module (โมดูลกลาง):** Independent unit direct to OS. Complex but not a vital organ.
@@ -86,3 +86,4 @@ Standards for upgrading an entity when its scope expands:
 ```
 
 *Note: PhysioCore is exempt from the Module/Node naming pattern due to complex coupling.*
+

@@ -1,7 +1,7 @@
 {
     "schema": "EVA-Block-v1",
     "block": "Master",
-    "version": "EVA-9.4.0",
+    "version": "EVA-9.4.3",
     "system_id": "THA-01",
     "updated": "2026-01-13T21:50:00+07:00",
     "nature": "Canonical Mechanisms: DNA-level knowledge distilled from recurrent Genesis patterns and cross-model stable definitions",

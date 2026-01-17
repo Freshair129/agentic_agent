@@ -21,7 +21,7 @@ MEMORY_BASE_DIR.mkdir(parents=True, exist_ok=True)
 app = FastAPI(
     title="EVA Chat API",
     description="API endpoint for Boss's portfolio chatbot",
-    version="9.4.0"
+    version="9.4.3"
 )
 
 # CORS configuration
@@ -237,7 +237,7 @@ async def health_check():
     """Health check endpoint"""
     return {
         "status": "ok",
-        "agent": "EVA 9.4.0",
+        "agent": "EVA 9.4.3",
         "active_sessions": len(manager.orchestrators)
     }
 
@@ -262,3 +262,4 @@ if __name__ == "__main__":
         port=port,
         log_level="info"
     )
+

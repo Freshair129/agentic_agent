@@ -1,9 +1,9 @@
-# EVA v9.4.0 Documentation Index
+# EVA v9.4.3 Documentation Index
 >
 > **Source of Truth**: master
 > **Last Updated**: 2026-01-17
 
-ยินดีต้อนรับสู่คลังความรู้ของ **EVA v9.4.0 (Resonance Refactored)** เอกสารนี้ถูกจัดเรียงตามลำดับความสำคัญเพื่อให้ง่ายต่อการศึกษาทั้ง AI และ Developer
+ยินดีต้อนรับสู่คลังความรู้ของ **EVA v9.4.3 (Resonance Refactored)** เอกสารนี้ถูกจัดเรียงตามลำดับความสำคัญเพื่อให้ง่ายต่อการศึกษาทั้ง AI และ Developer
 
 ---
 
@@ -19,9 +19,9 @@
 
 ### [03. Architecture (สถาปัตยกรรมระดับสูง)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/)
 
-- [**High-Level Architecture**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_9.4_Architecture.md): โครงสร้างโฟลเดอร์และหลักการ Consciousness-Implementation Separation
-- [**Operational Flow (v9.4.0)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/OPERATIONAL_FLOW_V9.4.md): ลำดับการทำงานของ Runtime Hooks (Engram -> SLM -> Gap -> LLM)
-- [**MSP Storage ERD**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/V9.4_SYSTEM_STORAGE_ERD.md): แผนผังการถือครองข้อมูลและการเชื่อมโยง Entity
+- [**High-Level Architecture**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_v9.4.3_Architecture.md): โครงสร้างโฟลเดอร์และหลักการ Consciousness-Implementation Separation
+- [**Operational Flow (v9.4.3)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/OPERATIONAL_FLOW_v9.4.3.md): ลำดับการทำงานของ Runtime Hooks (Engram -> SLM -> Gap -> LLM)
+- [**MSP Storage ERD**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/v9.4.3_SYSTEM_STORAGE_ERD.md): แผนผังการถือครองข้อมูลและการเชื่อมโยง Entity
 
 ### [04. Systems (ระบบอวัยวะ)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/04_Systems/)
 
@@ -42,4 +42,6 @@
 - [**Archive**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/archive/): คลังเอกสารเก่าสำหรับการอ้างอิงย้อนหลัง
 
 ---
-*Created for EVA v9.4.0 Documentation Management*
+*Created for EVA v9.4.3 Documentation Management*
+
+

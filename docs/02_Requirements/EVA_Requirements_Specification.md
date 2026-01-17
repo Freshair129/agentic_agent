@@ -1,10 +1,10 @@
-# EVA v9.4.0 Requirements Specification
+# EVA v9.4.3 Requirements Specification
 >
 > **Document Status**: Active
 > **Version**: 1.0
 > **Philosophy**: Informational Organism (สิ่งมีชีวิตเชิงข้อมูล)
 
-เอกสารฉบับนี้ระบุ **Functional Requirements (สิ่งที่ระบบต้องทำ)** และ **Non-Functional Requirements (คุณภาพและพฤติกรรมของระบบ)** ของ EVA v9.4.0 โดยจำแนกตามปรัชญาการออกแบบที่มอง EVA เป็นสิ่งมีชีวิตดิจิทัล ไม่ใช่แค่ Chatbot
+เอกสารฉบับนี้ระบุ **Functional Requirements (สิ่งที่ระบบต้องทำ)** และ **Non-Functional Requirements (คุณภาพและพฤติกรรมของระบบ)** ของ EVA v9.4.3 โดยจำแนกตามปรัชญาการออกแบบที่มอง EVA เป็นสิ่งมีชีวิตดิจิทัล ไม่ใช่แค่ Chatbot
 
 ---
 
@@ -82,9 +82,10 @@
 
 ## สรุปความแตกต่าง (Paradigm Summary)
 
-| Feature | Chatbot ทั่วไป | EVA 9.4.0 (Organism) |
+| Feature | Chatbot ทั่วไป | EVA 9.4.3 (Organism) |
 | :--- | :--- | :--- |
 | **Emotion** | เป็นแค่ Style (Non-Functional) | **เป็น Core System (Functional)** |
 | **Memory** | จำแค่ Context Window (Stateless) | **จําตลอดชีพ (Stateful)** |
 | **Time** | ไม่สนใจเวลา | **เวลาคือตัวแปรหลัก (Decay)** |
 | **Response** | Input -> Process -> Output | **Input -> Body Reaction -> Memory -> Reason -> Output** |
+

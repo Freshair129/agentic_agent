@@ -1,9 +1,9 @@
-# EVA 9.4.0 Cognitive Flow Diagram
+# EVA 9.4.3 Cognitive Flow Diagram
 >
 > **Level**: Architectural Overview
 > **Focus**: Orchestration of Perception, Physiology, and Memory
 
-สถาปัตยกรรมของ EVA 9.4.0 แบ่งการประมวลผลออกเป็นชั้นตาม "ลำดับความเร็ว" และ "ความลึกเชิงสติสัมปชัญญะ" เพื่อเลียนแบบการทำงานของสิ่งมีชีวิตที่ผสานรวมทั้งสัญชาตญาณและเหตุผล
+สถาปัตยกรรมของ EVA 9.4.3 แบ่งการประมวลผลออกเป็นชั้นตาม "ลำดับความเร็ว" และ "ความลึกเชิงสติสัมปชัญญะ" เพื่อเลียนแบบการทำงานของสิ่งมีชีวิตที่ผสานรวมทั้งสัญชาตญาณและเหตุผล
 
 ---
 
@@ -87,4 +87,5 @@ flowchart TD
 
 ---
 
-*Generated for EVA v9.4.0 Architecture Documentation*
+*Generated for EVA v9.4.3 Architecture Documentation*
+

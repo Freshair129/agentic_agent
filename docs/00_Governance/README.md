@@ -1,6 +1,6 @@
-# EVA 9.4.0 Documentation Hub (SSOT)
+# EVA 9.4.3 Documentation Hub (SSOT)
 
-Welcome to the centralized documentation hub for EVA 9.4.0. According to the **Doc-to-Code Protocol**, all architectural decisions and logic parameters must be defined here before implementation.
+Welcome to the centralized documentation hub for EVA 9.4.3. According to the **Doc-to-Code Protocol**, all architectural decisions and logic parameters must be defined here before implementation.
 
 ## 📂 Hierarchy Overview
 
@@ -30,3 +30,4 @@ Welcome to the centralized documentation hub for EVA 9.4.0. According to the **D
 
 ---
 > **Rule:** Never update code without checking if the corresponding document in this hub reflects the change.
+

@@ -2,11 +2,11 @@
 
 * **Status:** Accepted
 * **Date:** 2026-01-13
-* **Context:** EVA 9.4.0 - Architectural Formalization & Scalability
+* **Context:** EVA 9.4.3 - Architectural Formalization & Scalability
 
 ## Context
 
-As the EVA 9.4.0 architecture scales, the previous hierarchy (System > Module > Node) faced two major challenges:
+As the EVA 9.4.3 architecture scales, the previous hierarchy (System > Module > Node) faced two major challenges:
 
 1. **Ownership Ambiguity:** Some modules (like `IdentityManager` or `ResonanceBus`) are used across multiple systems and don't logically belong to any single "organ".
 2. **Communication Bottlenecks:** Complex internal logic (like `RMS`) that is part of a system but sufficiently dense to be its own "engine" often created bottlenecks if all signals had to be re-routed through a parent system on the main bus.
@@ -56,3 +56,4 @@ We formalized the "LEGO" manual of composition:
 
 * Updated `docs/protocols/ARCHITECTURAL_STANDARDS.md`.
 * Re-classified `RMS`, `Identity_Manager`, and `Resonance_Bus` in `core_systems.yaml`.
+

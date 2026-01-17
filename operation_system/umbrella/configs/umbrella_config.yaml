@@ -1,10 +1,10 @@
 ---
-# Umbrella Engine Configuration (v9.4.0)
+# Umbrella Engine Configuration (v9.4.3)
 # Safety Layer & Exposure Management Protocol (EMP)
 
 umbrella:
   name: "Umbrella Safety Layer"
-  version: "9.4.0"
+  version: "9.4.3"
   description: "Toggle-based safety state for coexisting with uncontrollable events"
   
   mode: "toggle"  # ON/OFF state
@@ -45,3 +45,4 @@ output:
   state: "boolean"                    # Is Umbrella Deployed?
   active_strategy: "string"           # Current EMP strategy
   protection_mask: "list"             # What systems are isolated
+

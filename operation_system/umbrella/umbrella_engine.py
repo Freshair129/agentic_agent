@@ -1,6 +1,6 @@
 """
 Umbrella Engine (Safety Layer & EMP)
-Version: 9.4.0
+Version: 9.4.3
 
 Implements the "Umbrella Principle": Coexisting with uncontrollable
 events (Physio-Stress, Mental Paradox, Untrusted Input).
@@ -43,7 +43,7 @@ class UmbrellaEngine:
 
     def evaluate_state(self, physio_state: Dict, matrix_state: Dict, env_flags: Dict) -> bool:
         """
-        Evaluate if Umbrella should be deployed based on 9.4.0 triggers.
+        Evaluate if Umbrella should be deployed based on 9.4.3 triggers.
         """
         triggers = self.config['umbrella']['triggers']
 
@@ -107,3 +107,4 @@ class UmbrellaEngine:
             "prime_directive": self.config['umbrella']['prime_directive'],
             "active_parameters": self.config['umbrella']['parameters'] if self.is_deployed else {}
         }
+

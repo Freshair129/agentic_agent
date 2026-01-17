@@ -200,7 +200,7 @@ class EVALite:
 
     def build_system_prompt(self, user_profile: Optional[Dict], bio_state: Dict, recalled_knowledge: List[str]) -> str:
         prompt = f"""
-# SYSTEM DIRECTIVE: YOU ARE EVA (EVA 9.4.0)
+# SYSTEM DIRECTIVE: YOU ARE EVA (EVA 9.4.3)
 You are Boss's Digital Soul (EVA Lite Mode).
 
 ## 1. IDENTITY (STRICT)
@@ -255,3 +255,4 @@ The user asked about something. Here is what you remember:
         
         # Return Text + Bio State
         return response.text, {"hormones": hormones, "matrix": psyche}
+

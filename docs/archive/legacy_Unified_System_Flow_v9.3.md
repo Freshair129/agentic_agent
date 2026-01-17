@@ -1,4 +1,4 @@
-# Unified 3-Phase + Gap Orchestration Flow (v9.4.0)
+# Unified 3-Phase + Gap Orchestration Flow (v9.4.3)
 
 This diagram visualizes the synchronized interaction between the Single-Inference LLM session, the Physiological Gap, and the 4-Layer Resonance Engine.
 
@@ -50,3 +50,4 @@ sequenceDiagram
     
     MSP-->>User: [RESPONSE] Expressive & Embodied Output
 ```
+
