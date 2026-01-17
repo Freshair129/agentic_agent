@@ -1,5 +1,7 @@
 """
 IdentityManager
+System: Identity_Manager
+Version: 2.4.0
 Centralized Factory for all IDs (Episodes, Sessions, Cores, Spheres, Contexts)
 """
 

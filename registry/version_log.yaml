@@ -56,6 +56,21 @@ baseline_versions:
 # CHANGE LOG (Chronological - Newest First)
 # ============================================================
 changes:
+  - timestamp: 2026-01-18T04:47:00+07:00
+    system_id: Multiple (GKS, Identity_Manager)
+    version_from: "Unknown"
+    version_to: "2.0.0 / 2.4.0"
+    change_type: PATCH
+    reason: "Added missing version headers to match Registry SSOT"
+    changed_by: USER + Antigravity
+    files_affected:
+      - genesis_knowledge_system/gks_interface.py
+      - operation_system/identity_manager.py
+    rollback_command: >
+      Revert file headers to original state.
+    git_commit: "[Version] Synced GKS (v2.0.0) and IdentityManager (v2.4.0) headers with Registry"
+    approved: true
+
   - timestamp: 2026-01-18T02:01:00+07:00
     system_id: MSP
     version_from: 1.1.0

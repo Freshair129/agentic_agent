@@ -1,5 +1,7 @@
 """
 GKS Interface Module
+System: Genesis_Knowledge_System
+Version: 2.0.0
 Unified API for accessing Genesis Knowledge System and NexusMind Engine.
 """
 
