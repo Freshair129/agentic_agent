@@ -194,21 +194,29 @@ systems:
   # ----------------------------------------------------------
   - id: GKS
     name: Genesis_Knowledge_System
-    version: 2.0.0  # Maps from EVA 9.0.0 (introduced in v9)
-    domain: epistemology
+    version: 2.0.0  # Maps from EVA 9.0.0 (introduced in v9)\n    domain: epistemology
     role: knowledge_authority
     
-    # NOTE: GKS is a STRUCTURAL EXCEPTION (ADR-017)
-    # Reason: JSON-based flat structure, knowledge-focused, not code-heavy, stable
-    structure_standard: exception
-    exception_reason: "JSON-based knowledge system, flat structure appropriate for data-centric design"
+    structure_standard: v9.4.3
     root_presence: true
     manifest:
-      follows_standard: false
-      config_location: local
+      follows_standard: true
+      config_location: centralized  # Uses operation_system/configs
     permissions:
       bus_publish: [BUS_KNOWLEDGE]
       state_ownership: [] # Static Knowledge
+    
+    # Knowledge Storage (similar to MSP's chains)
+    chains:
+      folders: [genesis_knowledge_system]  # Genesis/Master/Safety Blocks storage
+      files:
+        - genesis_knowledge_system/Master_Block.json
+        - genesis_knowledge_system/Framework_Genesis_Block.json
+        - genesis_knowledge_system/Algorithm_How_Genesis_Block.json
+        - genesis_knowledge_system/Concept_Why_Genesis_Block.json
+        - genesis_knowledge_system/Parameter_What_Genesis_Block.json
+        - genesis_knowledge_system/Protocol_Process_Genesis_Block.json
+        - genesis_knowledge_system/Safety_Block.json
 
   - id: RMS
     name: Resonance_Memory_System
