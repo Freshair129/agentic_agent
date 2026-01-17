@@ -534,3 +534,96 @@ capabilities:
       description: "Mass code modification specialist"
       dependencies: [task_order.yaml]
       permissions: [fs_write, fs_read]
+
+
+# ============================================================
+# 5. RUNTIME EXECUTION FLOW (The Generated Graph)
+# ============================================================
+# This section consolidates the 'runtime.sequence' and 'entry_point'
+# from all Systems/Modules into a single Executable Plan.
+# Usage: Orchestrator reads this to boot the organism.
+# ------------------------------------------------------------
+execution_graph:
+  boot_flow:
+    # --- Step 1: Identity ---
+    - step: 1
+      mode: serial
+      system: Identity_Manager
+      entry_point: operation_system.identity_manager.IdentityManager
+
+    # --- Step 2: Transport ---
+    - step: 2
+      mode: serial
+      system: Resonance_Bus
+      entry_point: operation_system.resonance_bus.ResonanceBus
+    
+    # --- Step 3: Biology (Parallel) ---
+    - step: 3
+      mode: parallel_group
+      description: "Awaken PhysioCore and Sub-Engines"
+      targets:
+        - id: PhysioCore
+          role: controller
+          entry_point: physio_core.physio_core.PhysioCore
+        - id: Endocrine_Engine
+          role: async_module
+          group: 3_ASYNC_A
+        - id: Blood_Engine
+          role: async_module
+          group: 3_ASYNC_B
+        - id: ANS_Engine
+          role: async_module
+          group: 3_ASYNC_C
+        - id: Vitals_Engine
+          role: async_module
+          group: 3_ASYNC_D
+
+    # --- Step 4: Psychology ---
+    - step: 4
+      mode: serial
+      system: EVA_Matrix
+      entry_point: eva_matrix.eva_matrix.EVAMatrixSystem
+      modules: [MatrixPsychModule]
+
+    # --- Step 5: Memory (Parallel Load) ---
+    - step: 5
+      mode: parallel_group
+      description: "Load MSP and Memory Streams"
+      targets:
+        - id: MSP
+          role: controller
+          entry_point: memory_n_soul_passport.memory_n_soul_passport_engine.MSP
+        - id: Episodic_Memory
+          role: async_module
+          group: 5_ASYNC_A
+        - id: Semantic_Memory
+          role: async_module
+          group: 5_ASYNC_B
+
+    # --- Step 6-8: Cognition & Senses ---
+    - step: 6
+      mode: serial
+      system: GKS
+      entry_point: genesis_knowledge_system.gks_interface.GKSInterface
+    
+    - step: 7
+      mode: serial
+      system: RMS
+      entry_point: resonance_memory_system.rms.RMSEngineV6
+
+    - step: 8
+      mode: serial
+      system: Artifact_Qualia
+      entry_point: artifact_qualia.artifact_qualia.ArtifactQualiaSystem
+
+    # --- Step 9: Orchestration ---
+    - step: 9
+      mode: loop_start
+      system: Orchestrator
+      entry_point: orchestrator.orchestrator.EVAOrchestrator
+
+    # --- Step 10: Capabilities (On Demand) ---
+    - step: 10
+      mode: on_demand
+      capabilities: [AgenticRAG]
+
