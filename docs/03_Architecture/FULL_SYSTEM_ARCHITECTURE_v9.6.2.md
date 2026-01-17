@@ -83,12 +83,18 @@ graph TD
     %% 5. OUTPUT & PERSISTENCE
     %% ==========================================
 
-    subgraph Save ["Layer 5: PERSISTENCE"]
+    %% ==========================================
+    %% 5. OUTPUT & PERSISTENCE
+    %% ==========================================
+    subgraph Save ["Layer 5: PERSISTENCE & PREDICTION (Phase 3)"]
         MSP["MSP Authority<br/>(Save Episode)"]
+        Phase3["🔮 Phase 3: PREDICTION<br/>(Self-Note & Summary)"]
     end
 
     LLM --> FinalOut(["💬 Final Response"])
-    FinalOut --> MSP
+    FinalOut --> Phase3
+    Phase3 -->|Loopback: Self-Note + Plan| CIM
+    Phase3 --> MSP
 
     %% ==========================================
     %% STYLING (High Contrast)

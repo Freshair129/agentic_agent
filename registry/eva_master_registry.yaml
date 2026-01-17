@@ -331,6 +331,12 @@ systems:
           bus_publish: [BUS_OPERATIONAL]
         runtime:
           sequence: 9
+        protocols:
+          - id: Phase_3_Loopback (The Sponge)
+            type: cognitive_loop
+            description: "Post-Response state persistence, prediction, and self-note buffering for next turn."
+            owner: CIM
+            criticality: L2
 
   # ----------------------------------------------------------
   # 5. INFRASTRUCTURE & KNOWLEDGE
