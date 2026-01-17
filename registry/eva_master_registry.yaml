@@ -84,6 +84,9 @@ systems:
       bus_subscribe: []
       state_ownership: [physio_core_state.json]
     
+    # [Dependencies: Needs]
+    dependencies: [] # Foundational System (No external deps)
+    
     # [Components: Modules]
     modules:
       - id: Endocrine_Engine
@@ -139,11 +142,17 @@ systems:
       bus_publish: [BUS_PSYCHOLOGICAL]
       bus_subscribe: [BUS_PHYSICAL]
       state_ownership: [eva_matrix_state.json]
-      
+    
+    dependencies:
+      - system: PhysioCore # via BUS_PHYSICAL
+    
     modules:
       - id: MatrixPsychModule
         type: logic_node
         dependencies: [system: EVA_Matrix]
+        permissions:
+          bus_subscribe: [BUS_PHYSICAL]
+          bus_publish: [BUS_PSYCHOLOGICAL]
 
   # ----------------------------------------------------------
   # 3. MEMORY DOMAIN (MSP)
@@ -169,6 +178,10 @@ systems:
       bus_publish: []
       bus_subscribe: [BUS_ALL] # Special right
       state_ownership: []      # MSP owns storage, not state
+    
+    dependencies:
+      - system: Resonance_Bus
+      - service: Vector_Bridge
       
     modules:
       - id: Episodic_Memory
@@ -177,6 +190,8 @@ systems:
       - id: Semantic_Memory
         type: storage_module
         dependencies: [system: MSP, service: ChromaBridge]
+        permissions:
+          fs_write: [memory/semantic_memory]
 
     chains:
       folders: [memory_n_soul_passport/memory]
@@ -208,10 +223,19 @@ systems:
       bus_subscribe: [BUS_ALL]
       state_ownership: [cim_state.json]
       
+    dependencies:
+      - system: PhysioCore
+      - system: EVA_Matrix
+      - system: MSP
+      - system: GKS
+      - system: RMS
+      
     modules:
       - id: CIM
         type: core_system
         dependencies: [system: Orchestrator]
+        permissions:
+          bus_publish: [BUS_OPERATIONAL]
 
   # ----------------------------------------------------------
   # 5. INFRASTRUCTURE & KNOWLEDGE
@@ -229,6 +253,8 @@ systems:
     permissions:
       bus_publish: [BUS_KNOWLEDGE]
       state_ownership: [] # Static Knowledge
+    
+    dependencies: [] # Static Knowledge Base
     
     # Knowledge Storage (similar to MSP's chains)
     chains:
@@ -254,6 +280,8 @@ systems:
     permissions:
       bus_subscribe: [BUS_ALL]
       state_ownership: [rms_state.json]
+    dependencies:
+      - system: Resonance_Bus
 
   - id: Artifact_Qualia
     name: Artifact_Qualia
@@ -271,6 +299,8 @@ systems:
     permissions:
       bus_publish: [BUS_PHENOMENOLOGICAL]
       state_ownership: [artifact_qualia_state.json]
+    dependencies:
+      - system: Resonance_Bus
 
   - id: AgenticRAG
     name: AgenticRAG
@@ -303,6 +333,7 @@ systems:
     root_presence: false # Lives in operation_system
     manifest:
       files: [operation_system/identity_manager.py]
+    dependencies: [] # Standalone Utility
 
 
 
