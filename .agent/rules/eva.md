@@ -124,10 +124,11 @@ Legacy logic involving "Phase 1 Call -> Stop -> Phase 2 Call" is **DEPRECATED**.
 3. **Step 3: Post-Inference (Reasoning)**
     - **Orchestrator** sends the function result back to the **SAME** LLM session.
     - **LLM** generates the final response + `propose_episodic_memory`.
-4. **Step 4: Persistence & Learning**
-    - **MSP**: Writes episodic memory with refined metadata (intent, emotion, confidence).
+4. **Step 4: Persistence & Learning (8-8-8 Protocol)**
+    - **Tier 1 (Session):** MSP writes episodic memory with refined metadata and "Snapshot + Digest" pattern.
+    - **Tier 2 (Core):** Periodic distillation of sessions into stable Core identity patterns.
+    - **Tier 3 (Sphere):** Long-term archival of Core wisdom across development epochs.
     - **Vector DB**: Indexes user input with **LLM-refined** Intent/Emotion (Cognitive Learning Loop).
-    - **Knowledge Graph (optional)**: Stores bio-resonance and causal relationships.
 
 ## Identity Management
 
@@ -139,7 +140,7 @@ Legacy logic involving "Phase 1 Call -> Stop -> Phase 2 Call" is **DEPRECATED**.
 - **ID Formats:**
   - **Turn:** `TURN_{session_id}_{index:03d}` (e.g., `TURN_SES_1_001`)
   - **Context:** `ctx_{session_seq}_{episodic_id}.md`
-  - **Session:** `{dev_id}_SP{sphere}C{core}_SES{session}`
+  - **Memory Identifier:** `{dev_id}_SP{sphere}C{core}_SES{session}` (e.g., `THA-06_SP1C1_SES7`)
   - **Episode:** `{PERSONA}_EP{seq:02d}` (e.g., `EVA_EP01`)
 - **Config Assets:** Persona definitions at `orchestrator/cim/prompt_rule/configs/identity/`
 
@@ -157,4 +158,3 @@ Legacy logic involving "Phase 1 Call -> Stop -> Phase 2 Call" is **DEPRECATED**.
     2. **Ghost Stage:** Run `tools/subagents/ris_subagent.py` -> See "Ghost Key" (Missing Implementation).
     3. **Code Stage:** Implement code to satisfy the Config/Doc.
     4. **Verify Stage:** Run RIS -> Ghost disappears.
-
