@@ -316,30 +316,49 @@ capabilities:
       domain: knowledge_retrieval
       path: capabilities/services/agentic_rag
       description: "Autonomous RAG service with tool use"
+      dependencies:
+        - service: Vector_Bridge
+        - service: SLM_Bridge
+        - system: Orchestrator
+      permissions:
+        bus_subscribe: [BUS_KNOWLEDGE]
+        bus_publish: [BUS_KNOWLEDGE]
 
     - id: Engram_System
       active: true
       domain: memory_optimization
       path: capabilities/services/engram_system
       description: "O(1) high-frequency memory cache"
+      dependencies:
+        - system: MSP
+      permissions:
+        bus_subscribe: [BUS_PSYCHOLOGICAL] # Listen for high-arousal events
 
     - id: SLM_Bridge
       active: true
       domain: cognitive_interface
       path: capabilities/services/slm_bridge
       description: "Small Language Model interface (Qwen/Llama)"
+      dependencies: [] # Standalone bridge
+      permissions:
+        bus_publish: []
 
     - id: Vector_Bridge
       active: true
       domain: memory_storage
       path: capabilities/services/vector_bridge
       description: "ChromaDB vector store interface"
+      dependencies: [] # Standalone bridge
+      permissions:
+        bus_publish: []
 
     - id: Graph_Bridge
       active: false
       domain: knowledge_representation
       path: capabilities/services/graph_bridge
       description: "Knowledge graph interface (Future)"
+      dependencies: []
+      permissions: []
 
   tools:
     - id: Archivist
@@ -348,6 +367,8 @@ capabilities:
       domain: maintenance
       path: capabilities/tools/subagents/archivist_subagent.py
       description: "System maintenance and rule synchronization"
+      dependencies: [registry/eva_master_registry.yaml]
+      permissions: [fs_write]
 
     - id: RIS
       active: true
@@ -355,6 +376,8 @@ capabilities:
       domain: audit
       path: capabilities/tools/subagents/ris_subagent.py
       description: "Resonance Integrity Subagent (Structure/Config Auditor)"
+      dependencies: [registry/eva_master_registry.yaml]
+      permissions: [fs_read] # Auditor only reads
 
     - id: Technician
       active: true
@@ -362,3 +385,5 @@ capabilities:
       domain: development
       path: capabilities/tools/subagents/technician_subagent.py
       description: "Mass code modification specialist"
+      dependencies: [task_order.yaml]
+      permissions: [fs_write, fs_read]
