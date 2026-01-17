@@ -69,7 +69,7 @@ sequenceDiagram
 | **0. Reflex** | Engram System | `engram_engine.py` | `lookup(text)` -> Return cached data if hit. |
 | **1. Perception** | SLM Gateway | `orchestrator.py` | `process_user_input` -> `slm.extract_intent()` |
 | **2. The Gap** | Physio & Matrix | `physio_core.py` | `process_stimulus()` -> Update HPA/ANS axis. |
-| **2.1 Association**| Agentic RAG | `agentic_rag.py` | `recall(state_vector)` -> Fetch 7-stream memories. |
+| **2.1 Association**| Agentic RAG | `agentic_rag.py` | `contextualize(state)` -> Fetch 7-stream memories. |
 | **3. Reasoning** | CIM & LLM | `orchestrator.py` | `cim.inject()` -> `llm.generate()` (Phase 2). |
 | **4. Persistence** | MSP Engine | `msp_engine.py` | `archive_turn()` -> Save to semantic/episodic store. |
 
@@ -80,8 +80,9 @@ sequenceDiagram
 * **CIM (Context Injection Module)**: *[REPLACES CIN]* หน่วยงานจัดเตรียม Context ให้ LLM
 * **The Gap**: ช่วงเวลาประมวลผลระบบสรีรวิทยาและจิตวิทยาข้าม Token
 * **State-Dependent Memory**: การดึงความจำที่เน้นความสอดคล้องกับอารมณ์ความรู้สึกปัจจุบัน
+* **Hydrate**: (State) การกู้คืนสภาวะความจำเก่าลงสู่ Consciousness โดย MSP/RAG
+* **Contextualize**: (Process) การปรับปรุงบริบทของเทิร์นปัจจุบันด้วยข้อมูลจากความจำถาวร
 * **Engram**: หน่วยความจำรีเฟล็กซ์ที่ทำงานระดับ O(1)
 
 ---
 *Created for EVA v9.4.3 Implementation*
-

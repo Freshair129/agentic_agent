@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Requirements**: Moved specs to `docs/02_Requirements/`.
   - **Architecture**: Consolidated all architectural diagrams and flows into `docs/03_Architecture/`.
 - **Architecture Sync**: Updated `EVA_v9.4.3_Architecture.md` and `v9.4.3_SYSTEM_STORAGE_ERD.md` to align with the 8-8-8 nomenclature and the new "Snapshot + Digest" Session Memory model.
-  - **Terminology Correction**: Replaced misleading "Finetune" with **"Hydrate"** in the Agentic RAG retrieval model to accurately reflect semantic state injection.
+  - **Terminology Correction**: Refined the Agentic RAG model with a logical distinction: **"Hydrate"** for State (ERD) and **"Contextualize"** for Process (Flow).
 
 ## [9.4.3-ArchitectureConsolidation] - 2026-01-15
 
