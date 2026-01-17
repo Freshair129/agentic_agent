@@ -58,11 +58,17 @@ systems:
     role: system_authority
     
     # [Manifest: Structure]
+    # NOTE: PhysioCore is a STRUCTURAL EXCEPTION (ADR-015)
+    # Uses legacy logic/ directory, not v9.4.3 Module/Node structure
     root_presence: true
     manifest:
       folders:
-        - physio_core/modules
-        - physio_core/utils
+        - physio_core/logic           # Legacy structure (22 files)
+        - physio_core/configs
+        - physio_core/contract
+        - physio_core/schema
+        - physio_core/validation
+        - physio_core/tests
       files:
         - physio_core/physio_core.py
         - physio_core/__init__.py
