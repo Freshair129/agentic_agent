@@ -144,7 +144,7 @@ systems:
   # ----------------------------------------------------------
   - id: Orchestrator
     name: EVA_Orchestrator
-    version: 2.4.3  # Maps from EVA 9.4.3
+    version: 1.2.0  # Independent versioning (legacy system)
     domain: central_nervous_system
     role: system_authority
     
@@ -191,7 +191,7 @@ systems:
 
   - id: Artifact_Qualia
     name: Artifact_Qualia
-    version: 2.3.0  # Maps from EVA 9.3.0
+    version: 2.4.3  # Updated from 2.3.0 (matches code)
     domain: phenomenology
     role: core_system
     root_presence: true
@@ -204,7 +204,7 @@ systems:
 
   - id: AgenticRAG
     name: AgenticRAG
-    version: 2.4.0  # Maps from EVA 9.4.0
+    version: 1.1.0  # Independent versioning (not mapped from EVA)
     domain: knowledge_retrieval
     role: central_module
     root_presence: false
