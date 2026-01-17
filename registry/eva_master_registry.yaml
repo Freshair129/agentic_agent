@@ -84,7 +84,9 @@ systems:
         - physio_core/tests
       files:
         - physio_core/physio_core.py
+        - physio_core/physio_core.py
         - physio_core/__init__.py
+      entry_point: physio_core.physio_core.PhysioCore
     
     # [Permissions: Rights]
     permissions:
@@ -144,7 +146,9 @@ systems:
       follows_standard: true
       config_location: local
       folders: [eva_matrix/Module]  # Note: Module/ exists, Node/ needed
+      folders: [eva_matrix/Module]  # Note: Module/ exists, Node/ needed
       files: [eva_matrix/eva_matrix.py]
+      entry_point: eva_matrix.eva_matrix.EVAMatrixSystem
       
     permissions:
       bus_publish: [BUS_PSYCHOLOGICAL]
@@ -180,7 +184,9 @@ systems:
       follows_standard: false
       config_location: local
       folders: [memory_n_soul_passport/modules]
+      folders: [memory_n_soul_passport/modules]
       files: [memory_n_soul_passport/memory_n_soul_passport_engine.py]
+      entry_point: memory_n_soul_passport.memory_n_soul_passport_engine.MSP
       
     permissions:
       bus_publish: []
@@ -224,7 +230,9 @@ systems:
       follows_standard: false
       config_location: local
       folders: [orchestrator/cim, orchestrator/session_manager]
+      folders: [orchestrator/cim, orchestrator/session_manager]
       files: [orchestrator/orchestrator.py]
+      entry_point: orchestrator.orchestrator.EVAOrchestrator
       
     permissions:
       bus_publish: [BUS_OPERATIONAL]
@@ -260,7 +268,10 @@ systems:
     root_presence: true
     manifest:
       follows_standard: true
+    manifest:
+      follows_standard: true
       config_location: centralized  # Uses operation_system/configs
+      entry_point: genesis_knowledge_system.gks_interface.GKSInterface
     permissions:
       bus_publish: [BUS_KNOWLEDGE]
       state_ownership: [] # Static Knowledge
@@ -288,7 +299,10 @@ systems:
     root_presence: true
     manifest:
       folders: [resonance_memory_system/configs, resonance_memory_system/contract]
+    manifest:
+      folders: [resonance_memory_system/configs, resonance_memory_system/contract]
       files: [resonance_memory_system/rms.py]
+      entry_point: resonance_memory_system.rms.RMSEngineV6
     permissions:
       bus_subscribe: [BUS_ALL]
       state_ownership: [rms_state.json]
@@ -307,7 +321,9 @@ systems:
       follows_standard: true
       config_location: local
       folders: [artifact_qualia/Module, artifact_qualia/configs]  # Module/ exists, Node/ needed
+      folders: [artifact_qualia/Module, artifact_qualia/configs]  # Module/ exists, Node/ needed
       files: [artifact_qualia/artifact_qualia.py]
+      entry_point: artifact_qualia.artifact_qualia.ArtifactQualiaSystem
     permissions:
       bus_publish: [BUS_PHENOMENOLOGICAL]
       state_ownership: [artifact_qualia_state.json]
