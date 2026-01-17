@@ -53,6 +53,7 @@ systems:
   # ----------------------------------------------------------
   - id: PhysioCore
     name: Physiological_Core
+    version: 2.4.3  # Maps from EVA 9.4.3 (9.x -> 2.x per ADR-011)
     domain: biological
     role: system_authority
     
@@ -87,6 +88,7 @@ systems:
   # ----------------------------------------------------------
   - id: EVA_Matrix
     name: EVA_Matrix
+    version: 2.4.3  # Maps from EVA 9.4.3
     domain: psychological
     role: core_system
     
@@ -110,6 +112,7 @@ systems:
   # ----------------------------------------------------------
   - id: MSP
     name: Memory_Soul_Passport
+    version: 1.1.0  # Legacy system (8.x -> 1.x per ADR-011)
     domain: memory_persistence
     role: core_system
     
@@ -131,11 +134,17 @@ systems:
         type: storage_module
         dependencies: [system: MSP, service: ChromaBridge]
 
+    chains:
+      folders: [memory_n_soul_passport/memory]
+      files: []
+
+
   # ----------------------------------------------------------
   # 4. ORCHESTRATION DOMAIN (CNS)
   # ----------------------------------------------------------
   - id: Orchestrator
     name: EVA_Orchestrator
+    version: 2.4.3  # Maps from EVA 9.4.3
     domain: central_nervous_system
     role: system_authority
     
@@ -159,6 +168,7 @@ systems:
   # ----------------------------------------------------------
   - id: GKS
     name: Genesis_Knowledge_System
+    version: 2.0.0  # Maps from EVA 9.0.0 (introduced in v9)
     domain: epistemology
     role: knowledge_authority
     root_presence: true
@@ -168,6 +178,7 @@ systems:
 
   - id: RMS
     name: Resonance_Memory_System
+    version: 2.4.0  # Maps from EVA 9.4.0 (activated in v9.4)
     domain: memory_filtration
     role: system_authority
     root_presence: true
@@ -180,6 +191,7 @@ systems:
 
   - id: Artifact_Qualia
     name: Artifact_Qualia
+    version: 2.3.0  # Maps from EVA 9.3.0
     domain: phenomenology
     role: core_system
     root_presence: true
@@ -192,6 +204,7 @@ systems:
 
   - id: AgenticRAG
     name: AgenticRAG
+    version: 2.4.0  # Maps from EVA 9.4.0
     domain: knowledge_retrieval
     role: central_module
     root_presence: false
@@ -200,6 +213,7 @@ systems:
 
   - id: Resonance_Bus
     name: Resonance_Bus
+    version: 2.4.3  # Maps from EVA 9.4.3 (core infrastructure)
     domain: transport
     role: central_module
     root_presence: false # Lives in operation_system
@@ -213,6 +227,7 @@ systems:
 
   - id: Identity_Manager
     name: Identity_Manager
+    version: 2.4.0  # Maps from EVA 9.4.0
     domain: security
     role: central_module
     root_presence: false # Lives in operation_system
