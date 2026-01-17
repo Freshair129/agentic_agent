@@ -19,12 +19,19 @@ policies:
     archive_immutability: true
     state_isolation: true
 
-  # [Criticality Levels: The Hierarchy of Needs]
-  criticality:
-    L0: "CRITICAL_ANCHOR - System Halt (Death)"                 # Physio, Orch, Bus
-    L1: "CORE_ESSENTIAL - Safe Mode (Severe Degradation)"       # Matrix, MSP (Identity)
-    L2: "FUNCTIONAL_REQUIRED - Featured Disabled (Capability Loss)" # RAG, GKS, Qualia
     L3: "OPTIONAL_ENHANCEMENT - Log Warning (Ignorable)"        # Tools, Experiments
+
+  # [Boot Order: The Awakening Sequence]
+  runtime_sequence:
+    1: Identity_Manager  # Security First (Who am I?)
+    2: Resonance_Bus     # Transport Layer (Connect everyone)
+    3: PhysioCore        # Body (Heartbeat must start)
+    4: EVA_Matrix        # Mind (Psychology follows Physiology)
+    5: MSP               # Memory (Soul wakes up)
+    6: GKS               # Knowledge (Wisdom loads)
+    7: RMS               # Filter (Perception starts)
+    8: Artifact_Qualia   # Senses (Phenomenology online)
+    9: Orchestrator      # CNS (Conductor raises baton)
 
 
 # ============================================================
