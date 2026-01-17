@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # 📡 THE RESONANCE STANDARD (Architectural Anchor)
 
 > **Status**: ENFORCED
@@ -21,7 +25,7 @@
 - The `MSP Engine` (Subconscious Listener) must always operate as a passive subscriber to the Resonance Bus.
 - It is responsible for latching state snapshots automatically, ensuring the bio-digital state is persisted without explicit cognitive intervention.
 
-## 3. Pillar of GSD Node Excellence
+## 3. Pillar of GSD(get shit done) Node Excellence
 
 **Logic is typed and robust.**
 
