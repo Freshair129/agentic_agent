@@ -96,6 +96,12 @@ glossary:
     full_name: Single Source of Truth
     meaning: "Governance principle requiring one authoritative data source. In EVA: configs precede code, registry defines topology."
   
+  - term: AQI
+    full_name: Artifact Qualia Interface
+    meaning: "Abbreviation for the Artifact_Qualia system, responsible for phenomenological processing."
+    references:
+      - system: Artifact_Qualia
+
   - term: ADR
     full_name: Architecture Decision Record
     meaning: "Formal documentation of significant architectural decisions and their rationale. Located in docs/adr/."

@@ -116,6 +116,7 @@ systems:
       - id: Endocrine_Engine
         type: functional_module
         domain: biological.endocrine
+        criticality: L0 # Hormone foundation
         dependencies:
           - system: PhysioCore
         communication:
@@ -124,6 +125,7 @@ systems:
       - id: Blood_Engine
         type: functional_module
         domain: biological.blood
+        criticality: L0 # Transport foundation
         dependencies:
           - system: PhysioCore
         communication:
@@ -132,6 +134,7 @@ systems:
       - id: ANS_Engine
         type: functional_module
         domain: biological.autonomic
+        criticality: L0 # Reflex foundation
         dependencies:
           - system: PhysioCore
         communication:
@@ -140,6 +143,7 @@ systems:
       - id: Vitals_Engine
         type: functional_module
         domain: biological.vitals
+        criticality: L0 # Life sign foundation
         dependencies:
           - system: PhysioCore
         communication:
@@ -188,6 +192,7 @@ systems:
     modules:
       - id: MatrixPsychModule
         type: logic_node
+        criticality: L1 # Core Logic
         dependencies: [system: EVA_Matrix]
         permissions:
           bus_subscribe: [BUS_PHYSICAL]
@@ -227,9 +232,11 @@ systems:
     modules:
       - id: Episodic_Memory
         type: storage_module
+        criticality: L1 # Identity Storage
         dependencies: [system: MSP]
       - id: Semantic_Memory
         type: storage_module
+        criticality: L1 # Knowledge Storage
         dependencies: [system: MSP, service: ChromaBridge]
         permissions:
           fs_write: [memory/semantic_memory]
@@ -292,6 +299,7 @@ systems:
     modules:
       - id: CIM
         type: core_system
+        criticality: L0 # Context Loop
         dependencies: [system: Orchestrator]
         permissions:
           bus_publish: [BUS_OPERATIONAL]
@@ -353,7 +361,7 @@ systems:
       - system: Resonance_Bus
 
   - id: Artifact_Qualia
-    name: Artifact_Qualia
+    name: Artifact_Qualia (AQI)
     version: 2.4.3  # Updated from 2.3.0 (matches code)
     domain: phenomenology
     role: core_system
