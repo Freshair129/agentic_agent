@@ -48,6 +48,6 @@
 - [**Archive**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/archive/): คลังเอกสารเก่าสำหรับการอ้างอิงย้อนหลัง
 
 ---
----
 
+<!-- markdownlint-disable-next-line MD036 -->
 **Created for EVA v9.4.3 Documentation Management**

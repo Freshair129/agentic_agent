@@ -87,6 +87,5 @@ sequenceDiagram
 * **Engram**: หน่วยความจำรีเฟล็กซ์ที่ทำงานระดับ O(1)
 
 ---
----
 
 **Created for EVA v9.4.3 Implementation**

@@ -93,6 +93,5 @@ session_memory/{session_id}/
 - **Consolidation**: เมื่อสะสมครบ 8 Sessions -> ระบบจะใช้ Digest ทั้ง 8 เป็นวัตถุดิบหลักในการสร้าง **Core Memory**
 
 ---
----
 
 **Directed by "The Human Algorithm" v9.4.3 Principles**
