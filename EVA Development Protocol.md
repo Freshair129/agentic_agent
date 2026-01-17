@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 -->
 # **📜 EVA v9.5 Development Protocol (The GSD Standard)**
 
 **Codename:** Resonance GSD  
@@ -105,4 +106,4 @@ Just because a file exists doesn't mean it works. Just because it imports doesn'
 3. **Wired:** Component A คุยกับ B ได้จริง (ไม่ใช่แค่ Mock)
 
 ---
-*Authored by: EVA Orchestrator (After GSD Alignment)*
+**Authored by: EVA Orchestrator (After GSD Alignment)**
