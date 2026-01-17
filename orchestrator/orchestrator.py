@@ -238,6 +238,60 @@ class EVAOrchestrator:
 
         print(f"✅ EVA Orchestrator ready! (Session: {self.session_id})\n")
 
+    def _enforce_criticality(self, system_id: str, error: Exception):
+        """
+        [NEW] Registry-Driven Failure Handling (L0-L3 Policy)
+        Reads criticality from Master Registry and decides action.
+        """
+        # 1. Load Registry Criticality Map (Lazy Load or Cached)
+        # For performance, we assume self.config_data has registry or we load it.
+        # Ideally, Criticality should be injected during init.
+        # Fallback to defaults if registry not loaded.
+        
+        # Define Policy Map
+        POLICY = {
+            "L0": "CRITICAL_ANCHOR - System Halt (Death)",
+            "L1": "CORE_ESSENTIAL - Safe Mode (Severe Degradation)",
+            "L2": "FUNCTIONAL_REQUIRED - Featured Disabled (Capability Loss)",
+            "L3": "OPTIONAL_ENHANCEMENT - Log Warning (Ignorable)"
+        }
+        
+        # Lookup Criticality (Mock implementation until Registry Injection is full)
+        # TODO: Inject real Registry lookup
+        criticality_map = {
+            "PhysioCore": "L0",
+            "Orchestrator": "L0",
+            "Resonance_Bus": "L0",
+            "EVA_Matrix": "L1",
+            "MSP": "L1",
+            "GKS": "L2",
+            "RMS": "L2",
+            "Artifact_Qualia": "L2",
+            "AgenticRAG": "L2"
+        }
+        
+        level = criticality_map.get(system_id, "L3") # Default to L3 (Safe)
+        
+        safe_print(f"\n🚨 SYSTEM FAILURE DETECTED: {system_id} (Level: {level})")
+        safe_print(f"   Error: {error}")
+        safe_print(f"   Policy: {POLICY.get(level)}")
+        
+        if level == "L0":
+            safe_print("‼️ CRITICAL SYSTEM FAILURE. INITIATING EMERGENCY SHUTDOWN.")
+            # self.cleanup()
+            sys.exit(1)
+        elif level == "L1":
+            safe_print("⚠️ CORE SYSTEM FAILURE. ENTERING SAFE MODE.")
+            # Disable high-level functions, keep heartbeat
+            self.nexus_mode = False
+            self.gks_enabled = False
+        elif level == "L2":
+            safe_print("⚠️ FUNCTIONAL FAILURE. DISABLING COMPONENT.")
+            # Disable specific component
+            if system_id == "AgenticRAG": self.agentic_rag = None
+        else:
+            safe_print("ℹ️ NON-CRITICAL ERROR. LOGGING AND CONTINUING.")
+
     def _execute_the_gap(self, stimulus: Dict[str, Any], query_text: str = "") -> Dict[str, Any]:
         """
         Execute The Gap: Biological processing without LLM.

@@ -114,12 +114,23 @@ graph TB
     %% ==========================================
     %% STYLING
     %% ==========================================
-    classDef Input fill:#e1f5ff,stroke:#0066cc,stroke-width:2px;
-    classDef Output fill:#e1f5ff,stroke:#0066cc,stroke-width:2px;
-    classDef L0 fill:#ffcccc,stroke:#d93025,stroke-width:3px;
-    classDef L1 fill:#fff2cc,stroke:#f1c232,stroke-width:2px;
-    classDef L2 fill:#d9ead3,stroke:#6aa84f,stroke-width:1px;
-    classDef InfraStyle fill:#eeeeee,stroke:#999999,stroke-width:1px,stroke-dasharray: 5 5;
+    %% ==========================================
+    %% STYLING
+    %% ==========================================
+    classDef Input fill:#ffffff,stroke:#0066cc,stroke-width:3px;
+    classDef Output fill:#ffffff,stroke:#0066cc,stroke-width:3px;
+    
+    classDef L0 fill:#ffffff,stroke:#d93025,stroke-width:3px;
+    %% Critical (Red)
+    
+    classDef L1 fill:#ffffff,stroke:#f1c232,stroke-width:3px;
+    %% Essential (Yellow)
+    
+    classDef L2 fill:#ffffff,stroke:#6aa84f,stroke-width:3px;
+    %% Functional (Green)
+    
+    classDef InfraStyle fill:#ffffff,stroke:#999999,stroke-width:2px,stroke-dasharray: 5 5;
+    %% Infra (Grey)
 
     class UserIn Input;
     class UserOut Output;
