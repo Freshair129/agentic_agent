@@ -68,20 +68,29 @@ graph TD
     %% 4. CONTEXT & REASONING (Synthesis)
     %% ==========================================
     %% CRITICAL: CIM must inject State into LLM regardless of path
-    subgraph Reason ["Layer 3: REASONING (State Awareness)"]
-        CIM["CIM Injector<br/>(Merge State+Data)"]
-        LLM["LLM Core<br/>(Generate Response)"]
+    %% ==========================================
+    %% 4. SINGLE INFERENCE SCOPE (Function Calling Loop)
+    %% ==========================================
+    %% CRITICAL: This is ONE API Call, paused for The Gap
+    subgraph Inference ["Layer 3: SINGLE INFERENCE SCOPE (One API Call)"]
+        direction TB
+        LLM_Start["LLM Start<br/>(Perception)"]
+        FnCall{{"Function Call<br/>(sync_bio_state)"}}
+        Gap_Execution["EXECUTE GAP<br/>(Bio-Sync)"]
+        LLM_Resume["LLM Resume<br/>(Reasoning)"]
     end
 
-    Matrix -->|9D State| CIM
-    ExtractIntent -->|Intent| CIM
-    FetchCached -->|Pattern| CIM
+    %% Wiring the Loop
+    CIM --> LLM_Start
+    LLM_Start --> FnCall
+    FnCall -->|Pause & call| Gap_Execution
     
-    CIM -->|Prompt: State + Data| LLM
-
-    %% ==========================================
-    %% 5. OUTPUT & PERSISTENCE
-    %% ==========================================
+    %% The Gap connects here
+    Matrix -->|9D State| Gap_Execution
+    ExtractIntent -->|Intent| Gap_Execution
+    FetchCached -->|Pattern| Gap_Execution
+    
+    Gap_Execution -->|Return Result| LLM_Resume
 
     %% ==========================================
     %% 5. OUTPUT & PERSISTENCE
@@ -91,7 +100,7 @@ graph TD
         Phase3["🔮 Phase 3: PREDICTION<br/>(Self-Note & Summary)"]
     end
 
-    LLM --> FinalOut(["💬 Final Response"])
+    LLM_Resume --> FinalOut(["💬 Final Response"])
     FinalOut --> Phase3
     Phase3 -->|Loopback: Self-Note + Plan| CIM
     Phase3 --> MSP
