@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **8-8-8 Memory Synthesis Protocol**: Implemented a tiered distillation architecture for long-term wisdom.
   - **Philosophy**: Redefined Consciousness as the Awareness Domain (Functional Buffer), while Session, Core, and Sphere represent the tiered distillation hierarchy.
+  - **Session Memory Spec**: Refined the storage architecture to use a **"Snapshot + Digest Index"** pattern, ensuring full data integrity while optimizing RAG retrieval speed.
   - **Concept**: `docs/01_Philosophies/MEM_PHILOSOPHY_888.md`
+  - **Spec**: `docs/04_Systems/memory_n_soul_passport/Session_Memory_Spec.md`
 - **Documentation Master Index**: Created a unified entry point and reading order.
   - **Index**: `docs/00_Governance/INDEX.md`
 - **ADR-010**: Documented the "8-8-8 Memory Protocol and Documentation Reorganization" decision.
@@ -23,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Philosophies**: Created `docs/01_Philosophies/` for core principles.
   - **Requirements**: Moved specs to `docs/02_Requirements/`.
   - **Architecture**: Consolidated all architectural diagrams and flows into `docs/03_Architecture/`.
-- **Architecture Sync**: Updated `EVA_9.4_Architecture.md` and `MSP_System_Storage_ERD.md` to align with the 8-8-8 nomenclature.
+- **Architecture Sync**: Updated `EVA_v9.4.3_Architecture.md` and `v9.4.3_SYSTEM_STORAGE_ERD.md` to align with the 8-8-8 nomenclature and the new "Snapshot + Digest" Session Memory model.
 
 ## [9.4.3-ArchitectureConsolidation] - 2026-01-15
 
@@ -130,4 +132,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Phase 3 Prediction:** Removed standalone Prediction Phase to simplify the cognitive loop.
 - **Split Context Logs:** Stopped generating `context_phase2.json` and `context_phase3.json`; merged all reasoning data into Episodic Memory.
-
