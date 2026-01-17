@@ -91,7 +91,7 @@ If error count > 10:
 
 ### ❌ What I Did (Wrong)
 
-```
+```text
 1. Fixed CHANGELOG.md
 2. Saw 6 more errors → Fixed all in parallel
 3. Made typo (double separator)
@@ -102,7 +102,7 @@ If error count > 10:
 
 ### ✅ What Should Have Been Done
 
-```
+```text
 1. Fix CHANGELOG.md
 2. Commit: [Lint] Fixed MD024 in CHANGELOG.md
 3. See 6 new errors → Pick ONE
