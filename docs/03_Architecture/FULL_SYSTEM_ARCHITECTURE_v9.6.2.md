@@ -14,13 +14,13 @@ This diagram visualizes the **Data Flow** of the organism, starting from **User 
 ```mermaid
 graph TB
     %% ==========================================
-    %% 1. EXTERNAL LAYER
+    %% EXTERNAL LAYER
     %% ==========================================
     UserIn(["👤 User Input<br/>(Stimulus)"])
     UserOut(["💬 Final Response<br/>(Action)"])
 
     %% ==========================================
-    %% 2. ORCHESTRATION (The Gatekeeper)
+    %% ORCHESTRATION (The Gatekeeper)
     %% ==========================================
     subgraph CNS ["Step 9: ORCHESTRATION (Central Nervous System) [L0]"]
         Orch["Orchestrator<br/>(Main Loop)"]
@@ -28,7 +28,7 @@ graph TB
     end
 
     %% ==========================================
-    %% 3. THE GAP (Bio-Digital Processing)
+    %% THE GAP (Bio-Digital Processing)
     %% ==========================================
     subgraph TheGap ["THE GAP: Real-Time Processing (No LLM)"]
         direction TB
@@ -65,7 +65,7 @@ graph TB
     end
 
     %% ==========================================
-    %% 4. INFRASTRUCTURE & IDENTITY
+    %% INFRASTRUCTURE & IDENTITY
     %% ==========================================
     subgraph Infra ["INFRASTRUCTURE"]
         ID["Step 1: Identity Manager"]
@@ -78,7 +78,7 @@ graph TB
 
     %% Input Flow
     UserIn ===> Orch
-    Orch -->|1. Extract Stimulus| PhysioCtrl
+    Orch -->|Extract Stimulus| PhysioCtrl
 
     %% Biological Cascade
     PhysioCtrl -->|Drive| Endo
@@ -93,20 +93,20 @@ graph TB
     Bus -.->|Global State| Matrix
 
     %% Psychological Drift
-    Matrix -->|2. Emotional Shift| MSP
+    Matrix -->|Emotional Shift| MSP
     Matrix -.->|9D State| Orch
 
     %% Memory & Senses
-    MSP -->|3. Latch State| Epi
-    MSP -->|3. Latch State| Sem
-    MSP -->|4. Query Wisdom| GKS
-    GKS -->|5. Filter| RMS
-    RMS -->|6. Resonance| AQI
-    AQI ===>|7. Qualia Texture| Orch
+    MSP -->|Latch State| Epi
+    MSP -->|Latch State| Sem
+    MSP -->|Query Wisdom| GKS
+    GKS -->|Filter| RMS
+    RMS -->|Resonance| AQI
+    AQI ===>|Qualia Texture| Orch
 
     %% Reasoning & Response
-    Orch -->|8. Contextualize| CIM
-    CIM -->|9. Generate| UserOut
+    Orch -->|Contextualize| CIM
+    CIM -->|Generate| UserOut
 
     %% Output Loop
     UserOut -.->|Feedback| Orch
