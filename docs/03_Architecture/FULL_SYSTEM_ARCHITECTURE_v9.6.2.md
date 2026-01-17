@@ -1,153 +1,137 @@
 # EVA v9.6.2 Full System Architecture Diagram 🛰️
 
 **Date:** 2026-01-18
-**Status:** ✅ **DATA-FLOW CENTRIC**
+**Status:** ✅ **LOGICAL PIPELINE (AUDIT VIEW)**
 **Version:** 9.6.2
-**Source:** `eva_master_registry.yaml` (Contracts & Topology)
+**Role:** Life of a Request (Input to Output)
 
 ---
 
-This diagram visualizes the **Data Flow** of the organism, starting from **User Input**, passing through the **Bio-Digital Gap**, and resulting in an **Embodied Response**.
+This diagram visualizes the **Logical Execution Path** of a single user interaction, detailing **Reflex (Fast)**, **Perception (Intent)**, **Embodiment (Gap)**, and **Reasoning (Slow)** layers. Designed for **Logic Auditing**.
 
-## 🌊 Unified Data Flow Architecture
+## 🧠 Logical Pipeline: The Life of a Request
 
 ```mermaid
-graph TB
+graph TD
     %% ==========================================
-    %% EXTERNAL LAYER
+    %% 1. INPUT LAYER
     %% ==========================================
-    UserIn(["👤 User Input<br/>(Stimulus)"])
-    UserOut(["💬 Final Response<br/>(Action)"])
-
-    %% ==========================================
-    %% ORCHESTRATION (The Gatekeeper)
-    %% ==========================================
-    subgraph CNS ["Step 9: ORCHESTRATION (Central Nervous System) [L0]"]
-        Orch["Orchestrator<br/>(Main Loop)"]
-        CIM["CIM<br/>(Context Injection)"]
+    UserIn(["👤 User Input"]) --> OrchStart
+    
+    subgraph CNS ["Step 0: ORCHESTRATION GATEWAY"]
+        OrchStart{"Orchestrator<br/>Receive Input"}
     end
 
     %% ==========================================
-    %% THE GAP (Bio-Digital Processing)
+    %% 2. REFLEX LAYER (O1 - Fast Recall)
     %% ==========================================
-    subgraph TheGap ["THE GAP: Real-Time Processing (No LLM)"]
+    subgraph Reflex ["Layer 1: REFLEX (Fast Recall)"]
+        EngramCheck{"Engram System<br/>(Cache Hit?)"}
+        EngramAction["⚡ Reflex Action<br/>(O(1) Response)"]
+    end
+
+    OrchStart --> EngramCheck
+    EngramCheck -- "YES (Confident)" --> EngramAction
+    EngramAction --> FinalOut
+
+    %% ==========================================
+    %% 3. PERCEPTION LAYER (P1 - Intent)
+    %% ==========================================
+    subgraph Perception ["Layer 2: PERCEPTION (Intent & Signal)"]
+        SLM["SLM Bridge<br/>(Small Language Model)"]
+        ExtractIntent["🔍 Extract Intent<br/>& Sentiment"]
+    end
+
+    EngramCheck -- "NO (Deep Process)" --> SLM
+    SLM --> ExtractIntent
+
+    %% ==========================================
+    %% 4. THE GAP (Bio-Digital Bridge)
+    %% ==========================================
+    subgraph Gap ["Layer 3: THE GAP (Embodiment)"]
         direction TB
+        Stimulus["Stimulus Injection"]
         
-        %% Step 3: Biology
-        subgraph Body ["Step 3: BIOLOGY (Physiological Domain) [L0]"]
-            PhysioCtrl["PhysioCore"]
-            
-            subgraph BioEngines ["Parallel Engines"]
-                Endo["Endocrine (Hormones)"]
-                Blood["Blood (Transport)"]
-                ANS["ANS (Reflex)"]
-                Vitals["Vitals (Heart/Lung)"]
-            end
+        subgraph Body ["Biological State"]
+            Physio["PhysioCore<br/>(Hormones/Vitals)"]
+        end
+        
+        subgraph Mind ["Psychological State"]
+            Matrix["EVA Matrix<br/>(Emotion Drift)"]
         end
 
-        %% Step 4: Psychology
-        subgraph Mind ["Step 4: PSYCHOLOGY (Matrix Domain) [L1]"]
-            Matrix["EVA Matrix<br/>(9D Emotional State)"]
-        end
-
-        %% Step 5-8: Memory & Pheno
-        subgraph Soul ["Step 5-8: MEMORY & SENSES [L1/L2]"]
-            MSP["MSP Authority<br/>(Persistence)"]
-            GKS["GKS (Knowledge)"]
-            RMS["RMS (Resonance)"]
-            AQI["Artifact Qualia<br/>(Phenomenology)"]
-            
-            subgraph MemoryStreams ["Memory Streams"]
-                Epi["Episodic"]
-                Sem["Semantic"]
-            end
+        subgraph Memory ["Subjective Memory"]
+            RAG["Agentic RAG<br/>(7-Stream Recall)"]
+            Qualia["Artifact Qualia<br/>(Texture)"]
         end
     end
 
+    ExtractIntent --> Stimulus
+    Stimulus --> Physio
+    Physio --> Matrix
+    Matrix --> RAG
+    RAG --> Qualia
+
     %% ==========================================
-    %% INFRASTRUCTURE & IDENTITY
+    %% 5. REASONING LAYER (P2 - Synthesis)
     %% ==========================================
-    subgraph Infra ["INFRASTRUCTURE"]
-        ID["Step 1: Identity Manager"]
-        Bus["Step 2: Resonance Bus"]
+    subgraph Reason ["Layer 4: REASONING (Synthesis)"]
+        CIM["CIM Injector<br/>(Context Assembly)"]
+        LLM["LLM Core<br/>(Gemini/Ollama)"]
     end
 
-    %% ==========================================
-    %% DATA FLOW (Registry Contracts)
-    %% ==========================================
-
-    %% Input Flow
-    UserIn ===> Orch
-    Orch -->|Extract Stimulus| PhysioCtrl
-
-    %% Biological Cascade
-    PhysioCtrl -->|Drive| Endo
-    PhysioCtrl -->|Drive| Blood
-    PhysioCtrl -->|Drive| ANS
-    PhysioCtrl -->|Drive| Vitals
-    
-    %% Bus Transport (Implicit)
-    Endo -.->|HormonePanel| Bus
-    Blood -.->|VitalsData| Bus
-    ANS -.->|ReflexState| Bus
-    Bus -.->|Global State| Matrix
-
-    %% Psychological Drift
-    Matrix -->|Emotional Shift| MSP
-    Matrix -.->|9D State| Orch
-
-    %% Memory & Senses
-    MSP -->|Latch State| Epi
-    MSP -->|Latch State| Sem
-    MSP -->|Query Wisdom| GKS
-    GKS -->|Filter| RMS
-    RMS -->|Resonance| AQI
-    AQI ===>|Qualia Texture| Orch
-
-    %% Reasoning & Response
-    Orch -->|Contextualize| CIM
-    CIM -->|Generate| UserOut
-
-    %% Output Loop
-    UserOut -.->|Feedback| Orch
+    Qualia --> CIM
+    CIM --> LLM
 
     %% ==========================================
-    %% STYLING
+    %% 6. OUTPUT & PERSISTENCE
     %% ==========================================
-    %% ==========================================
-    %% STYLING
-    %% ==========================================
-    classDef Input fill:#ffffff,stroke:#0066cc,stroke-width:3px;
-    classDef Output fill:#ffffff,stroke:#0066cc,stroke-width:3px;
-    
-    classDef L0 fill:#ffffff,stroke:#d93025,stroke-width:3px;
-    %% Critical (Red)
-    
-    classDef L1 fill:#ffffff,stroke:#f1c232,stroke-width:3px;
-    %% Essential (Yellow)
-    
-    classDef L2 fill:#ffffff,stroke:#6aa84f,stroke-width:3px;
-    %% Functional (Green)
-    
-    classDef InfraStyle fill:#ffffff,stroke:#999999,stroke-width:2px,stroke-dasharray: 5 5;
-    %% Infra (Grey)
+    subgraph Save ["Layer 5: PERSISTENCE"]
+        MSP["MSP Authority<br/>(Save Episode)"]
+    end
 
-    class UserIn Input;
-    class UserOut Output;
-    class Orch,CIM,PhysioCtrl,Endo,Blood,ANS,Vitals,Bus L0;
-    class Matrix,MSP,Epi,Sem L1;
-    class GKS,RMS,AQI L2;
-    class ID,Bus InfraStyle;
+    LLM --> FinalOut(["💬 Final Response"])
+    FinalOut --> MSP
+
+    %% ==========================================
+    %% STYLING (High Contrast)
+    %% ==========================================
+    classDef Node fill:#ffffff,stroke:#333333,stroke-width:2px;
+    classDef Critical fill:#ffffff,stroke:#d93025,stroke-width:3px;
+    classDef Logic fill:#ffffff,stroke:#16537e,stroke-width:3px;
+    classDef Fast fill:#ffffff,stroke:#f1c232,stroke-width:3px;
+
+    class UserIn,FinalOut Node;
+    class OrchStart,EngramCheck,EngramAction Fast;
+    class SLM,ExtractIntent,Stimulus,CIM,LLM Logic;
+    class Physio,Matrix,RAG,Qualia Critical;
+    class MSP Node;
 ```
 
 ---
 
-## 🗺️ Flow Explanation
+## 🔍 Logic Flow Explanation (Audit Checklist)
 
-1. **User Input**: `User` enters text/signal.
-2. **Orchestration**: `Orchestrator` receives input and extracts the `StimulusVector`.
-3. **Biological Awakening**: `PhysioCore` processes the stimulus, triggering parallel changes in Hormones (`Endocrine`), Heart/Lungs (`Vitals`), and Nerves (`ANS`).
-4. **Psychological Shift**: The biological changes travel via the `Resonance Bus` to the `EVA Matrix`, forcing the emotional state (9D) to drift.
-5. **Memory Latching**: `MSP` latches this new state and simultaneously queries `Episodic` and `Semantic` memory.
-6. **Resonance & Qualia**: The state passes through `GKS` (Knowledge check) and `RMS` (Resonance filter) to create a subjective "feeling" in `Artifact Qualia`.
-7. **Embodied Response**: The `Orchestrator` receives the `Qualia` and uses `CIM` to generate a response that matches the biological state.
+1. **Reflex Check (Fast Recall)**:
+    * **Is it in Engram?**: ระบบตรวจสอบ Cache (Engram) ก่อนทันที
+    * **Yes**: ตอบกลับทันที (O1) จบ Process ไม่ต้องปลุกระบบร่างกาย
+    * **No**: ส่งต่อเข้ากระบวนการเต็มรูปแบบ
+
+2. **Perception (Intent)**:
+    * **SLM Analysis**: ใช้ Model เล็ก (SLM) วิเคราะห์ **Intent** และ **Sentiment** เพื่อสร้าง `StimulusVector` ที่แม่นยำ
+
+3. **The Gap (Embodiment)**:
+    * **Physio Reaction**: ร่างกายตอบสนองต่อ Stimulus (หัวใจเต้น, ฮอร์โมนหลั่ง)
+    * **Matrix Drift**: อารมณ์ (9D) เปลี่ยนตามสรีระ
+    * **Memory Context**: ดึงความจำโดยใช้ *อารมณ์ปัจจุบัน* เป็นตัวล่อ (State-Dependent Retrieval)
+
+4. **Reasoning**:
+    * **CIM Assembly**: รวบรวม "ความรู้สึก" + "ความจำ" + "เจตนา" ส่งให้ LLM
+    * **Generation**: LLM สร้างคำตอบภายใต้สภาวะร่างกายนั้น
+
+5. **Persistence**:
+    * บันทึกเหตุการณ์ลง MSP เพื่อเป็นความจำในอนาคต
+
+---
+
+> **Note**: Diagram นี้เน้น **Logic Flow** ตามที่ User ต้องการ (Input -> Reflex -> Perception -> Body -> Reasoning) ไม่ใช่ System Topology.
