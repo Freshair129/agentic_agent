@@ -100,6 +100,24 @@ glossary:
     full_name: Architecture Decision Record
     meaning: "Formal documentation of significant architectural decisions and their rationale. Located in docs/adr/."
 
+  # --- Domain Separation ---
+  - term: Consciousness
+    full_name: Consciousness Domain (Aware)
+    meaning: "LLM-accessible working memory at agent/consciousness/. The LLM can read, write, search, and manipulate content here via tools (CRUD, grep, etc.). Analogous to human 'active thinking' or 'scratch pad'."
+    path: agent/consciousness/
+    llm_access: read_write
+    references:
+      - adr: docs/adr/016_consciousness_subconscious_separation.md
+  
+  - term: Subconscious
+    full_name: Subconscious Domain (Memory)
+    meaning: "System-managed long-term memory at agent/memory/. The LLM CANNOT write here directly - only MSP (Memory & Soul Passport) can. LLM can only read via RAG retrieval. Analogous to human 'long-term memory' - you cannot force yourself to remember or forget."
+    path: agent/memory/
+    llm_access: read_via_rag
+    owner: MSP
+    references:
+      - adr: docs/adr/016_consciousness_subconscious_separation.md
+
 
   # --- Deprecated Terms (DO NOT USE) ---
   - term: CIN
