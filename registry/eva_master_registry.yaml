@@ -93,6 +93,30 @@ systems:
           - system: PhysioCore
         communication:
           publishes: [BUS_PHYSICAL]
+      
+      - id: Blood_Engine
+        type: functional_module
+        domain: biological.blood
+        dependencies:
+          - system: PhysioCore
+        communication:
+          publishes: [BUS_PHYSICAL]
+
+      - id: ANS_Engine
+        type: functional_module
+        domain: biological.autonomic
+        dependencies:
+          - system: PhysioCore
+        communication:
+          publishes: [BUS_PHYSICAL]
+
+      - id: Vitals_Engine
+        type: functional_module
+        domain: biological.vitals
+        dependencies:
+          - system: PhysioCore
+        communication:
+          publishes: [BUS_PHYSICAL]
 
   # ----------------------------------------------------------
   # 2. PSYCHOLOGICAL DOMAIN (Matrix)
