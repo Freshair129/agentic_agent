@@ -27,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Architecture**: Consolidated all architectural diagrams and flows into `docs/03_Architecture/`.
 - **Architecture Sync**: Updated `EVA_v9.4.3_Architecture.md` and `v9.4.3_SYSTEM_STORAGE_ERD.md` to align with the 8-8-8 nomenclature and the new "Snapshot + Digest" Session Memory model.
   - **Terminology Correction**: Refined the Agentic RAG model with a logical distinction: **"Hydrate"** for State (ERD) and **"Contextualize"** for Process (Flow).
+- **Memory Governance & Belief Revision**:
+  - Integrated **Memory Domains** (Safety, Identity, etc.) and **Epistemic States** into the 8-8-8 philosophy.
+  - Implemented the **Belief Revision Protocol** (Sphere → Core downgrade logic).
+  - Formalized specialized memory classes: **Habit** and **Somatic Imprint**.
+  - New Policy: `docs/07_Protocols/MEMORY_GOVERNANCE_POLICY.md`.
 
 ## [9.4.3-ArchitectureConsolidation] - 2026-01-15
 

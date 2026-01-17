@@ -36,12 +36,13 @@
 ## 🛠️ หมวดหมู่เพิ่มเติม
 
 - [**06. Orchestration**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/06_Orchestration/): เจาะลึกการควบคุม Session และ Context
-- [**07. Protocols**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/): กฎระเบียบของเหตุการณ์และการระบุตัวตน
-- [**08. Knowledge Graphs**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/08_Knowledge_Graphs/): บทความเกี่ยวกับ GraphRAG และการออกแบบ Schema
+
+### [07. Protocols (กฎระเบียบระบบ)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/)
+
+- [**Memory Governance Policy**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/MEMORY_GOVERNANCE_POLICY.md): กฎการโปรโมทและแก้ไขความเชื่อ (Sphere -> Core logic)
+- [**Event Policy Specification**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/eventpolicy.md): ข้อกำหนดการจัดการสัญญาณและเหตุการณ์ (State-Dominant)
 - [**ADR (Architecture Decision Records)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/adr/): บันทึกการตัดสินใจเชิงสถาปัตยกรรมที่สำคัญ
 - [**Archive**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/archive/): คลังเอกสารเก่าสำหรับการอ้างอิงย้อนหลัง
 
 ---
 *Created for EVA v9.4.3 Documentation Management*
-
-

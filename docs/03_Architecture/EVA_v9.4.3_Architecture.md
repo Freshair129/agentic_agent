@@ -227,13 +227,16 @@ agent/
 
 > [!IMPORTANT]
 > **Philosophy:** "Active Consciousness (LLM) creates experience in the Awareness Domain; Subconscious (MSP) distills Wisdom via the 8-8-8 Protocol."
-> **Full Guide:** See [MEM_PHILOSOPHY_888.md](file:///e:/The%20Human%20Algorithm/T2/agent/docs/architecture/MEM_PHILOSOPHY_888.md)
+> **Full Guide:** See [MEM_PHILOSOPHY_888.md](file:///e:/The%20Human%20Algorithm/T2/agent/docs/01_Philosophies/MEM_PHILOSOPHY_888.md)
 
 ### 1. Memory Layers (Redefined)
 - **Consciousness (Buffer)**: The "Awareness Domain" where the LLM lives and has full R/W authority.
 - **Session (Working Memory)**: คลังความจำเหตุการณ์ (Raw Snapshots) ที่เก็บโฟลเดอร์ `consciousness/` ทั้งหมดหลังจากจบ Session
 - **Core (Short-Term)**: 8-session distillation (Clean, Summary, Index, Relation).
 - **Sphere (Long-Term)**: 8-core / 64-session wisdom (Identity DNA).
+- **Governance Overlay**: ความจำทั้งหมดถูกควบคุมด้วย **Memory Domains** และ **Epistemic States**
+- **Belief Revision**: รองรับการ Downgrade Sphere -> Core เมื่อเกิดความขัดแย้งซ้ำๆ (Belief Erosion)
+- **Intuition Layer**: ระบบความจำพิเศษแบบ Habit และ Somatic Imprint
 
 ### 2. MSP (Memory & Soul Passport) - **The Subconscious Governor**
 - **Role:** Central authority for persistence and the 8-8-8 synthesis engine.
