@@ -112,7 +112,7 @@ systems:
   # ----------------------------------------------------------
   - id: MSP
     name: Memory_Soul_Passport
-    version: 1.1.0  # Legacy system (8.x -> 1.x per ADR-011)
+    version: 2.1.0  # Updated from 1.1.0 (2026-01-18: Version Control Baseline)
     domain: memory_persistence
     role: core_system
     

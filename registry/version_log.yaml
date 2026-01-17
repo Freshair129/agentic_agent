@@ -1,0 +1,113 @@
+schema: EVA-VersionLog-v1
+description: >
+  Version Control Change Log - Audit trail for all system/module version changes.
+  This file tracks WHAT changed, WHEN, WHY, and WHO approved it.
+  Used for rollback and compliance auditing.
+
+baseline_date: 2026-01-18T02:01:00+07:00
+baseline_note: "Initial Version Control snapshot - All versions synced with code headers"
+
+# ============================================================
+# BASELINE VERSIONS (Snapshot at 2026-01-18)
+# ============================================================
+baseline_versions:
+  # Core Systems
+  - system_id: PhysioCore
+    version: 2.4.3
+    note: "Verified stable - matches code header"
+  
+  - system_id: EVA_Matrix
+    version: 2.4.3
+    note: "Verified stable - matches code header"
+  
+  - system_id: MSP
+    version: 2.1.0
+    note: "Bumped from 1.1.0 to 2.1.0 (MINOR: Added version control features)"
+  
+  - system_id: Orchestrator
+    version: 1.2.0
+    note: "Independent versioning (legacy system)"
+  
+  - system_id: GKS
+    version: 2.0.0
+    note: "Introduced in EVA v9.0"
+  
+  - system_id: RMS
+    version: 6.2.0
+    note: "Independent versioning (not mapped from EVA)"
+  
+  - system_id: Artifact_Qualia
+    version: 2.4.3
+    note: "Updated to current version"
+  
+  - system_id: AgenticRAG
+    version: 1.1.0
+    note: "Independent versioning"
+  
+  - system_id: Resonance_Bus
+    version: 2.4.3
+    note: "Core infrastructure"
+  
+  - system_id: Identity_Manager
+    version: 2.4.0
+    note: "Introduced in EVA v9.4"
+
+# ============================================================
+# CHANGE LOG (Chronological - Newest First)
+# ============================================================
+changes:
+  - timestamp: 2026-01-18T02:01:00+07:00
+    system_id: MSP
+    version_from: 1.1.0
+    version_to: 2.1.0
+    change_type: MINOR
+    reason: "Added version control logging system and audit trail features"
+    changed_by: USER + Antigravity
+    files_affected:
+      - registry/eva_master_registry.yaml
+      - memory_n_soul_passport/memory_n_soul_passport_engine.py
+      - registry/version_log.yaml (created)
+    rollback_command: >
+      1. Update registry: MSP version 2.1.0 -> 1.1.0
+      2. Update code: memory_n_soul_passport_engine.py line 2
+      3. Remove version_log.yaml
+      4. git revert [commit_hash]
+    git_commit: "[Registry] MSP 1.1.0 -> 2.1.0 + Established Version Control Baseline"
+    approved: true
+
+# ============================================================
+# VERSIONING RULES (Reference)
+# ============================================================
+# Ref: .agent/workflows/version-control.md
+# 
+# MAJOR (X.0.0): Breaking changes, architectural paradigm shift
+# MINOR (0.Y.0): New features, new modules (backwards compatible)
+# PATCH (0.0.Z): Bug fixes, performance improvements
+#
+# ALL version changes MUST be logged here with:
+# - timestamp
+# - system_id
+# - version_from / version_to
+# - change_type (MAJOR/MINOR/PATCH)
+# - reason (WHY this change)
+# - changed_by (who approved)
+# - files_affected (complete list)
+# - rollback_command (how to undo)
+# - git_commit (reference)
+# ============================================================
+
+# Template for new entries (add to top of changes list):
+# - timestamp: YYYY-MM-DDTHH:MM:SS+07:00
+#   system_id: [System ID from registry]
+#   version_from: X.Y.Z
+#   version_to: X.Y.Z
+#   change_type: MAJOR | MINOR | PATCH
+#   reason: "[Clear explanation of WHY]"
+#   changed_by: [Name/Role]
+#   files_affected:
+#     - [file path 1]
+#     - [file path 2]
+#   rollback_command: >
+#     [Step-by-step rollback instructions]
+#   git_commit: "[Commit message]"
+#   approved: true | false

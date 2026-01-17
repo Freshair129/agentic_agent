@@ -1,5 +1,5 @@
 """
-MSP (Memory & Soul Passport) Engine (Independent Version: 1.1.0)
+MSP (Memory & Soul Passport) Engine (Independent Version: 2.1.0)
 Manages episodic memory using JSONL format + individual JSON files
 
 

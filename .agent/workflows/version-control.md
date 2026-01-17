@@ -205,5 +205,142 @@ If registry and code disagree:
 
 ---
 
+---
+
+## Step 8: Log Version Changes (MANDATORY)
+
+**EVERY version change MUST be logged** in `registry/version_log.yaml`
+
+### Required Information
+
+```yaml
+- timestamp: 2026-01-18T14:30:00+07:00  # Use current datetime
+  system_id: PhysioCore                  # From registry
+  version_from: 2.4.3
+  version_to: 2.5.0
+  change_type: MINOR                     # MAJOR | MINOR | PATCH
+  reason: "Added new hormone: Ghrelin"   # WHY this change
+  changed_by: USER + Antigravity         # Who approved
+  files_affected:
+    - registry/eva_master_registry.yaml
+    - physio_core/physio_core.py
+    - physio_core/modules/endocrine_engine.py
+  rollback_command: >
+    1. Update registry: PhysioCore version 2.5.0 -> 2.4.3
+    2. Update code: physio_core.py line 2
+    3. Remove Ghrelin module
+    4. git revert [commit_hash]
+  git_commit: "[PhysioCore] v2.5.0: Added Ghrelin hormone support"
+  approved: true
+```
+
+### How to Log
+
+1. **Open** `registry/version_log.yaml`
+2. **Add new entry** at TOP of `changes:` list (newest first)
+3. **Fill all fields** - no field should be empty
+4. **Save** and commit with the same message as `git_commit` field
+
+### Rollback Procedure
+
+To roll back to a previous version:
+
+```bash
+# 1. Find the change entry in version_log.yaml
+# 2. Follow the rollback_command instructions
+# 3. Remove the change entry from version_log.yaml
+# 4. Commit with: [Rollback] System X.Y.Z -> A.B.C
+```
+
+**Example Rollback**:
+
+```yaml
+# Entry to roll back:
+- timestamp: 2026-01-18T14:30:00+07:00
+  system_id: PhysioCore
+  version_from: 2.4.3
+  version_to: 2.5.0
+  rollback_command: >
+    1. Update registry: PhysioCore version 2.5.0 -> 2.4.3
+    2. Update code: physio_core.py line 2
+    3. Remove Ghrelin module
+    4. git revert abc123
+
+# Execute rollback:
+$ # Step 1: Update registry
+$ # Step 2: Update code header
+$ # Step 3: Delete module file
+$ git add .
+$ git commit -m "[Rollback] PhysioCore 2.5.0 -> 2.4.3 (removed Ghrelin)"
+$ # Step 4: Remove this entry from version_log.yaml
+```
+
+---
+
+## Step 9: Audit Trail
+
+### View Full Version History
+
+```bash
+# All changes to a specific system
+grep -A 10 "system_id: PhysioCore" registry/version_log.yaml
+
+# Changes within date range
+grep "2026-01" registry/version_log.yaml
+
+# Approved vs Pending changes
+grep "approved: false" registry/version_log.yaml
+```
+
+### Compliance Report
+
+```python
+# scripts/version_audit.py
+import yaml
+from datetime import datetime
+
+log = yaml.safe_load(open("registry/version_log.yaml"))
+
+print("Version Change Audit Report")
+print(f"Baseline Date: {log['baseline_date']}")
+print(f"Total Changes: {len(log['changes'])}")
+
+for change in log['changes']:
+    print(f"\n{change['timestamp']}: {change['system_id']}")
+    print(f"  {change['version_from']} → {change['version_to']}")
+    print(f"  Reason: {change['reason']}")
+    print(f"  Approved: {change['approved']}")
+```
+
+---
+
+## Common Scenarios
+
+### Scenario 1: Adding a New System
+
+1. Decide initial version (usually `2.0.0` for new v9 systems)
+2. Add to registry with `version` field
+3. Add version header to code
+4. Update `root_slots` if needed
+5. **Log the change** in `version_log.yaml`:
+
+```yaml
+- timestamp: [now]
+  system_id: NewSystem
+  version_from: null  # New system
+  version_to: 2.0.0
+  change_type: MAJOR
+  reason: "Initial implementation of NewSystem"
+  changed_by: [Your Name]
+  files_affected: [...]
+  rollback_command: >
+    Delete all NewSystem files and remove from registry
+  git_commit: "[NewSystem] v2.0.0: Initial implementation"
+  approved: true
+```
+
+---
+
 **Enforcement**: Version mismatches are detected during code review.  
-**Tool**: Consider adding `check_versions.py` to pre-commit hooks.
+**Tool**: Consider adding `check_versions.py` to pre-commit hooks.  
+**Audit**: All version changes are logged in `registry/version_log.yaml` for compliance and rollback.
