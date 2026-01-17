@@ -58,10 +58,15 @@ systems:
     role: system_authority
     
     # [Manifest: Structure]
-    # NOTE: PhysioCore is a STRUCTURAL EXCEPTION (ADR-015)
+    # NOTE: PhysioCore is a STRUCTURAL EXCEPTION (ADR-015, ADR-017)
     # Uses legacy logic/ directory, not v9.4.3 Module/Node structure
+    # Reason: Verified Stable + Performance Critical (30Hz loop)
+    structure_standard: exception
+    exception_reason: "Performance critical (30Hz loop), Verified Stable, ADR-015"
     root_presence: true
     manifest:
+      follows_standard: false
+      config_location: local
       folders:
         - physio_core/logic           # Legacy structure (22 files)
         - physio_core/configs
