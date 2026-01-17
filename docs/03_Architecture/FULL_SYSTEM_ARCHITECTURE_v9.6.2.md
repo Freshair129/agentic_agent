@@ -23,69 +23,66 @@ graph TD
     end
 
     %% ==========================================
-    %% 2. REFLEX LAYER (O1 - Fast Recall)
+    %% 2. ORCHESTRATION & REFLEX
     %% ==========================================
-    subgraph Reflex ["Layer 1: REFLEX (Fast Recall)"]
+    subgraph CNS ["Step 0: ORCHESTRATION"]
+        OrchStart{"Orchestrator<br/>(Input Handler)"}
         EngramCheck{"Engram System<br/>(Cache Hit?)"}
-        EngramAction["⚡ Reflex Action<br/>(O(1) Response)"]
     end
 
+    UserIn --> OrchStart
     OrchStart --> EngramCheck
-    EngramCheck -- "YES (Confident)" --> EngramAction
-    EngramAction --> FinalOut
 
     %% ==========================================
-    %% 3. PERCEPTION LAYER (P1 - Intent)
+    %% 3. THE GAP (Embodiment & State Update)
     %% ==========================================
-    subgraph Perception ["Layer 2: PERCEPTION (Intent & Signal)"]
-        SLM["SLM Bridge<br/>(Small Language Model)"]
-        ExtractIntent["🔍 Extract Intent<br/>& Sentiment"]
-    end
-
-    EngramCheck -- "NO (Deep Process)" --> SLM
-    SLM --> ExtractIntent
-
-    %% ==========================================
-    %% 4. THE GAP (Bio-Digital Bridge)
-    %% ==========================================
-    subgraph Gap ["Layer 3: THE GAP (Embodiment)"]
+    %% CRITICAL: All paths must update Physio State
+    subgraph Gap ["Layer 2: THE GAP (State Update)"]
         direction TB
-        Stimulus["Stimulus Injection"]
         
-        subgraph Body ["Biological State"]
-            Physio["PhysioCore<br/>(Hormones/Vitals)"]
+        Physio["PhysioCore<br/>(Update Cycle)"]
+        Matrix["EVA Matrix<br/>(State Drift)"]
+        
+        subgraph Perception ["Perception Route (Miss)"]
+            SLM["SLM Bridge"]
+            ExtractIntent["Extract Intent"]
         end
         
-        subgraph Mind ["Psychological State"]
-            Matrix["EVA Matrix<br/>(Emotion Drift)"]
-        end
-
-        subgraph Memory ["Subjective Memory"]
-            RAG["Agentic RAG<br/>(7-Stream Recall)"]
-            Qualia["Artifact Qualia<br/>(Texture)"]
+        subgraph Reflex ["Reflex Route (Hit)"]
+            FetchCached["Fetch Cached Pattern"]
         end
     end
 
-    ExtractIntent --> Stimulus
-    Stimulus --> Physio
-    Physio --> Matrix
-    Matrix --> RAG
-    RAG --> Qualia
+    %% Routing
+    EngramCheck -- "YES (Reflex)" --> FetchCached
+    EngramCheck -- "NO (Deep)" --> SLM
+
+    %% Logic Flow
+    SLM --> ExtractIntent
+    ExtractIntent -->|Stimulus| Physio
+    FetchCached -->|No Stimulus| Physio
+    
+    Physio -->|New State| Matrix
 
     %% ==========================================
-    %% 5. REASONING LAYER (P2 - Synthesis)
+    %% 4. CONTEXT & REASONING (Synthesis)
     %% ==========================================
-    subgraph Reason ["Layer 4: REASONING (Synthesis)"]
-        CIM["CIM Injector<br/>(Context Assembly)"]
-        LLM["LLM Core<br/>(Gemini/Ollama)"]
+    %% CRITICAL: CIM must inject State into LLM regardless of path
+    subgraph Reason ["Layer 3: REASONING (State Awareness)"]
+        CIM["CIM Injector<br/>(Merge State+Data)"]
+        LLM["LLM Core<br/>(Generate Response)"]
     end
 
-    Qualia --> CIM
-    CIM --> LLM
+    Matrix -->|9D State| CIM
+    ExtractIntent -->|Intent| CIM
+    FetchCached -->|Pattern| CIM
+    
+    CIM -->|Prompt: State + Data| LLM
 
     %% ==========================================
-    %% 6. OUTPUT & PERSISTENCE
+    %% 5. OUTPUT & PERSISTENCE
     %% ==========================================
+
     subgraph Save ["Layer 5: PERSISTENCE"]
         MSP["MSP Authority<br/>(Save Episode)"]
     end
