@@ -68,7 +68,6 @@ These systems are **EXEMPT** from v9.4.3 standard structure:
 | **PhysioCore** | Performance Critical (30Hz loop), 22 files | `logic/` directory | 305 lines + logic/ |
 | **MSP** | Legacy memory engine, Verified Stable | Custom structure | 2454 lines |
 | **Orchestrator** | Central control, highly coupled to all systems | `cim/` + `session_manager/` | 931 lines + 49 CIM files |
-| **GKS** | JSON-based knowledge system, data-centric design | Flat JSON structure | JSON files + modules |
 
 **Audit Date**: 2026-01-18  
 **Reference**: ADR-015 (GSD Governance Scope)
@@ -78,10 +77,10 @@ These systems are **EXEMPT** from v9.4.3 standard structure:
 - **PhysioCore**: 30Hz performance loop cannot tolerate refactoring overhead
 - **MSP**: 2454-line memory engine with complex state management
 - **Orchestrator**: Orchestrates PhysioCore, Matrix, MSP, AgenticRAG - changing structure breaks integration
-- **GKS**: Knowledge representation via JSON is more appropriate than code structure
 
 **NOT Exceptions** (Must follow v9.4.3):
 
+- **GKS** ✅ (follows v9.4.3, uses `chains` for knowledge storage like MSP)
 - EVA_Matrix ✅ (has Module/, needs Node/)
 - Artifact_Qualia ✅ (has Module/, needs Node/)
 - RMS (simple 184-line single file, easy to migrate)
