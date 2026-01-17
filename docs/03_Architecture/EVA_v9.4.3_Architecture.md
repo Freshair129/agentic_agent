@@ -162,7 +162,7 @@ agent/
 - **Shortcuts:** The `tools/` and `skills/` in Consciousness act as API definitions or Symlinks to the actual code.
 - **Memory Flow:**
   - Session Start: Load relevant blocks to `consciousness/memory`.
-  - Session End: Flush `consciousness/memory` to `memory/session_memory` (via MSP).
+  - Session End: Snapshot the entire `consciousness/` folder to `memory/session_memory` (via MSP).
 หัวใจการออกแบบของเราตอนนี้คือ doc to code นะ เพราะฉะนั้นจะแก้อะไรแก้ไฟล์ yaml,md ก่อน
 
 ---
@@ -231,7 +231,7 @@ agent/
 
 ### 1. Memory Layers (Redefined)
 - **Consciousness (Buffer)**: The "Awareness Domain" where the LLM lives and has full R/W authority.
-- **Session (Working Memory)**: Raw logs and snapshots of finished interactions.
+- **Session (Working Memory)**: คลังความจำเหตุการณ์ (Raw Snapshots) ที่เก็บโฟลเดอร์ `consciousness/` ทั้งหมดหลังจากจบ Session
 - **Core (Short-Term)**: 8-session distillation (Clean, Summary, Index, Relation).
 - **Sphere (Long-Term)**: 8-core / 64-session wisdom (Identity DNA).
 
