@@ -43,7 +43,7 @@ class ArtifactQualiaSystem:
         self.base_path = base_path or Path(".")
         self.msp = msp
         self.bus = bus
-        self.state_file = self.base_path / "system_state/artifact_qualia_state.json"
+        self.state_file = self.base_path / "consciousness/state_memory/artifact_qualia_state.json"
         
         # Load Configuration (SSOT)
         self.config = {}

@@ -15,7 +15,7 @@ class UserRegistryManager:
     Handles speaker identification, auto-registration, and profile management.
     """
     
-    def __init__(self, registry_path: str = "eva/memory/user_registry.json"):
+    def __init__(self, registry_path: str = "memory/user_registry.json"):
         self.registry_path = Path(registry_path)
         self.users: Dict[str, dict] = {}
         self.active_user: Optional[str] = None

@@ -10,7 +10,7 @@ import os
 from typing import List, Dict, Any, Optional
 
 class ChromaVectorBridge:
-    def __init__(self, persistence_path: str = "eva/memory/vector_store", collection_name: str = "eva_memories"):
+    def __init__(self, persistence_path: str = "memory/vector_store", collection_name: str = "eva_memories"):
         """
         Initialize ChromaDB Client and Sentence Transformer Model.
         """

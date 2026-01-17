@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
 
 class QualiaStorageNode:
     """
@@ -23,10 +23,32 @@ class QualiaStorageNode:
         
         self.base_path.mkdir(parents=True, exist_ok=True)
 
-    def write_sensory_record(self, sensory_data: Dict[str, Any]):
+    def append_sensory_record(self, record: Dict[str, Any]) -> bool:
         """
-        Appends sensory data to the sensory log.
+        Appends a sensory record to the log.
         """
         log_path = self.base_path / self.log_filename
-        with open(log_path, 'a', encoding='utf-8') as f:
-            f.write(json.dumps(sensory_data, ensure_ascii=False) + "\n")
+        try:
+            with open(log_path, 'a', encoding='utf-8') as f:
+                f.write(json.dumps(record, ensure_ascii=False) + "\n")
+            return True
+        except Exception:
+            return False
+
+    def read_sensory_log(self) -> List[Dict[str, Any]]:
+        """
+        Reads the sensory log and returns all records.
+        """
+        log_path = self.base_path / self.log_filename
+        if not log_path.exists():
+            return []
+            
+        records = []
+        with open(log_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                if line.strip():
+                    try:
+                        records.append(json.loads(line))
+                    except (json.JSONDecodeError, Exception):
+                        continue
+        return records

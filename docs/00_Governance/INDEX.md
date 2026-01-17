@@ -21,6 +21,7 @@
 
 - [**High-Level Architecture**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_v9.4.3_Architecture.md): โครงสร้างโฟลเดอร์และหลักการ Consciousness-Implementation Separation
 - [**Operational Flow (v9.4.3)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/OPERATIONAL_FLOW_v9.4.3.md): ลำดับการทำงานของ Runtime Hooks (Engram -> SLM -> Gap -> LLM)
+- [**Consciousness Domain Structure**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/CONSCIOUSNESS_DOMAIN_STRUCTURE.md): โครงสร้าง Awareness Domain และพื้นที่การทำงานของ LLM
 - [**MSP Storage ERD**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/v9.4.3_SYSTEM_STORAGE_ERD.md): แผนผังการถือครองข้อมูลและการเชื่อมโยง Entity
 
 ### [04. Systems (ระบบอวัยวะ)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/04_Systems/)

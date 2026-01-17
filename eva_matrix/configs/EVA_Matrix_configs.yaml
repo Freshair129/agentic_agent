@@ -74,7 +74,7 @@ emotion_categories:
 # 4. RUNTIME INTEGRATION
 # ============================================================
 runtime_hook:
-  persistence_file: "eva/consciousness/state_memory/eva_matrix_state.json"
+  persistence_file: "consciousness/state_memory/eva_matrix_state.json"
   reflex_thresholds:
     high_stress: 0.85
     concise_mode: true

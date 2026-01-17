@@ -1,7 +1,13 @@
 from typing import Dict, Any, Optional, List
 from .Node.GroundingNode import GroundingNode
+import sys
+from pathlib import Path
 
-class SemanticMemoryModule:
+# Add contracts path for import
+sys.path.append(str(Path(__file__).parent.parent.parent.parent.resolve()))
+from contracts.modules.IMemoryStorage import IMemoryStorage
+
+class SemanticMemoryModule(IMemoryStorage):
     """
     Manages situational knowledge and validates it against historical truths.
     Implements the "Situation Grounding" buffer.
@@ -29,3 +35,23 @@ class SemanticMemoryModule:
             fact["conflict_details"] = conflict
             results.append(fact)
         return results
+
+    # --- IMemoryStorage Implementation ---
+
+    def store_episode(self, episode_data: Dict[str, Any]) -> bool:
+        """Extracts and stores semantic facts from an episode."""
+        proposals = episode_data.get("situation_context", {}).get("knowledge_proposals", [])
+        if proposals:
+            self.process_new_knowledge(proposals, {})
+            # Actually store them in GroundingNode/SemanticDB
+            for prop in proposals:
+                self.grounding.persist_fact(prop)
+            return True
+        return False
+
+    def update_semantic_node(self, node_id: str, updates: Dict[str, Any]) -> bool:
+        """Reinforces or updates a specific semantic node."""
+        return self.grounding.update_fact(node_id, updates)
+
+    def archive_session(self, session_id: str) -> str:
+        return f"SEM_ARCHIVE_{session_id}"

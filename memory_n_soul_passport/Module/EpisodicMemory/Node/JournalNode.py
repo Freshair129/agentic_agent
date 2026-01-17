@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import datetime
 
 class JournalNode:
@@ -55,11 +55,11 @@ class JournalNode:
         
         return results
 
-    def _write_json(self, path: Path, data: Dict[str, Any]):
+    def _write_json(self, path: Path, data: Dict[str, Any]) -> None:
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=self.config.get("global", {}).get("json_indent", 4), ensure_ascii=False)
 
-    def append_to_log(self, episode_summary: Dict[str, Any]):
+    def append_to_log(self, episode_summary: Dict[str, Any]) -> None:
         """
         Appends a summary line to episodic log.
         """
@@ -67,3 +67,48 @@ class JournalNode:
         
         with open(log_path, 'a', encoding='utf-8') as f:
             f.write(json.dumps(episode_summary, ensure_ascii=False) + "\n")
+
+    def read_log(self) -> List[Dict[str, Any]]:
+        """
+        Reads the episodic log and returns a list of summaries.
+        """
+        log_path = self.base_path / self.log_filename
+        if not log_path.exists():
+            return []
+        
+        summaries = []
+        with open(log_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                if line.strip():
+                    try:
+                        summaries.append(json.loads(line))
+                    except (json.JSONDecodeError, Exception):
+                        continue
+        return summaries
+
+    def read_full_episode(self, episode_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Reads a full episode by ID.
+        """
+        path = self.episodes_path / f"{episode_id}.json"
+        if not path.exists():
+            return None
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, Exception):
+            return None
+
+    def update_episode(self, episode_id: str, updated_data: Dict[str, Any]) -> bool:
+        """
+        Updates an existing episode (GSD: Belief Revision Support).
+        """
+        path = self.episodes_path / f"{episode_id}.json"
+        if not path.exists():
+            return False
+        
+        try:
+            self._write_json(path, updated_data)
+            return True
+        except Exception:
+            return False

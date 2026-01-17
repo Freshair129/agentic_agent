@@ -30,6 +30,13 @@ How entities combine to create complexity:
 - **Module + System = System**
 - **System + System = Core System / Organism**
 
+### 🧩 2.1 Decoupling Law (The Resonance Standard)
+
+- **Direct Coupling Forbidden**: Systems (Physio, Matrix, Qualia) must not call each other's methods directly.
+- **Signal-First Interaction**: Interaction must be decentralized via the **Resonance Bus**.
+- **Orchestrator as Trigger**: The Orchestrator initiates the cycle, but logical propagation is handled by component subscriptions.
+- **Subconscious Persistence**: The MSP engine acts as a passive listener, automatically latching snapshots from the bus to maintain state.
+
 ---
 
 ## 🔐 3. Permission & Communication Boundaries
@@ -73,6 +80,26 @@ Standards for upgrading an entity when its scope expands:
 
 ---
 
+## 🏗️ 5. Implementation Standards (GSD & Versioning)
+
+### GSD (Goal-State Driven) Implementation
+
+All Level 4 (Node) and Level 5 (Component) code must adhere to:
+
+- **Strict Type Hinting**: 100% type annotations for inputs and outputs.
+- **Robust I/O**: Operations wrapped in try/except with standardized fallback.
+- **Logic-Data Separation**: Parameters resolved from `config` during initialization.
+
+### Independent Versioning (ADR-011)
+
+Subsystems evolve independently following the **Legacy mapping rule**:
+
+- `8.x.x` → `1.x.x`
+- `9.x.x` → `2.x.x`
+Authoritative versions are stored in `core_systems.yaml` and mirrored in file headers.
+
+---
+
 ## 📂 5. Directory Mapping (SSOT)
 
 ```text
@@ -86,4 +113,3 @@ Standards for upgrading an entity when its scope expands:
 ```
 
 *Note: PhysioCore is exempt from the Module/Node naming pattern due to complex coupling.*
-

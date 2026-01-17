@@ -1,0 +1,24 @@
+{
+  "data": {
+    "autonomic": {
+      "sympathetic": 0.0,
+      "parasympathetic": 0.0
+    },
+    "blood": {
+      "ESC_H01_ADRENALINE": 50000.0,
+      "ESC_H02_CORTISOL": 25000.0,
+      "ESC_N02_DOPAMINE": 25000.0,
+      "ESC_N03_SEROTONIN": 505000.0,
+      "ESC_H04_OXYTOCIN": 10000.0
+    },
+    "vitals": {
+      "bpm": 1964.3,
+      "rpm": 489.1,
+      "vagus_tone": 0,
+      "breath_phase": 4.402104345965043,
+      "hrv_index": 0.7
+    },
+    "timestamp": "2026-01-15T05:04:47.784556"
+  },
+  "timestamp": "2026-01-15T05:04:47.784563"
+}

@@ -142,6 +142,17 @@ agent/
 └── memory_n_soul_passport/   # [SYSTEM] MSP - Memory OS & Custodian (Locked)
     ├── configs/              # MSP configs
     ├── schema/               # Memory schemas
+    ├── Module/               # [NEW] Delegated Logic Modules
+    │   ├── EpisodicMemory/
+    │   │   └── Node/
+    │   │       └── JournalNode/
+    │   ├── SemanticMemory/
+    │   │   └── Node/
+    │   │       └── GroundingNode/
+    │   └── SensoryMemory/
+    │       └── Node/
+    │           └── QualiaStorageNode/
+    └── memory_n_soul_passport_engine.py # Facade
 
 
 ├── operation_system/         # [SYSTEM] Core Identity & Bus Management (Locked)
@@ -164,6 +175,31 @@ agent/
   - Session Start: Load relevant blocks to `consciousness/memory`.
   - Session End: Snapshot the entire `consciousness/` folder to `memory/session_memory` (via MSP).
 หัวใจการออกแบบของเราตอนนี้คือ doc to code นะ เพราะฉะนั้นจะแก้อะไรแก้ไฟล์ yaml,md ก่อน
+
+---
+
+## 📡 Resonance Bus Architecture (v2.4.3)
+
+The Central Nervous System of EVA v9.4.3 is the **Resonance Bus**, a decentralized, subscriber-based communication hub.
+
+- **Role:** Replaces direct system-to-system method calls.
+- **Pattern:** Publish/Subscribe (Decoupled).
+- **Core Channels:**
+  - `BUS_PHYSICAL` (PhysioCore -> Matrix)
+  - `BUS_PSYCHOLOGICAL` (Matrix -> Qualia)
+  - `BUS_PHENOMENOLOGICAL` (Qualia -> MSP)
+- **Passive Persistence:** The MSP Engine acts as a "Subconscious Listener," automatically latching state snapshots from the bus to maintain system continuity.
+- **Reference:** `docs/adr/012_resonance_bus_state_decoupling.md`
+
+## 🏷️ Independent Versioning Standard (ADR-011)
+
+EVA v9.4.3 adopts a decoupled versioning strategy to allow subsystems to evolve independently while maintaining historical context.
+
+- **Global Context:** v9.4.3 (The Orchestrator/Integration Layer)
+- **Subsystem Logic:**
+  - Legacy `8.x.x` → `1.x.x` (e.g., MSP v1.1.0)
+  - Legacy `9.x.x` → `2.x.x` (e.g., PhysioCore v2.4.3)
+- **System of Record:** `core_systems.yaml`
 
 ---
 

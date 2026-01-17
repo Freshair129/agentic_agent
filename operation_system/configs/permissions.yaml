@@ -25,7 +25,7 @@ classification_criteria:
       state_ownership: true
       continuous_runtime: true
       slot_creation: true
-      parent: "root (eva/ or orchestrator/)"
+      parent: "root (agent/)"
     examples:
       - PhysioCore
       - EVAMatrix
@@ -125,7 +125,7 @@ state_ownership:
   rule: "Only Systems own persistent state slots in MSP."
   
   mandatory_state:
-    description: "These Systems MUST have state files in eva/consciousness/state_memory/"
+    description: "These Systems MUST have state files in consciousness/state_memory/"
     systems:
       - system: PhysioCore
         state_file: physio_core_state.json
@@ -171,8 +171,8 @@ slot_creation:
   systems:
     description: "Systems automatically have root slot rights."
     examples:
-      - eva/consciousness/state_memory/physio_core_state.json
-      - eva/consciousness/state_memory/rms_state.json
+      - consciousness/state_memory/physio_core_state.json
+      - consciousness/state_memory/rms_state.json
 
   central_modules:
     description: "Central Modules may create slots at services/ or operation_system/ root."
@@ -265,7 +265,7 @@ memory_domains:
 
   domain_ownership:
     live_consciousness:
-      path: "eva/consciousness/"
+      path: "consciousness/"
       owner: "EVA"
       mutability: "Mutable"
       authority: "EVA has absolute write authority"
@@ -278,20 +278,20 @@ memory_domains:
         - sphere_memory/
 
     context_storage:
-      path: "eva/memory/context_storage/"
+      path: "memory/context_storage/"
       owner: "CIM"
       mutability: "Mutable (Turn-only)"
       authority: "CIM manages working context buffers"
 
     state_memory:
-      path: "eva/consciousness/state_memory/"
+      path: "consciousness/state_memory/"
       owner: "Systems (PhysioCore, Matrix, RMS, etc.)"
       mutability: "Append-Only (JSONL for hot cache)"
       authority: "Each System owns its state file"
       format: "state_memory/{system}_state.json"
 
     archival_memory:
-      path: "eva/memory/archival_memory/"
+      path: "memory/archival_memory/"
       owner: "MSP"
       mutability: "Immutable"
       authority: "MSP is sole custodian of frozen archives"
@@ -300,16 +300,16 @@ memory_domains:
   ownership_rules:
     - "Ownership is absolute and must never be inferred implicitly."
     - "Memory flows forward only (no reverse write)."
-    - "MSP never writes to eva/consciousness/"
-    - "EVA never modifies eva/memory/archival_memory/"
-    - "LLM has full R/W access to eva/consciousness/ (all layers)"
-    - "LLM has NO access to eva/memory/archival_memory/"
+    - "MSP never writes to consciousness/"
+    - "EVA never modifies memory/archival_memory/"
+    - "LLM has full R/W access to consciousness/ (all layers)"
+    - "LLM has NO access to memory/archival_memory/"
 
   llm_domain_access:
     description: "LLM is the primary actor for EVA's lived experience"
     
     eva_consciousness:
-      path: "eva/consciousness/*"
+      path: "consciousness/*"
       read: true
       write: true
       modify: true
@@ -325,27 +325,19 @@ memory_domains:
       note: "Full R/W access to EVA's lived experience"
     
     eva_consciousness_indexes:
-      path: "eva/consciousness/indexes/*"
+      path: "consciousness/indexes/*"
       read: true
       write: false
       modify: false
       note: "Auto-generated indices (MSP managed)"
     
     eva_context_storage:
-      path: "eva/memory/context_storage/"
+      path: "memory/context_storage/"
       read: true
       write: true
       modify: true
       note: "Working memory for current turn"
     
-    eva_system_state:
-      path: "eva/system_state/*"
-      read: true
-      write: false
-      modify: false
-      owner: "Systems (PhysioCore, Matrix, RMS, CIM, AQI)"
-      note: "System-owned state. LLM can read for context but cannot modify."
-      enforcement: "CRITICAL FAULT if LLM writes to system_state"
 
 # ============================================================
 # 9. BOUNDARY GUARANTEES (Runtime Enforcement)
@@ -367,11 +359,11 @@ boundary_guarantees:
   llm_isolation:
     rule: "LLM has full access to Consciousness but never to Archive"
     allowed:
-      - "Read from eva/consciousness/ (all memory layers)"
-      - "Write to eva/consciousness/ (via propose_episodic_memory tool)"
-      - "Modify working context in eva/memory/context_storage/"
+      - "Read from consciousness/ (all memory layers)"
+      - "Write to consciousness/ (via propose_episodic_memory tool)"
+      - "Modify working context in memory/context_storage/"
     forbidden:
-      - "Direct write to eva/memory/archival_memory/"
+      - "Direct write to memory/archival_memory/"
       - "Bypass MSP for persistence"
     note: >
       LLM is the primary actor for EVA's lived experience.
@@ -381,7 +373,7 @@ boundary_guarantees:
   system_isolation:
     rule: "Systems and Services never bypass MSP"
     allowed: "Emit signals to Resonance Bus"
-    forbidden: "Direct file write to eva/consciousness/ or eva/memory/"
+    forbidden: "Direct file write to consciousness/ or memory/"
 
   archive_immutability:
     rule: "Archived memory is immutable forever"

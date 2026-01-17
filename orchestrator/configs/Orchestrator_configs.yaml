@@ -21,7 +21,7 @@ orchestrator:
     llm_backend: "gemini"
     ollama_model: "qwen3:4b"
     ollama_context_window: 32768
-    context_storage_path: "eva/consciousness/context_storage/context_storage.json"
+    context_storage_path: "consciousness/context_storage/context_storage.json"
     recording_active: true
     
     # Cognitive Strategy (V9.3.0G+)

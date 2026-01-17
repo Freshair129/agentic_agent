@@ -5,6 +5,30 @@ All notable changes to the EVA Core project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.4.3-ResonanceRefactored] - 2026-01-17
+
+### Added
+
+- **Resonance Bus Architecture**: Implemented a decentralized communication hub using a subscriber-based pattern.
+  - **Decoupling**: Removed direct dependencies between `PhysioCore`, `EVAMatrix`, and `ArtifactQualia`.
+  - **IResonanceBus**: Formally defined the interface for stable messaging across components.
+  - **Passive Persistence**: MSP now functions as a "Subconscious Listener," automatically latching state snapshots from the bus.
+  - **ADR-012**: Documented the "Resonance Bus State Decoupling" architecture.
+- **SOLID Memory Delegation**: Refactored the MSP engine into a pure facade with specialized modules.
+  - **Modules**: Created `EpisodicMemoryModule`, `SemanticMemoryModule`, and `SensoryMemoryModule`.
+  - **Interfaces**: Implemented `IMemoryRetrieval` and `IMemoryStorage` contracts for all modules.
+  - **Nodes**: Finalized `JournalNode`, `GroundingNode`, and `QualiaStorageNode` with robust logic and 100% type hinting.
+  - **ADR-013**: Documented the "GSD Node Implementation Pattern".
+- **GSD Implementation**: Enforced Goal-State Driven standards across new components, focusing on type safety and error resilience.
+- **Technician Subagent**: Implemented `technician_subagent.py` for token-optimized, large-scale file modifications via `task_order.yaml`.
+- **System Codification**: Formalized core laws into `.agent/rules/resonancestandard.md` and workflows into `.agent/workflows/`.
+
+### Changed
+
+- **Orchestrator Refine**: Simplified `Orchestrator._execute_the_gap` to act as a trigger, relying on the Resonance Bus for signal propagation.
+- **Component Versioning**: Synchronized all file headers and documentation with the independent versioning system (e.g., PhysioCore v2.4.3, MSP v1.1.0).
+- **Consolidated State**: Merged all "Locked" state files into the `consciousness/state_memory/` root for unified governance.
+
 ## [9.4.3-MemoryProtocolRefactor] - 2026-01-17
 
 ### Added

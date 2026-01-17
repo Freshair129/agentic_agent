@@ -236,76 +236,45 @@ class EVAOrchestrator:
     def _execute_the_gap(self, stimulus: Dict[str, Any], query_text: str = "") -> Dict[str, Any]:
         """
         Execute The Gap: Biological processing without LLM.
-        
-        Args:
-            stimulus: Extracted from sync_biocognitive_state() call
-            query_text: Raw user input for re-ranking
-            
-        Returns:
-            Rich bio state to feed back to LLM for embodied reasoning
+        Signal driven via Resonance Bus (9.4.3 Architecture).
         """
         safe_print("\n⚡ STEP 2: The Gap - Bio-Digital Sync")
         
-        # [NEW] Configuration Binding: Chunking Protocol
-        chunk_cfg = self.config_data.get("chunking_protocol", {})
-        max_chunks = chunk_cfg.get("max_chunks", 1)
-        delay_ms = chunk_cfg.get("digestion_delay_ms", 0)
+        # 1. Start Physio Step (Starts the chain: Physio -> Matrix -> Qualia)
+        # We still call .step() to control the 'clock', but result propagation is via BUS.
+        physio_result = self.physio.step(
+            eva_stimuli=[stimulus],
+            zeitgebers={"active": 0.5},
+            dt=60.0
+        )
+        safe_print(f"  - [Bus Trigger] Physiological step completed. Signals propagated.")
         
-        # 1. Physio Core Processing (with Chunking Simulation)
-        safe_print(f"  - [Process A] Physio Core: Chunking hormonal response (Max: {max_chunks})...")
+        # 2. Wait/Process: Matrix & Qualia were updated via Bus Subscription
+        # We pull the latest result from MSP (which acts as ground truth) for LLM injection
+        matrix_snap = self.matrix.axes_9d
+        emotion_label = self.matrix.emotion_label
+        qualia_snap = self.qualia.last_qualia
         
-        physio_result = {}
-        for i in range(max_chunks):
-            # Split processing if needed, for now we run master step and simulate chunks
-            physio_result = self.physio.step(
-                eva_stimuli=[stimulus] if i == 0 else [], # Apply stimulus on first chunk
-                zeitgebers={"active": 0.5},
-                dt=60.0 / max_chunks
-            )
-            safe_print(f"    [Chunk {i+1}/{max_chunks}] Processing signal: {stimulus.get('salience_anchor', 'N/A')}")
-            
-            if delay_ms > 0:
-                time.sleep(delay_ms / 1000.0)
-
-        safe_print(f"  - [Sync Complete] Physiological state updated.")
+        qualitative_exp = f"Intensity: {qualia_snap.intensity:.2f}, Tone: {qualia_snap.tone}"
+        safe_print(f"  - Latest Qualia: {qualitative_exp}")
         
-        # 2. Matrix Update
-        safe_print("  - [Process B] EVA Matrix: Recalculating psychological state...")
-        matrix_result = self.matrix.process_signals(physio_result.get("blood", {}))
+        # 3. Two-Stage RAG (Keep as direct call for sync response)
+        safe_print("  - [Process C] Two-Stage RAG: Retrieving memories...")
         
-        # 3. Qualia Generation
-        qualia_snap = self.qualia.process_experience()
-        qualitative_exp = f"Intensity: {qualia_snap.get('intensity', 0.8):.2f}, Tone: {qualia_snap.get('tone', 'neutral')}"
-        safe_print(f"  - Qualia Color: {qualia_snap.get('tone', 'neutral')} | Experience: {qualitative_exp}")
-        
-        # 4. Two-Stage RAG
-        # 4. Two-Stage RAG: Correctly call Fast + Deep retrieval
-        safe_print("  - [Process C] Two-Stage RAG: Quick Recall (parallel) + Deep Recall...")
-        
-        # Stage 1: Quick Recall
-        quick_query = {
-            "tags": stimulus.get("tags", []),
-            "context_id": "auto"
-        }
+        quick_query = {"tags": stimulus.get("tags", []), "context_id": "auto"}
         quick_matches = self.agentic_rag.retrieve_fast(quick_query)
-        safe_print(f"  - Quick Recall: {len(quick_matches)} matches")
 
-        # Stage 2: Deep Recall
         deep_query = {
             "tags": stimulus.get("tags", []),
             "ans_state": physio_result.get("autonomic", {}),
             "blood_levels": physio_result.get("blood", {}),
-            "qualia_texture": qualia_snap
+            "qualia_texture": self.qualia.integrator.get_internal_state().get("last_snapshot", {})
         }
         deep_matches = self.agentic_rag.retrieve_deep(deep_query)
-        safe_print(f"  - Deep Recall: {len(deep_matches)} matches")
-
-        # Merge results with Cross-Encoder Reranking
         unique_memories = self.agentic_rag.merge_results(quick_matches, deep_matches, user_query=query_text)
-        safe_print(f"  - Merged & Reranked: {len(unique_memories)} highly relevant episodes")
         
-        # 5. RMS scan
-        safe_print(f"  - RMS: Scanning for '{matrix_result.get('emotion_label', 'neutral')}' resonance chains...")
+        # 4. RMS scan
+        safe_print(f"  - RMS: Scanning for '{emotion_label}' resonance chains...")
         
         # 6. Format for LLM Continuation
         return {

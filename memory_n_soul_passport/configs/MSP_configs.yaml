@@ -131,7 +131,7 @@ storage_structure:
   # 08: STATE STORAGE (Active bio-cognitive)
   state:
     enabled: true
-    path: "system_state"
+    path: "consciousness/state_memory"
     formats:
       active_state: { filename: "active_state.json" }
   # 09: CONTEXT STORAGE (Working buffers)

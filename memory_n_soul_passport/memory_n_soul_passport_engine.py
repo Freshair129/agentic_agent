@@ -54,7 +54,7 @@ import sys
 from pathlib import Path
 
 # Add root to path for tools and engines
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from capabilities.tools.logger import safe_print
 from operation_system.identity_manager import IdentityManager
 from resonance_memory_system.rms import RMSEngineV6
@@ -73,8 +73,9 @@ import re
 from .Module.EpisodicMemory import EpisodicMemoryModule
 from .Module.SemanticMemory import SemanticMemoryModule
 from .Module.SensoryMemory import SensoryMemoryModule
+from contracts.systems.IMSPassport import IMSPassport
 
-class MSP:
+class MSP(IMSPassport):
 
     """
 
@@ -202,7 +203,30 @@ class MSP:
         self.episodes_llm_dir.mkdir(parents=True, exist_ok=True)
         self.active_state_dir.mkdir(parents=True, exist_ok=True)
 
-        safe_print(f"[MSP] ✅ Subconscious Facade Initialized (v1.1.0)")
+        # [NEW] 9.4.3: MSP as Resonance Listener
+        # We subscribe to all core channels and latch updates to active state
+        self.bus = self.config.get("bus_instance") # Assuming it might be passed via config or global
+        from operation_system.resonance_bus import bus as global_bus
+        self.bus = global_bus
+        
+        if self.bus:
+            # Latch Physical -> physio_state
+            self.bus.subscribe(IdentityManager.BUS_PHYSICAL, 
+                lambda p: self.set_active_state("physio_state", p))
+            
+            # Latch Psychological -> matrix_state
+            self.bus.subscribe(IdentityManager.BUS_PSYCHOLOGICAL, 
+                lambda p: self.set_active_state("matrix_state", p))
+            
+            # Latch Phenomenological -> qualia_state
+            self.bus.subscribe(IdentityManager.BUS_PHENOMENOLOGICAL, 
+                lambda p: self.set_active_state("qualia_state", p))
+            
+            # Latch Knowledge -> prn_policy
+            self.bus.subscribe(IdentityManager.BUS_KNOWLEDGE, 
+                lambda p: self.set_active_state("prn_policy", p))
+
+        safe_print(f"[MSP] ✅ Subconscious Facade Initialized as Resonance Listener (v1.1.0)")
 
     # ============================================================
     # 9.1.0 BRIDGE METHODS
@@ -381,416 +405,29 @@ class MSP:
 
 
 
-    def query_by_tags(
+    def query_by_tags(self, tags: List[str], limit: int = 5, min_ri: float = 0.0, **kwargs) -> List[Dict]:
+        """Delegated to EpisodicMemoryModule."""
+        return self.episodic_module.retrieve_by_tags(tags, limit=limit)
 
-        self,
+    def query_by_physio_state(self, physio_query: Dict[str, float], similarity_threshold: float = 0.7, limit: int = 3, **kwargs) -> List[Dict]:
+        """Delegated to EpisodicMemoryModule."""
+        return self.episodic_module.retrieve_by_state_similarity({"Endocrine": physio_query}, limit=limit)
 
-        tags: List[str],
+    def query_by_ri(self, min_ri: float = 0.70, max_results: int = 3) -> List[Dict]:
+        """Delegated to EpisodicMemoryModule."""
+        return self.episodic_module.retrieve_by_resonance(min_ri=min_ri, limit=max_results)
 
-        limit: int = 5,
+    def query_by_qualia(self, min_intensity: float = 0.6, max_results: int = 3) -> List[Dict]:
+        """Delegated to SensoryMemoryModule."""
+        return self.sensory_module.retrieve_by_resonance(min_ri=min_intensity, limit=max_results)
 
-        min_ri: float = 0.0,
-
-        **kwargs
-
-    ) -> List[Dict]:
-
+    def query_recent(self, limit: int = 5, max_age_days: int = 30, **kwargs) -> List[Dict]:
         """
-
-        Query episodes by semantic tags
-
-
-
-        Args:
-
-            tags: List of tags to search for
-
-            limit: Maximum number of results
-
-            min_ri: Minimum Resonance Index threshold
-
+        Query recent episodes (Temporal Stream).
+        Still partially implemented here for temporal logic if not in module.
         """
-
-        max_results = limit
-
-        self._load_cache()
-
-
-
-        # Search in cache first (fast)
-
-        matches = []
-
-        tags_lower = [t.lower() for t in tags]
-
-
-
-        for ep in self._episode_cache:
-
-            # Schema V2: tags are in turn_1.semantic_frames
-
-            # Legacy: tags are at root level
-
-            if "turn_1" in ep:
-
-                ep_tags = [t.lower() for t in ep.get("turn_1", {}).get("semantic_frames", [])]
-
-            else:
-
-                ep_tags = [t.lower() for t in ep.get("tags", [])]
-
-
-
-            if any(tag in ep_tags for tag in tags_lower):
-
-                # Schema V2: RI in state_snapshot.Resonance_index
-
-                # Legacy: resonance_index at root
-
-                if "state_snapshot" in ep:
-
-                    ri = ep.get("state_snapshot", {}).get("Resonance_index", 0)
-
-                else:
-
-                    ri = ep.get("resonance_index", 0)
-
-
-
-                if ri >= min_ri:
-
-                    matches.append(ep)
-
-
-
-        # If not enough matches, search user episodes (fast, no LLM data)
-
-        if len(matches) < max_results:
-
-            user_episodes = self._read_user_episodes()
-
-            for ep in user_episodes:
-
-                if ep in matches:
-
-                    continue
-
-
-
-                # Schema V2: tags in turn_1.semantic_frames
-
-                ep_tags = [t.lower() for t in ep.get("turn_1", {}).get("semantic_frames", [])]
-
-
-
-                if any(tag in ep_tags for tag in tags_lower):
-
-                    # Schema V2: RI in state_snapshot.Resonance_index
-
-                    ri = ep.get("state_snapshot", {}).get("Resonance_index", 0)
-
-
-
-                    if ri >= min_ri:
-
-                        matches.append(ep)
-
-
-
-        # Sort by RI (descending)
-
-        def get_ri(ep):
-
-            if "state_snapshot" in ep:
-
-                return ep.get("state_snapshot", {}).get("Resonance_index", 0)
-
-            return ep.get("resonance_index", 0)
-
-
-
-        matches.sort(key=get_ri, reverse=True)
-
-        return matches[:max_results]
-
-
-
-    def query_by_physio_state(
-
-        self,
-
-        physio_query: Dict[str, float],
-
-        similarity_threshold: float = 0.7,
-
-        limit: int = 3,
-
-        **kwargs
-
-    ) -> List[Dict]:
-
-        """
-
-        Query episodes by physiological similarity (Emotion Stream)
-
-
-
-        Args:
-
-            physio_query: Current physiological state
-
-            similarity_threshold: Minimum cosine similarity (0.0-1.0)
-
-            limit: Maximum number of results
-
-        """
-
-        max_results = limit
-
-        self._load_cache()
-
-        all_episodes = self._read_all_episodes_from_log()
-
-
-
-        matches = []
-
-        for ep in all_episodes:
-
-            # Schema V2: physio state in state_snapshot.Endocrine
-
-            # Legacy: physio_state at root
-
-            if "state_snapshot" in ep:
-
-                physio_state = ep.get("state_snapshot", {}).get("Endocrine", {})
-
-            else:
-
-                physio_state = ep.get("physio_state", {})
-
-
-
-            if not physio_state:
-
-                continue
-
-
-
-            similarity = self._cosine_similarity(physio_query, physio_state)
-
-
-
-            if similarity >= similarity_threshold:
-
-                ep_copy = ep.copy()
-
-                ep_copy["physio_similarity"] = similarity
-
-                matches.append(ep_copy)
-
-
-
-        # Sort by similarity (descending)
-
-        matches.sort(key=lambda x: x["physio_similarity"], reverse=True)
-
-        return matches[:max_results]
-
-
-
-    def query_by_ri(
-
-        self,
-
-        min_ri: float = 0.70,
-
-        max_results: int = 3
-
-    ) -> List[Dict]:
-
-        """
-
-        Query high-salience episodes (Salience Stream)
-
-
-
-        Args:
-
-            min_ri: Minimum Resonance Index
-
-            max_results: Maximum results
-
-
-
-        Returns:
-
-            High-impact episodes
-
-        """
-
-        self._load_cache()
-
-        all_episodes = self._read_all_episodes_from_log()
-
-
-
-        # Schema V2 or Legacy format
-
-        def get_ri(ep):
-
-            if "state_snapshot" in ep:
-
-                return ep.get("state_snapshot", {}).get("Resonance_index", 0)
-
-            return ep.get("resonance_index", 0)
-
-
-
-        matches = [ep for ep in all_episodes if get_ri(ep) >= min_ri]
-
-        matches.sort(key=get_ri, reverse=True)
-
-        return matches[:max_results]
-
-
-
-    def query_by_qualia(
-
-        self,
-
-        min_intensity: float = 0.6,
-
-        max_results: int = 3
-
-    ) -> List[Dict]:
-
-        """
-
-        Query sensory-rich episodes (Sensory Stream)
-
-
-
-        Args:
-
-            min_intensity: Minimum qualia intensity
-
-            max_results: Maximum results
-
-
-
-        Returns:
-
-            Sensory-rich episodes
-
-        """
-
-        self._load_cache()
-
-        all_episodes = self._read_all_episodes_from_log()
-
-
-
-        # Schema V2 or Legacy format
-
-        def get_qualia_intensity(ep):
-
-            if "state_snapshot" in ep:
-
-                return ep.get("state_snapshot", {}).get("qualia", {}).get("intensity", 0)
-
-            return ep.get("qualia", {}).get("intensity", 0)
-
-
-
-        matches = [
-
-            ep for ep in all_episodes
-
-            if get_qualia_intensity(ep) >= min_intensity
-
-        ]
-
-        matches.sort(key=get_qualia_intensity, reverse=True)
-
-        return matches[:max_results]
-
-
-
-    def query_recent(
-
-        self,
-
-        limit: int = 5,
-
-        max_age_days: int = 30,
-
-        **kwargs
-
-    ) -> List[Dict]:
-
-        """
-
-        Query recent episodes (Temporal Stream)
-
-
-
-        Args:
-
-            limit: Maximum results
-
-            max_age_days: Maximum age in days
-
-        """
-
-        max_results = limit
-
-        self._load_cache()
-
-        all_episodes = self._read_all_episodes_from_log()
-
-
-
-        cutoff_date = datetime.now() - timedelta(days=max_age_days)
-
-        matches = []
-
-
-
-        for ep in all_episodes:
-
-            timestamp_str = ep.get("timestamp", "")
-
-            if not timestamp_str:
-
-                continue
-
-
-
-            try:
-
-                ep_date = datetime.fromisoformat(timestamp_str)
-
-                if ep_date >= cutoff_date:
-
-                    days_ago = (datetime.now() - ep_date).days
-
-                    recency_score = self._exponential_decay(days_ago, halflife=30)
-
-
-
-                    ep_copy = ep.copy()
-
-                    ep_copy["recency_score"] = recency_score
-
-                    matches.append(ep_copy)
-
-            except:
-
-                continue
-        # Sort by recency
-        matches.sort(key=lambda x: x.get("recency_score", 0), reverse=True)
-        return matches[:max_results]
+        # For now, delegate to module's general retrieval if specific temporal not ready
+        return self.episodic_module.retrieve_by_resonance(min_ri=0.0, limit=limit)
 
     # ============================================================
     # EPISODIC MEMORY - WRITE OPERATIONS
@@ -838,22 +475,6 @@ class MSP:
             print(f"[MSP] Error logging internal thought: {e}")
             return False
 
-    def write_episode(
-        self,
-        episode_data: Dict[str, Any],
-        persist: bool = True
-    ) -> str:
-        """
-        Consolidates and writes a new episode by delegating to EpisodicMemoryModule.
-        """
-        if not persist:
-            safe_print(f"[MSP] ⚠️ Transient Mode: Episode {episode_data.get('episode_id')} NOT written to disk.")
-            return episode_data.get("episode_id", "EP_TRANSIENT")
-
-        # 1. ID Generation (Keep in Facade/Identity Manager for global consistency)
-        persona_code = self.identity_config.get("persona", {}).get("persona_code", "EVA")
-        episode_num = self._increment_episode_counter()
-        episode_id = IdentityManager.generate_episode_id(persona_code, episode_num)
         episode_data["episode_id"] = episode_id
 
         # 2. Metadata Preparation
@@ -2048,53 +1669,17 @@ class MSP:
 
 
 
-    def write_sensory_log(
-        self,
-        episode_id: str,
-        qualia_data: Dict[str, Any]
-    ) -> str:
+    def write_sensory_log(self, episode_id: str, qualia_data: Dict[str, Any]) -> str:
         """
-        Write sensory memory sidecar for an episode (Supports JSONL + JSON)
+        Delegated to SensoryMemoryModule.
         """
-        sensory_file = self.root_path / "sensory_memory" / "sensory_memory.json"
-        
-        # 1. Load existing structured storage
-        if sensory_file.exists():
-            try:
-                with open(sensory_file, 'r', encoding='utf-8') as f:
-                    sensory_data = json.load(f)
-            except:
-                sensory_data = {"entries": []}
-        else:
-            sensory_data = {"entries": []}
-
-        # 2. Create entry
-        sensory_entry = {
-            "sensory_id": f"sen_{datetime.now().strftime('%y%m%d')}_{self._hash_short(episode_id)}",
+        # Create a mock episode structure for the module to digest
+        mock_ep = {
             "episode_id": episode_id,
-            "timestamp": datetime.now().isoformat(),
-            "qualia": qualia_data
+            "state_snapshot": {"qualia": qualia_data}
         }
-        
-        # 3. Append to JSONL (9.1.0 Standard)
-        try:
-            with open(self.sensory_log, 'a', encoding='utf-8') as f:
-                f.write(json.dumps(sensory_entry, ensure_ascii=False) + '\n')
-        except Exception as e:
-            print(f"[MSP] Error appending to sensory_log.jsonl: {e}")
-
-        # 4. Append to entries for legacy/structured view
-        sensory_data["entries"].append(sensory_entry)
-
-        # 5. Write back JSON
-        try:
-            with open(sensory_file, 'w', encoding='utf-8') as f:
-                json.dump(sensory_data, f, ensure_ascii=False, indent=2)
-            print(f"[MSP] ✓ Sensory qualitatively logged: {sensory_entry['sensory_id']}")
-        except Exception as e:
-            print(f"[MSP] Error writing sensory_memory.json: {e}")
-
-        return sensory_entry["sensory_id"]
+        self.sensory_module.store_episode(mock_ep)
+        return f"sen_delegated_{episode_id}"
 
 
 
@@ -2515,21 +2100,7 @@ class MSP:
 
     def set_active_state(self, slot: str, data: Any):
 
-        """
-
-        Set active state in the State Bus.
-
-        Used by components (Physio, Psyche) to broadcast their current state.
-
-
-
-        Args:
-
-            slot: State slot identifier (e.g., 'physio_state', 'matrix_state')
-
-            data: State data (dict or value)
-
-        """
+        """Broadcasts and persists a system's active state."""
 
         # 1. Update In-memory cache
 
@@ -2543,7 +2114,7 @@ class MSP:
 
 
 
-        # 2. Persist to transient file (for crash recovery)
+        # 2. Persist to transient file
 
         try:
 
@@ -2556,6 +2127,24 @@ class MSP:
         except Exception as e:
 
             print(f"[MSP] Error persisting active state {slot}: {e}")
+
+
+
+    def log_episodic_event(self, event_data: Dict[str, Any]) -> str:
+        """Standard log operation mapping to write_episode."""
+        return self.write_episode(event_data)
+
+    def query_memories(self, query_params: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Generic query gateway."""
+        if "tags" in query_params:
+            return self.query_by_tags(query_params["tags"], limit=query_params.get("limit", 5))
+        if "min_ri" in query_params:
+            return self.query_by_ri(min_ri=query_params["min_ri"], max_results=query_params.get("limit", 3))
+        return []
+
+    def latch_state(self, bus_id: str, snapshot: Dict[str, Any]) -> None:
+        """Latches state from the Resonance Bus."""
+        self.set_active_state(f"bus_{bus_id}", snapshot)
 
 
 

@@ -1,3 +1,8 @@
+"""
+Resonance Bus (Independent Version: 2.4.3)
+Central communication hub for the EVA 9.4.3 organism.
+"""
+
 import sys
 import os
 import json
@@ -8,9 +13,11 @@ from capabilities.tools.logger import safe_print
 from operation_system.identity_manager import IdentityManager
 print = safe_print
 
-class ResonanceBus:
+from contracts.systems.IResonanceBus import IResonanceBus
+
+class ResonanceBus(IResonanceBus):
     """
-    EVA 9.1.0: Central Resonance Bus (Infrastructure OS)
+    EVA 9.4.3: Central Resonance Bus (Infrastructure OS)
     A high-speed, schema-validated publish/subscribe event bus.
     """
     def __init__(self):

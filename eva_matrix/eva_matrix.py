@@ -1,3 +1,8 @@
+"""
+EVA Matrix System (Independent Version: 2.4.3)
+9D Psychological State Engine with Resonance Bus support.
+"""
+
 import sys
 import yaml
 from pathlib import Path
@@ -60,10 +65,11 @@ class EVAMatrixSystem:
         return {}
 
     def _on_physical_signal(self, payload: Dict[str, Any]):
-        """Handler for 'bus:physical' signals (from PhysioController)."""
-        neural_signals = payload.get("receptor_signals", {})
-        if neural_signals:
-            self.process_signals(signals=neural_signals)
+        """Handler for 'bus:physical' signals (from PhysioCore)."""
+        receptor_signals = payload.get("receptor_signals", {})
+        if receptor_signals:
+            # safe_print(f"  [EVA Matrix] Signal Received: {len(receptor_signals)} receptors.")
+            self.process_signals(signals=receptor_signals)
     
     def process_signals(self, signals: Dict[str, float] = None) -> Dict[str, Any]:
         """
@@ -91,9 +97,9 @@ class EVAMatrixSystem:
             })
             self.msp.set_active_state("reflex_directives", result.get("reflex_directives", {}))
 
-        # 5. Publish to Bus
+        # 5. Publish to Bus (9.4.3 Architecture)
         if self.bus:
-            self.bus.publish(IdentityManager.BUS_PSYCHOLOGICAL, {
+            matrix_payload = {
                 "matrix_state": {
                     "axes_9d": self.axes_9d,
                     "emotion_label": self.emotion_label,
@@ -101,7 +107,8 @@ class EVAMatrixSystem:
                 },
                 "reflex_directives": result.get("reflex_directives", {}),
                 "timestamp": datetime.now(timezone.utc).isoformat()
-            })
+            }
+            self.bus.publish(IdentityManager.BUS_PSYCHOLOGICAL, matrix_payload)
 
         self._save_state()
         return result

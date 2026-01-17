@@ -262,15 +262,22 @@ class PhysioCore:
         adr = blood_levels.get("ESC_H01_ADRENALINE", 0.0)
         vitals_state = self.vitals.step(ans_state, adr, dt)
 
-        # --- Logging ---
+        # --- Broadcasting & Persistence ---
+        physio_payload = {
+            "autonomic": ans_state,
+            "blood": core_vals,
+            "vitals": vitals_state,
+            "receptor_signals": receptor_signals,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        # 1. Publish to Resonance Bus (9.4.3 Architecture)
+        if self.bus:
+            self.bus.publish(IdentityManager.BUS_PHYSICAL, physio_payload)
+
+        # 2. Legacy MSP call (Will be removed in Phase 4 when MSP becomes a listener)
         if self.msp:
-            core_vals = {h: blood_levels.get(h, 0.0) for h in self.CORE_HORMONES}
-            self.msp.set_active_state("physio_state", {
-                "autonomic": ans_state,
-                "blood": core_vals,
-                "vitals": vitals_state,
-                "timestamp": datetime.now().isoformat()
-            })
+            self.msp.set_active_state("physio_state", physio_payload)
 
         return {
             "autonomic": ans_state,
