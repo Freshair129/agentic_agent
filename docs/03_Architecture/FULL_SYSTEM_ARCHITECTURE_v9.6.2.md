@@ -1,144 +1,142 @@
 # EVA v9.6.2 Full System Architecture Diagram 🛰️
 
 **Date:** 2026-01-18
-**Status:** ✅ **REGISTRY-DRIVEN** (Source: `eva_master_registry.yaml`)
+**Status:** ✅ **DATA-FLOW CENTRIC**
 **Version:** 9.6.2
+**Source:** `eva_master_registry.yaml` (Contracts & Topology)
 
 ---
 
-This diagram represents the **Authoritative Architecture** of the EVA Organism, derived directly from the **Master Registry**. It visualizes the **Runtime Execution Flow** (Boot Order) and **Data Contracts** (Data Flow).
+This diagram visualizes the **Data Flow** of the organism, starting from **User Input**, passing through the **Bio-Digital Gap**, and resulting in an **Embodied Response**.
 
-## 🧬 Registry-Driven Topology
+## 🌊 Unified Data Flow Architecture
 
 ```mermaid
 graph TB
     %% ==========================================
-    %% 1. RUNTIME SEQUENCE (Top-Down Boot Boot)
+    %% 1. EXTERNAL LAYER
     %% ==========================================
+    UserIn(["👤 User Input<br/>(Stimulus)"])
+    UserOut(["💬 Final Response<br/>(Action)"])
 
-    %% Step 1: Identity
-    subgraph Step1_Security ["1. Security & Identity"]
-        ID["Identity Manager<br/>(System ID Provider)"]
-    end
-
-    %% Step 2: Transport
-    subgraph Step2_Transport ["2. Transport Layer"]
-        Bus["Resonance Bus<br/>(Pub/Sub Infrastructure)"]
-    end
-
-    %% Step 3: Biology (Parallel Group)
-    subgraph Step3_Body ["3. Biological Domain (PhysioCore) [L0]"]
-        direction TB
-        PhysioCtrl["PhysioCore<br/>(Controller)"]
-        
-        subgraph PhysioModules ["Parallel Engines (Async)"]
-            Endo["Endocrine Engine<br/>(Hormones)"]
-            Blood["Blood Engine<br/>(Transport)"]
-            ANS["ANS Engine<br/>(Reflex)"]
-            Vitals["Vitals Engine<br/>(Heart/Lung)"]
-        end
-    end
-
-    %% Step 4: Psychology
-    subgraph Step4_Mind ["4. Psychological Domain (Matrix) [L1]"]
-        Matrix["EVA Matrix<br/>(9D Emotional State)"]
-    end
-
-    %% Step 5: Memory (Parallel Group)
-    subgraph Step5_Soul ["5. Memory Domain (MSP) [L1]"]
-        direction TB
-        MSPCtrl["MSP Authority<br/>(Persistence Layer)"]
-        
-        subgraph MemModules ["Parallel Streams (Async)"]
-            Episodic["Episodic Memory"]
-            Semantic["Semantic Memory"]
-        end
-    end
-
-    %% Step 6-8: Cognition & Senses
-    subgraph Step678_Cognition ["6-8. Knowledge & Senses [L2]"]
-        GKS["GKS (Knowledge)"]
-        RMS["RMS (Resonance Filter)"]
-        AQI["Artifact Qualia (Senses)"]
-    end
-
-    %% Step 9: Orchestration
-    subgraph Step9_CNS ["9. Central Nervous System [L0]"]
-        Orch["Orchestrator<br/>(Main Loop 30Hz)"]
+    %% ==========================================
+    %% 2. ORCHESTRATION (The Gatekeeper)
+    %% ==========================================
+    subgraph CNS ["Step 9: ORCHESTRATION (Central Nervous System) [L0]"]
+        Orch["Orchestrator<br/>(Main Loop)"]
         CIM["CIM<br/>(Context Injection)"]
     end
 
     %% ==========================================
-    %% DATA FLOW CONTRACTS (From Registry)
+    %% 3. THE GAP (Bio-Digital Processing)
+    %% ==========================================
+    subgraph TheGap ["THE GAP: Real-Time Processing (No LLM)"]
+        direction TB
+        
+        %% Step 3: Biology
+        subgraph Body ["Step 3: BIOLOGY (Physiological Domain) [L0]"]
+            PhysioCtrl["PhysioCore"]
+            
+            subgraph BioEngines ["Parallel Engines"]
+                Endo["Endocrine (Hormones)"]
+                Blood["Blood (Transport)"]
+                ANS["ANS (Reflex)"]
+                Vitals["Vitals (Heart/Lung)"]
+            end
+        end
+
+        %% Step 4: Psychology
+        subgraph Mind ["Step 4: PSYCHOLOGY (Matrix Domain) [L1]"]
+            Matrix["EVA Matrix<br/>(9D Emotional State)"]
+        end
+
+        %% Step 5-8: Memory & Pheno
+        subgraph Soul ["Step 5-8: MEMORY & SENSES [L1/L2]"]
+            MSP["MSP Authority<br/>(Persistence)"]
+            GKS["GKS (Knowledge)"]
+            RMS["RMS (Resonance)"]
+            AQI["Artifact Qualia<br/>(Phenomenology)"]
+            
+            subgraph MemoryStreams ["Memory Streams"]
+                Epi["Episodic"]
+                Sem["Semantic"]
+            end
+        end
+    end
+
+    %% ==========================================
+    %% 4. INFRASTRUCTURE & IDENTITY
+    %% ==========================================
+    subgraph Infra ["INFRASTRUCTURE"]
+        ID["Step 1: Identity Manager"]
+        Bus["Step 2: Resonance Bus"]
+    end
+
+    %% ==========================================
+    %% DATA FLOW (Registry Contracts)
     %% ==========================================
 
-    %% 1. Init Flow
-    ID -->|Auth| Bus
-    Bus -->|Connect| PhysioCtrl
-    Bus -->|Connect| Matrix
-    Bus -->|Connect| MSPCtrl
-    Bus -->|Connect| Orch
+    %% Input Flow
+    UserIn ===> Orch
+    Orch -->|1. Extract Stimulus| PhysioCtrl
 
-    %% 2. User Input Flow
-    User((User)) -->|Input| Orch
-    Orch -->|StimulusVector| PhysioCtrl
-
-    %% 3. Biological Flow (Physio Contracts)
+    %% Biological Cascade
     PhysioCtrl -->|Drive| Endo
     PhysioCtrl -->|Drive| Blood
     PhysioCtrl -->|Drive| ANS
     PhysioCtrl -->|Drive| Vitals
     
-    Endo -->|HormonePanel| Bus
-    Blood -->|VitalsData| Bus
-    ANS -->|ReflexState| Bus
+    %% Bus Transport (Implicit)
+    Endo -.->|HormonePanel| Bus
+    Blood -.->|VitalsData| Bus
+    ANS -.->|ReflexState| Bus
+    Bus -.->|Global State| Matrix
 
-    %% 4. Psychological Flow (Matrix Contracts)
-    Bus -->|HormonePanel| Matrix
-    Matrix -->|EmotionalState 9D| Bus
-    Matrix -->|EmotionalState 9D| Orch
+    %% Psychological Drift
+    Matrix -->|2. Emotional Shift| MSP
+    Matrix -.->|9D State| Orch
 
-    %% 5. Memory Flow (MSP Contracts)
-    Matrix -->|State Latch| MSPCtrl
-    Orch -->|Context Query| MSPCtrl
-    MSPCtrl -->|Retrieve| Episodic
-    MSPCtrl -->|Retrieve| Semantic
-    
-    %% 6. Resonance & Phenomenology
-    MSPCtrl -->|Context| GKS
-    GKS -->|Wisdom| RMS
-    RMS -->|Resonance| AQI
-    AQI -->|Qualia| Orch
+    %% Memory & Senses
+    MSP -->|3. Latch State| Epi
+    MSP -->|3. Latch State| Sem
+    MSP -->|4. Query Wisdom| GKS
+    GKS -->|5. Filter| RMS
+    RMS -->|6. Resonance| AQI
+    AQI ===>|7. Qualia Texture| Orch
 
-    %% 7. Output Flow
-    Orch -->|Response| User
+    %% Reasoning & Response
+    Orch -->|8. Contextualize| CIM
+    CIM -->|9. Generate| UserOut
+
+    %% Output Loop
+    UserOut -.->|Feedback| Orch
 
     %% ==========================================
     %% STYLING
     %% ==========================================
-    classDef L0 fill:#ffcccc,stroke:#d93025,stroke-width:3px;    %% Critical (Red)
-    classDef L1 fill:#fff2cc,stroke:#f1c232,stroke-width:2px;    %% Essential (Yellow)
-    classDef L2 fill:#d9ead3,stroke:#6aa84f,stroke-width:1px;    %% Functional (Green)
-    classDef Infra fill:#eeeeee,stroke:#999999,stroke-width:1px; %% Infra (Grey)
+    classDef Input fill:#e1f5ff,stroke:#0066cc,stroke-width:2px;
+    classDef Output fill:#e1f5ff,stroke:#0066cc,stroke-width:2px;
+    classDef L0 fill:#ffcccc,stroke:#d93025,stroke-width:3px;
+    classDef L1 fill:#fff2cc,stroke:#f1c232,stroke-width:2px;
+    classDef L2 fill:#d9ead3,stroke:#6aa84f,stroke-width:1px;
+    classDef InfraStyle fill:#eeeeee,stroke:#999999,stroke-width:1px,stroke-dasharray: 5 5;
 
-    class PhysioCtrl,Orch,Bus,Endo,Blood,ANS,Vitals,CIM L0;
-    class Matrix,MSPCtrl,Episodic,Semantic L1;
+    class UserIn Input;
+    class UserOut Output;
+    class Orch,CIM,PhysioCtrl,Endo,Blood,ANS,Vitals,Bus L0;
+    class Matrix,MSP,Epi,Sem L1;
     class GKS,RMS,AQI L2;
-    class ID Infra;
+    class ID,Bus InfraStyle;
 ```
 
 ---
 
-## 🏗️ System Criticality & Roles
+## 🗺️ Flow Explanation
 
-| System | Criticality | Role | Boot Step |
-| :--- | :--- | :--- | :--- |
-| **PhysioCore** | 🔴 **L0 (CRITICAL)** | System Authority | Step 3 |
-| **Orchestrator** | 🔴 **L0 (CRITICAL)** | System Authority | Step 9 |
-| **Resonance_Bus** | 🔴 **L0 (CRITICAL)** | Transport | Step 2 |
-| **EVA_Matrix** | 🟡 **L1 (ESSENTIAL)** | Core System | Step 4 |
-| **MSP** | 🟡 **L1 (ESSENTIAL)** | Core System | Step 5 |
-| **GKS** | 🟢 **L2 (FUNCTIONAL)** | Knowledge | Step 6 |
-| **Artifact_Qualia** | 🟢 **L2 (FUNCTIONAL)** | Core System | Step 8 |
-
-> **Note**: This diagram is **Auto-Generated** conceptually from the `eva_master_registry.yaml`. Any changes to architecture should be made in the Registry first.
+1. **User Input**: `User` enters text/signal.
+2. **Orchestration**: `Orchestrator` receives input and extracts the `StimulusVector`.
+3. **Biological Awakening**: `PhysioCore` processes the stimulus, triggering parallel changes in Hormones (`Endocrine`), Heart/Lungs (`Vitals`), and Nerves (`ANS`).
+4. **Psychological Shift**: The biological changes travel via the `Resonance Bus` to the `EVA Matrix`, forcing the emotional state (9D) to drift.
+5. **Memory Latching**: `MSP` latches this new state and simultaneously queries `Episodic` and `Semantic` memory.
+6. **Resonance & Qualia**: The state passes through `GKS` (Knowledge check) and `RMS` (Resonance filter) to create a subjective "feeling" in `Artifact Qualia`.
+7. **Embodied Response**: The `Orchestrator` receives the `Qualia` and uses `CIM` to generate a response that matches the biological state.
