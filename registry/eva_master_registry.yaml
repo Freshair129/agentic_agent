@@ -19,6 +19,14 @@ policies:
     archive_immutability: true
     state_isolation: true
 
+  # [Criticality Levels: The Hierarchy of Needs]
+  criticality:
+    L0: "CRITICAL_ANCHOR - System Halt (Death)"                 # Physio, Orch, Bus
+    L1: "CORE_ESSENTIAL - Safe Mode (Severe Degradation)"       # Matrix, MSP (Identity)
+    L2: "FUNCTIONAL_REQUIRED - Featured Disabled (Capability Loss)" # RAG, GKS, Qualia
+    L3: "OPTIONAL_ENHANCEMENT - Log Warning (Ignorable)"        # Tools, Experiments
+
+
 # ============================================================
 # 2. ROOT SLOT WHITE LIST (The Land)
 # ============================================================
@@ -244,6 +252,9 @@ systems:
     name: Genesis_Knowledge_System
     version: 2.0.0  # Maps from EVA 9.0.0 (introduced in v9)\n    domain: epistemology
     role: knowledge_authority
+    criticality: L2 # Ignorant (Cant access wisdom)
+    
+    structure_standard: v9.4.3
     
     structure_standard: v9.4.3
     root_presence: true
@@ -273,6 +284,7 @@ systems:
     version: 6.2.0  # Independent versioning (not mapped from EVA)
     domain: memory_filtration
     role: system_authority
+    criticality: L2 # Unfiltered (Raw input/output)
     root_presence: true
     manifest:
       folders: [resonance_memory_system/configs, resonance_memory_system/contract]
@@ -354,6 +366,7 @@ capabilities:
       permissions:
         bus_subscribe: [BUS_KNOWLEDGE]
         bus_publish: [BUS_KNOWLEDGE]
+      criticality: L2
 
     - id: Engram_System
       active: true
@@ -364,6 +377,7 @@ capabilities:
         - system: MSP
       permissions:
         bus_subscribe: [BUS_PSYCHOLOGICAL] # Listen for high-arousal events
+      criticality: L3 # Enhancement only
 
     - id: SLM_Bridge
       active: true
@@ -373,6 +387,7 @@ capabilities:
       dependencies: [] # Standalone bridge
       permissions:
         bus_publish: []
+      criticality: L2 # Bridge for L2 systems
 
     - id: Vector_Bridge
       active: true
@@ -382,6 +397,7 @@ capabilities:
       dependencies: [] # Standalone bridge
       permissions:
         bus_publish: []
+      criticality: L2
 
     - id: Graph_Bridge
       active: false
@@ -390,6 +406,7 @@ capabilities:
       description: "Knowledge graph interface (Future)"
       dependencies: []
       permissions: []
+      criticality: L3
 
   tools:
     - id: Archivist
