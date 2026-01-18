@@ -42,23 +42,86 @@ policies:
 # 2. ROOT SLOT WHITE LIST (The Land)
 # ============================================================
 root_slots:
-  - .agent             # Agent rules, workflows, and subagent configs
-  - registry
-  - contracts
-  - docs
-  - operation_system
-  - physio_core
-  - eva_matrix
-  - memory_n_soul_passport
-  - orchestrator
-  - genesis_knowledge_system
-  - resonance_memory_system
-  - artifact_qualia
-  - api               # Web/Socket Layer
-  - capabilities      # Tools/Skills
-  - consciousness     # Active State
-  - data              # Static Assets
-  - memory            # Archival Storage
+  # === GOVERNANCE & INFRASTRUCTURE ===
+  - name: .agent
+    type: governance
+    description: Agent rules, workflows, and subagent configs
+  
+  - name: registry
+    type: governance
+    description: Master registry and versioning
+  
+  - name: contracts
+    type: governance
+    description: Interface definitions
+  
+  - name: docs
+    type: knowledge
+    description: Documentation and wisdom
+  
+  # === BIOLOGICAL ORGANS ===
+  - name: physio_core
+    type: organ
+    authority: biological
+    description: Body simulation (hormones, vitals)
+  
+  - name: eva_matrix
+    type: organ
+    authority: psychological
+    description: Psychological state (9D emotions)
+  
+  - name: artifact_qualia
+    type: organ
+    authority: phenomenological
+    description: Sensory experience
+  
+  # === INFRASTRUCTURE SYSTEMS ===
+  - name: operation_system
+    type: infra
+    authority: transport
+    description: Resonance Bus, Identity Manager
+  
+  - name: orchestrator
+    type: infra
+    authority: control
+    description: Central Nervous System, CIM
+  
+  - name: resonance_memory_system
+    type: infra
+    authority: encoding
+    description: State snapshot and resonance
+  
+  # === MEMORY & KNOWLEDGE ===
+  - name: memory_n_soul_passport
+    type: memory
+    authority: archival
+    description: Episodic/Semantic/Sensory storage
+  
+  - name: genesis_knowledge_system
+    type: knowledge
+    authority: reasoning
+    description: Strategic knowledge base
+  
+  # === EXECUTION LAYER ===
+  - name: api
+    type: infra
+    description: Web/Socket Layer
+  
+  - name: capabilities
+    type: infra
+    description: Tools/Skills/Services
+  
+  - name: consciousness
+    type: memory
+    description: Active working memory (RAM)
+  
+  - name: data
+    type: knowledge
+    description: Static assets
+  
+  - name: memory # Archival Storage
+    type: memory
+    description: Archival Storage
   - scripts           # Verification & utility scripts
   - tests             # Verification Suite
   - tools             # Technician Subagents

@@ -1,0 +1,98 @@
+mission_name: "Phase 2: Foundation Paving (SOLID)"
+description: "Create standard Interface Contracts for major systems."
+tasks:
+  - file: "contracts/systems/IPhysioSystem.py"
+    create_if_missing: true
+    ops:
+      - type: "rewrite"
+        content: |
+          from abc import ABC, abstractmethod
+          from typing import Dict, Any, Optional
+
+          class IPhysioSystem(ABC):
+              """Contract for the Physiological Core System"""
+              
+              @abstractmethod
+              def step(self, eva_stimuli: list, zeitgebers: Dict, dt: float) -> Dict[str, Any]:
+                  """Advance physiological simulation by dt seconds."""
+                  pass
+              
+              @abstractmethod
+              def get_state(self) -> Dict[str, Any]:
+                  """Retrieve current full biological state."""
+                  pass
+
+  - file: "contracts/systems/IMatrixSystem.py"
+    create_if_missing: true
+    ops:
+      - type: "rewrite"
+        content: |
+          from abc import ABC, abstractmethod
+          from typing import Dict, Any
+
+          class IMatrixSystem(ABC):
+              """Contract for the Psychological Matrix System"""
+              
+              @abstractmethod
+              def step(self, physio_state: Dict, qualia_snapshot: Dict) -> Dict[str, Any]:
+                  """Update psychological axes based on bio-input."""
+                  pass
+              
+              @property
+              @abstractmethod
+              def axes_9d(self) -> Dict[str, float]:
+                  """Return the 9D emotional axes."""
+                  pass
+
+  - file: "contracts/modules/ICognitiveGateway.py"
+    create_if_missing: true
+    ops:
+      - type: "rewrite"
+        content: |
+          from abc import ABC, abstractmethod
+          from typing import Dict, Any
+
+          class ICognitiveGateway(ABC):
+              """Contract for SLM (Small Language Model) Bridge"""
+              
+              @abstractmethod
+              def extract_intent(self, user_input: str) -> Dict[str, Any]:
+                  """Extract intent, emotional signal, and salience anchor."""
+                  pass
+
+  - file: "contracts/modules/IKnowledgeAuthority.py"
+    create_if_missing: true
+    ops:
+      - type: "rewrite"
+        content: |
+          from abc import ABC, abstractmethod
+          from typing import Dict, Any
+
+          class IKnowledgeAuthority(ABC):
+              """Contract for Genesis Knowledge System (GKS)"""
+              
+              @abstractmethod
+              def verify_truth(self, statement: str) -> Dict[str, Any]:
+                  """Check statement against Master Blocks."""
+                  pass
+                  
+              @abstractmethod
+              def get_strategic_guidance(self, context: Dict) -> str:
+                  """Get high-level strategy (NexusMode)."""
+                  pass
+
+  - file: "contracts/systems/IOrchestrator.py"
+    create_if_missing: true
+    ops:
+      - type: "rewrite"
+        content: |
+          from abc import ABC, abstractmethod
+          from typing import Dict, Any
+
+          class IOrchestrator(ABC):
+              """Contract for the Main EVA Orchestrator"""
+              
+              @abstractmethod
+              def process_user_input(self, user_input: str) -> Dict[str, Any]:
+                  """Main entry point for user interaction."""
+                  pass

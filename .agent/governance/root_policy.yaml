@@ -1,0 +1,62 @@
+# EVA Root Governance Policy
+# Version: 9.6.2
+# Purpose: Enforce flat anatomy and prevent root pollution
+
+# === ALLOWED ROOT FILES ===
+allowed_root_files:
+  - CLAUDE.md                # Claude Code context (MUST be at root)
+  - .gitignore               # Git ignore patterns
+  - .env.api                 # Environment config
+  - "*.code-workspace"       # VS Code workspace files
+  - LLM Structure Debate.md  # Temporary discussion file (remove after completion)
+
+# === ALLOWED ROOT DIRECTORIES ===
+# These are auto-loaded from eva_master_registry.yaml:root_slots
+allowed_root_dirs:
+  - .git
+  - .agent
+  - .planning
+  - .claude
+  - registry
+  - contracts
+  - docs
+  - operation_system
+  - physio_core
+  - eva_matrix
+  - memory_n_soul_passport
+  - orchestrator
+  - genesis_knowledge_system
+  - resonance_memory_system
+  - artifact_qualia
+  - api
+  - capabilities
+  - consciousness
+  - data
+  - memory
+  - scripts
+  - tests
+  - tools
+
+# === ENFORCEMENT SETTINGS ===
+enforcement:
+  pre_commit_hook: true       # Block commits with violations
+  ci_check: true              # Run in CI pipeline
+  developer_notify: warning   # Show warnings (not blocking errors)
+  auto_cleanup: false         # Manual cleanup only
+
+# === EXEMPTIONS (Temporary) ===
+# Files that are temporarily allowed but should be cleaned up
+temporary_exemptions:
+  - "LLM Structure Debate.md"  # Discussion file, move to docs/ after completion
+
+# === SUGGESTED DESTINATIONS ===
+# Where to move files that violate root policy
+cleanup_destinations:
+  "*.md":
+    - docs/10_References/     # Technical references
+    - docs/99_Archive/        # Old/deprecated docs
+  "*.yaml":
+    - .agent/tasks/           # Task definitions
+    - .agent/workflows/       # Workflow definitions
+  "*.rar":
+    - docs/assets/            # Archived assets
