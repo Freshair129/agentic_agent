@@ -6,6 +6,19 @@ All notable changes to the EVA Core project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v9.6.2-CognitiveFlow2.0] - 2026-01-19
+
+### Added
+
+- **Inner Organ Documentation**: Created/Updated READMEs for all 18 major root directories and 13 internal sub-modules (slm_bridge, engram_system, resonance_engine, nexus_mind, rim, umbrella, llm_bridge, etc.), establishing a consistent documentation layer.
+- **Protocol Mirroring**: Synchronized critical rules from `.agent/rules/` to `docs/03_Architecture/` and `docs/07_Protocols/` (Gap Flow, Event Policy, Permissions).
+- **Context Workspace Docs**: Added a dedicated guide for the `consciousness/context_container/` awareness area.
+
+### Changed
+
+- **Documentation Hub Index**: Updated the Master Index (`docs/00_Governance/INDEX.md`) with a comprehensive reading order and links to all primary system protocols.
+- **Global Identity Alignment**: Synchronized `CLAUDE.md`, root READMEs, and API descriptions to reflect the final Cognitive Flow 2.0 and v9.6.2 standards.
+
 ## [v9.6.2-CognitiveFlow2.0] - 2026-01-18
 
 ### Added
