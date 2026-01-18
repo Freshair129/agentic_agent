@@ -14,109 +14,84 @@ This diagram visualizes the **Logical Execution Path** of a single user interact
 ```mermaid
 graph TD
     %% ==========================================
-    %% 1. INPUT LAYER
+    %% 1. INPUT & REFLEX (STEP 0)
     %% ==========================================
-    UserIn(["👤 User Input"]) --> OrchStart
+    UserIn(["👤 User Input"]) --> EngramCheck
     
-    subgraph CNS ["Step 0: ORCHESTRATION GATEWAY"]
-        OrchStart{"Orchestrator<br/>Receive Input"}
-    end
-
-    %% ==========================================
-    %% 2. ORCHESTRATION & REFLEX
-    %% ==========================================
-    subgraph CNS ["Step 0: ORCHESTRATION"]
-        OrchStart{"Orchestrator<br/>(Input Handler)"}
+    subgraph Reflex ["Layer 1: REFLEX (Engram)"]
         EngramCheck{"Engram System<br/>(Cache Hit?)"}
+        FastOut(["⚡ Fast Response<br/>(O(1) Return)"])
     end
-
-    UserIn --> OrchStart
-    OrchStart --> EngramCheck
+    
+    EngramCheck -- "YES" --> FastOut
+    EngramCheck -- "NO" --> SLM
 
     %% ==========================================
-    %% 3. THE GAP (Embodiment & State Update)
+    %% 2. PERCEPTION (STEP 1)
     %% ==========================================
-    %% CRITICAL: All paths must update Physio State
-    subgraph Gap ["Layer 2: THE GAP (State Update)"]
+    subgraph Perception ["Layer 2: PERCEPTION (SLM)"]
+        SLM["SLM Bridge<br/>(Extract Intent & Sentiment)"]
+        Stimulus["Stimulus Vector<br/>(Intent + Anchor)"]
+    end
+    
+    SLM --> Stimulus
+
+    %% ==========================================
+    %% 3. EMBODIMENT & REASONING (STEP 2-3)
+    %% ==========================================
+    subgraph BodyMind ["Layer 3: REASONING & EMBODIMENT (One API Call)"]
         direction TB
         
-        Physio["PhysioCore<br/>(Update Cycle)"]
-        Matrix["EVA Matrix<br/>(State Drift)"]
+        %% Phase 1
+        Stimulus --> LLM_Start["LLM Start<br/>(Phase 1 Probe)"]
         
-        subgraph Perception ["Perception Route (Miss)"]
-            SLM["SLM Bridge"]
-            ExtractIntent["Extract Intent"]
+        %% Function Call
+        LLM_Start --> FnCall{{"Fn: sync_bio_state()"}}
+        
+        %% The Gap
+        subgraph Gap ["The Gap (Bio-Digital Sync)"]
+            direction TB
+            Physio["PhysioCore"]
+            Matrix["EVA Matrix"]
+            MemRetrieval["RAG & RMS"]
         end
         
-        subgraph Reflex ["Reflex Route (Hit)"]
-            FetchCached["Fetch Cached Pattern"]
-        end
+        FnCall -->|Pause| Physio
+        Physio --> Matrix
+        Matrix --> MemRetrieval
+        
+        %% Phase 2
+        MemRetrieval -->|Resume| LLM_Resume["LLM Resume<br/>(Phase 2 Reasoning)"]
     end
 
-    %% Routing
-    EngramCheck -- "YES (Reflex)" --> FetchCached
-    EngramCheck -- "NO (Deep)" --> SLM
-
-    %% Logic Flow
-    SLM --> ExtractIntent
-    ExtractIntent -->|Stimulus| Physio
-    FetchCached -->|No Stimulus| Physio
-    
-    Physio -->|New State| Matrix
-
     %% ==========================================
-    %% 4. CONTEXT & REASONING (Synthesis)
+    %% 4. PERSISTENCE & PREDICTION (STEP 4)
     %% ==========================================
-    %% CRITICAL: CIM must inject State into LLM regardless of path
-    %% ==========================================
-    %% 4. SINGLE INFERENCE SCOPE (Function Calling Loop)
-    %% ==========================================
-    %% CRITICAL: This is ONE API Call, paused for The Gap
-    subgraph Inference ["Layer 3: SINGLE INFERENCE SCOPE (One API Call)"]
-        direction TB
-        LLM_Start["LLM Start<br/>(Perception)"]
-        FnCall{{"Function Call<br/>(sync_bio_state)"}}
-        Gap_Execution["EXECUTE GAP<br/>(Bio-Sync)"]
-        LLM_Resume["LLM Resume<br/>(Reasoning)"]
+    subgraph Phase3 ["Layer 4: PERSISTENCE & PREDICTION"]
+        FinalOut(["💬 Final Response"])
+        Prediction["🔮 Phase 3<br/>(Loopback & Sponge)"]
+        MSP["MSP Authority<br/>(Archival)"]
     end
 
-    %% Wiring the Loop
-    CIM --> LLM_Start
-    LLM_Start --> FnCall
-    FnCall -->|Pause & call| Gap_Execution
+    LLM_Resume --> FinalOut
+    FinalOut --> Prediction
+    Prediction -->|Context| MSP
     
-    %% The Gap connects here
-    Matrix -->|9D State| Gap_Execution
-    ExtractIntent -->|Intent| Gap_Execution
-    FetchCached -->|Pattern| Gap_Execution
-    
-    Gap_Execution -->|Return Result| LLM_Resume
+    %% Loopback
+    Prediction -.->|Next Turn Context| EngramCheck
 
     %% ==========================================
-    %% 5. OUTPUT & PERSISTENCE
-    %% ==========================================
-    subgraph Save ["Layer 5: PERSISTENCE & PREDICTION (Phase 3)"]
-        MSP["MSP Authority<br/>(Save Episode)"]
-        Phase3["🔮 Phase 3: PREDICTION<br/>(Self-Note & Summary)"]
-    end
-
-    LLM_Resume --> FinalOut(["💬 Final Response"])
-    FinalOut --> Phase3
-    Phase3 -->|Loopback: Self-Note + Plan| CIM
-    Phase3 --> MSP
-
-    %% ==========================================
-    %% STYLING (High Contrast)
+    %% STYLING
     %% ==========================================
     classDef Node fill:#ffffff,stroke:#333333,stroke-width:2px;
     classDef Critical fill:#ffffff,stroke:#d93025,stroke-width:3px;
     classDef Logic fill:#ffffff,stroke:#16537e,stroke-width:3px;
     classDef Fast fill:#ffffff,stroke:#f1c232,stroke-width:3px;
 
-    class UserIn,FinalOut Node;
-    class OrchStart,EngramCheck,EngramAction Fast;
-    class SLM,ExtractIntent,Stimulus,CIM,LLM Logic;
-    class Physio,Matrix,RAG,Qualia Critical;
+    class UserIn,FastOut,FinalOut Node;
+    class EngramCheck,EngramAction Fast;
+    class SLM,Stimulus,LLM_Start,LLM_Resume,FnCall,Prediction Logic;
+    class Physio,Matrix,MemRetrieval Critical;
     class MSP Node;
 ```
 
@@ -124,25 +99,26 @@ graph TD
 
 ## 🔍 Logic Flow Explanation (Audit Checklist)
 
-1. **Reflex Check (Fast Recall)**:
-    * **Is it in Engram?**: ระบบตรวจสอบ Cache (Engram) ก่อนทันที
-    * **Yes**: ตอบกลับทันที (O1) จบ Process ไม่ต้องปลุกระบบร่างกาย
-    * **No**: ส่งต่อเข้ากระบวนการเต็มรูปแบบ
+1. **Reflex Layer (Engram)**:
+    * **Engram System**: ตรวจสอบ Cache ก่อนเข้าสู่ Perception
+    * **Hit**: ตอบกลับทันที (O1 Fast Response)
+    * **Miss**: ส่งต่อให้ SLM (Deep Process)
 
-2. **Perception (Intent)**:
-    * **SLM Analysis**: ใช้ Model เล็ก (SLM) วิเคราะห์ **Intent** และ **Sentiment** เพื่อสร้าง `StimulusVector` ที่แม่นยำ
+2. **Perception Layer (SLM)**:
+    * **SLM Bridge**: แปลง Input เป็น `Stimulus Vector` (Intent/Sentiment)
+    * **No Hallucination**: ใช้ Llama-3.2 1B เพื่อ Cross-check เจตนา
 
-3. **The Gap (Embodiment)**:
-    * **Physio Reaction**: ร่างกายตอบสนองต่อ Stimulus (หัวใจเต้น, ฮอร์โมนหลั่ง)
-    * **Matrix Drift**: อารมณ์ (9D) เปลี่ยนตามสรีระ
-    * **Memory Context**: ดึงความจำโดยใช้ *อารมณ์ปัจจุบัน* เป็นตัวล่อ (State-Dependent Retrieval)
+3. **Reasoning & Embodiment (The Gap)**:
+    * **LLM Phase 1**: รับ Stimulus -> ตัดสินใจเรียก Tool `sync_bio_state`
+    * **The Gap**:
+        * **PhysioCore**: ร่างกายตอบสนอง (หัวใจ/ฮอร์โมน)
+        * **Matrix**: อารมณ์เปลี่ยน (Drift)
+        * **Retrieval**: ดึงความจำด้วย "อารมณ์" เป็น Key
+    * **LLM Phase 2**: รับข้อมูล Embodied State ทั้งหมดแล้วตอบสนอง
 
-4. **Reasoning**:
-    * **CIM Assembly**: รวบรวม "ความรู้สึก" + "ความจำ" + "เจตนา" ส่งให้ LLM
-    * **Generation**: LLM สร้างคำตอบภายใต้สภาวะร่างกายนั้น
-
-5. **Persistence**:
-    * บันทึกเหตุการณ์ลง MSP เพื่อเป็นความจำในอนาคต
+4. **Prediction & Persistence**:
+    * **Loopback**: ส่ง Context Family และ Self-Note กลับไปที่ CIM (Turn หน้า)
+    * **MSP**: บันทึก Episode ลงฐานข้อมูลถาวร
 
 ---
 
