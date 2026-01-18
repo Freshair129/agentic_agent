@@ -104,18 +104,20 @@ class TestMSPPhase3(unittest.TestCase):
                 return {
                     "episode_id": "EP1",
                     "state_snapshot": {
-                        "Resonance_index": 0.8,
+                        "resonance_index": 0.8, # Renamed
                         "qualia": {"intensity": 0.8},
-                        "resonance_texture": {"stress": 0.8} # High stress match
+                        "resonance_texture": {"stress": 0.8}, # High stress match
+                        "eva_matrix": {} # Added
                     }
                 }
             if ep_id == "EP2":
                 return {
                     "episode_id": "EP2",
                     "state_snapshot": {
-                        "Resonance_index": 0.2,
+                        "resonance_index": 0.2, # Renamed
                         "qualia": {"intensity": 0.2},
-                        "resonance_texture": {"stress": 0.1} # Low stress match
+                        "resonance_texture": {"stress": 0.1}, # Low stress match
+                        "eva_matrix": {} # Added
                     }
                 }
             return None

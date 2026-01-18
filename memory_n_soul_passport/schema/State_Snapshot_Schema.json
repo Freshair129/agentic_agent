@@ -4,8 +4,8 @@
     "description": "EXPANDED: Now includes full bio-cognitive state",
     "type": "object",
     "required": [
-        "EVA_matrix",
-        "Resonance_index",
+        "eva_matrix",
+        "resonance_index",
         "memory_encoding_level",
         "memory_color",
         "qualia"
@@ -100,70 +100,29 @@
         }
     },
     "properties": {
-        "EVA_matrix": {
+        "eva_matrix": {
             "type": "object",
-            "required": [
-                "stress_load",
-                "social_warmth",
-                "drive_level",
-                "cognitive_clarity",
-                "joy_level",
-                "emotion_label"
-            ],
-            "properties": {
-                "stress_load": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1
-                },
-                "social_warmth": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1
-                },
-                "drive_level": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1
-                },
-                "cognitive_clarity": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1
-                },
-                "joy_level": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1
-                },
-                "emotion_label": {
-                    "type": "string"
-                },
-                "momentum": {
-                    "type": "object",
-                    "properties": {
-                        "intensity": {
-                            "type": "number"
-                        }
-                    }
-                }
-            }
+            "description": "Psychological state",
+            "$ref": "#/definitions/EmotionalState"
         },
-        "Resonance_index": {
-            "type": "number"
+        "resonance_index": {
+            "type": "number",
+            "description": "Overall system resonance (0.0-1.0)",
+            "minimum": 0,
+            "maximum": 1
         },
         "memory_encoding_level": {
             "type": "string",
             "enum": [
-                "L0_trace",
                 "L1_light",
-                "L2_standard",
+                "L2_moderate",
                 "L3_deep",
-                "L4_trauma"
+                "L4_flashbulb"
             ]
         },
         "memory_color": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
         },
         "qualia": {
             "type": "object",
@@ -175,20 +134,16 @@
                     "type": "number"
                 },
                 "tone": {
-                    "type": "string",
-                    "description": "Qualitative feel (warm, sharp, soft, heavy, etc.)"
+                    "type": "string"
                 },
                 "coherence": {
-                    "type": "number",
-                    "description": "Unity of experience (0-1)"
+                    "type": "number"
                 },
                 "depth": {
-                    "type": "number",
-                    "description": "Existential significance (0-1)"
+                    "type": "number"
                 },
                 "texture": {
                     "type": "object",
-                    "description": "Multi-dimensional phenomenological texture",
                     "additionalProperties": {
                         "type": "number"
                     }
@@ -197,7 +152,6 @@
         },
         "resonance_texture": {
             "type": "object",
-            "description": "5D RMS color axes (detailed emotional coloring)",
             "properties": {
                 "stress": {
                     "type": "number"
@@ -217,12 +171,10 @@
             }
         },
         "trauma_flag": {
-            "type": "boolean",
-            "description": "Whether trauma protection was triggered"
+            "type": "boolean"
         },
         "reflex_directives": {
             "type": "object",
-            "description": "Fast-path emotional commands from EVA Matrix",
             "additionalProperties": true
         },
         "reflex": {
@@ -233,8 +185,16 @@
                 }
             }
         },
-        "threat_level": {
-            "type": "number"
+        "physio": {
+            "type": "object",
+            "properties": {
+                "vitals": {
+                    "$ref": "#/definitions/VitalsData"
+                },
+                "hormones": {
+                    "$ref": "#/definitions/HormonePanel"
+                }
+            }
         }
     }
 }

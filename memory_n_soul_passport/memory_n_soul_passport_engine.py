@@ -2264,13 +2264,12 @@ class MSP(IMSPassport):
             return self.get_active_state(key) or default
 
         # Construct Snapshot (Schema Compliance)
+        # Construct Snapshot (Schema Compliance)
         state_snapshot = {
-            "EVA_matrix": {
-                **matrix.get("axes_9d", {}),
-                "emotion_label": matrix.get("emotion_label", "Neutral"),
-                "momentum": matrix.get("momentum", {})
+            "eva_matrix": {
+                **matrix.get("axes_9d", {}), # Matches EmotionalState
             },
-            "Resonance_index": get_state("resonance_index", 0.0),
+            "resonance_index": get_state("resonance_index", 0.0),
             "memory_encoding_level": get_state("memory_encoding_level", "L1_light"),
             "memory_color": get_state("memory_color", "#808080"),
             "qualia": {

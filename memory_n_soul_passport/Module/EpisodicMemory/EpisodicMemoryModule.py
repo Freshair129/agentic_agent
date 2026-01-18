@@ -65,7 +65,7 @@ class EpisodicMemoryModule(IMemoryRetrieval, IMemoryStorage):
             "timestamp": timestamp,
             "turn_user": turn_user,
             "metrics": {
-                "resonance_index": full_episode["state_snapshot"].get("Resonance_index", self.default_ri)
+                "resonance_index": full_episode["state_snapshot"].get("resonance_index") or full_episode["state_snapshot"].get("Resonance_index", self.default_ri)
             }
         }
         
@@ -170,7 +170,7 @@ class EpisodicMemoryModule(IMemoryRetrieval, IMemoryStorage):
         """
         summaries = self.journal.read_log()
         
-        target_ri = state_snapshot.get("Resonance_index", 0.5)
+        target_ri = state_snapshot.get("resonance_index") or state_snapshot.get("Resonance_index", 0.5)
         target_int = state_snapshot.get("qualia", {}).get("intensity", 0.3)
         target_tex = state_snapshot.get("resonance_texture", {}) # Dict[str, float]
         
@@ -181,7 +181,7 @@ class EpisodicMemoryModule(IMemoryRetrieval, IMemoryStorage):
             if not full_ep: continue
             
             curr_snap = full_ep.get("state_snapshot", {})
-            curr_ri = curr_snap.get("Resonance_index", 0.5)
+            curr_ri = curr_snap.get("resonance_index") or curr_snap.get("Resonance_index", 0.5)
             curr_int = curr_snap.get("qualia", {}).get("intensity", 0.3)
             curr_tex = curr_snap.get("resonance_texture", {})
 
