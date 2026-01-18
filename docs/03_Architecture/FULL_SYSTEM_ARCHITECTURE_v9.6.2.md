@@ -75,14 +75,16 @@ graph TD
     ConfCheck -- "NO (Unsure)" --> AgenticRAG
     AgenticRAG -->|Embodied Context| Hydration
 
-    subgraph Output ["Layer 4: RESPONSE"]
+    subgraph Output ["Layer 4: RESPONSE & PERSISTENCE"]
         Hydration["Step 5: Hydration<br/>(Final Reasoning)"]
         Resp(["💬 Response to User"])
         Reflection["Step 6: Reflection<br/>(Self-Note / Forecast)"]
+        MSP["Step 7: MSP Authority<br/>(Episode Archival)"]
     end
 
     Hydration --> Resp
     Resp --> Reflection
+    Reflection --> MSP
     Reflection -.->|Next Turn Context| EngramCheck
 
     %% ==========================================
@@ -112,6 +114,7 @@ graph TD
     * ถ้า **Confidence < 0.8**: เข้าสู่ **Deep Recall** โดยใช้ **Body State** ที่เพิ่งได้จาก Gap เป็นตัวกรอง (เช่น "หาเหตุการณ์ที่ฉันเคยโกรธระดับ cortisol 80%")
 5. **Hydration**: ผสมผสาน ความจำ + ร่างกาย + เหตุผล เข้าด้วยกันเป็นคำตอบสุดท้าย
 6. **Reflection**: Loop ข้อมูลกลับไปที่ Engram/CIM สำหรับ Turn ถัดไป
+7. **MSP Archival**: บันทึก Episode (State + Context + Response) ลง Long-Term Memory (Persistent Storage)
 
 ---
 
