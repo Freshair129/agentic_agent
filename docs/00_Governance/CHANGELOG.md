@@ -6,6 +6,20 @@ All notable changes to the EVA Core project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.6.0-ResonanceRefined] - 2026-01-18
+
+### Added
+
+- **Registry as SSOT**: Elevated `eva_master_registry.yaml` to be the absolute Source of Truth for all versions, permissions, and runtime sequences.
+- **Runtime Execution Graph**: Added `execution_graph` to the Registry to autogenerate boot sequences.
+- **Criticality Levels**: Defined L0-L3 criticality for all systems to manage failure tolerance.
+- **Phase 3 Protocol**: Formalized `Phase_3_Loopback` (The Sponge) as a `cognitive_loop` protocol in CIM.
+
+### Changed
+
+- **Architecture Diagram**: Updated `FULL_SYSTEM_ARCHITECTURE_v9.6.2.md` to strictly follow logic: Input -> Engram -> SLM -> Gap -> Output.
+- **Version Control**: Enforced clear semantic versioning guidelines (Skipped v9.5.x as internal refactor).
+
 ## [9.4.3-ResonanceRefactored] - 2026-01-17
 
 ### Added
