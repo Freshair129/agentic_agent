@@ -3,6 +3,7 @@
 > **Status**: Canonical / Final
 > **Version**: 9.6.2 (Registry Refined)
 > **Role**: Source of Truth for Runtime Orchestration (Synced with Registry)
+> **Companion**: See [Cognitive Flow 2.0](file:///e:/The%20Human%20Algorithm/T2/agent/orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md) for logic sequence.
 
 เอกสารฉบับนี้แสดง **Runtime Execution Flow** ที่ถูกกำหนดใน `eva_master_registry.yaml` ซึ่งเป็นจุดอ้างอิงเดียว (SSOT) สำหรับการ Boot และ Execution ของระบบ
 

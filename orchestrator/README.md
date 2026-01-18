@@ -1,38 +1,59 @@
-# 🧠 Orchestrator Module (EVA 8.2.0)
-**Component ID:** `SYS-ORCH-8.2` | **Version:** `8.2.0` | **Role:** Central Decision Making & Flow Control
+# 🧠 Orchestrator (The Nervous System)
 
-> [!NOTE]
-> The Orchestrator is the "brain" of EVA, coordinating the entire dual-phase, one-inference cognitive loop. It acts as the conductor, ensuring seamless information flow between biological, psychological, and memory systems to generate embodied responses.
-
-## 📋 Overview
-The Orchestrator module is responsible for the overall execution flow of EVA's cognitive process. It implements the `Dual-Phase One-Inference` architecture, mediating between user input, internal biological/psychological states, memory retrieval, and LLM reasoning. Its primary engine is `orchestrator_engine.py`.
-
-## ⚙️ Core Responsibilities
-1.  **Dual-Phase Flow Management**: Orchestrates Phase 1 (Perception), `The Gap` (Embodied Processing), and Phase 2 (Reasoning) within a single LLM inference.
-2.  **Module Coordination**: Initializes and manages instances of Physio Core, EVA Matrix, Artifact Qualia, CIN, Agentic RAG, and MSP, ensuring proper data exchange via the Resonance Bus.
-3.  **Context Assembly**: Directs the Context Injection Node (CIN) to build rich, embodied prompts for the LLM.
-4.  **Persistence**: Instructs MSP to archive turn-by-turn interactions and their associated internal states.
-
-## 🔗 Key Sub-modules
-*   **`cin/` (Context Injection Node)**: Handles the detailed construction of LLM prompts for both phases.
-*   **`pmt/` (Prompt Rule Layer)**: Manages EVA's identity, behavioral constraints, and safety protocols.
-
-## 📚 Documentation
-For a deep dive into the `Dual-Phase One-Inference` architecture and the mechanics of `The Gap`, refer to:
-*   [Dual-Phase Orchestration Details](docs/Dual_Phase_Orchestration_Details.md)
-
-## 🗂️ Directory Structure (8.2.0 Standard)
-```
-orchestrator/
-├── cin/                     # Context Injection Node
-├── docs/                    # Conceptual Documentation
-│   └── Dual_Phase_Orchestration_Details.md
-│
-├── pmt/                     # Prompt Rule Layer
-├── orchestrator_engine.py     # Main Execution Loop
-└── README.md                # This document
-```
+**Component ID**: `SYS-ORCH` | **Version**: v9.6.2 (Cognitive Flow 2.0) | **Role**: CNS, Flow Control & Context Assembler
 
 ---
 
-**Last Updated**: 2026-01-05 | **Status**: Production Ready ✅
+## 📋 Overview
+
+The **Orchestrator** is the "Central Nervous System" of EVA. It coordinates the **Cognitive Flow 2.0** — a single-inference sequential process that simulates the transition from reflex (Perception) to processing (The Gap) to reasoning (Phase 2).
+
+In **v9.6.2**, the Orchestrator has shifted from managing "Prompt Strings" to managing "File Containers" (The Context Injector Node).
+
+---
+
+## ⚙️ Core Responsibilities
+
+1. **Flow Orchestration**: Executes the 3-phase loop (Perception -> Gap -> Reasoning).
+2. **Context Assembly (CIM)**: Manages the `consciousness/context_container` by injecting and purging files turn-by-turn.
+3. **Biological Synchronization**: Triggers the `sync_biocognitive_state` tool call.
+4. **Resonance Management**: Monitors the Bus to determine when the "Deep State" is ready for Phase 2.
+5. **Session Management**: Tracks `ConversationID` and `TurnIndex` via the OS Identity Manager.
+
+---
+
+## 🌀 Cognitive Flow 2.0
+
+1. **Phase 1 (Perception)**: Initial reflex using SLM signals and immediate vitals.
+2. **The Gap**: Wait for Physio-decay and Deep RAG recall.
+3. **Phase 2 (Reasoning)**: LLM consumes the "Hydrated" context container.
+4. **Phase 3 (Prediction)**: Post-turn prediction of future intent to prime next turn.
+
+---
+
+## 📂 Structure
+
+- **`orchestrator.py`**: The main system class.
+- **`cognitive_flow/`**: Rules and diagrams for the 2.0 flow protocol.
+- **`cim/` (Context Injector Node)**: The engine that manipulates the `context_container/`.
+- **`configs/`**: Runtime hooks and system sequence definitions.
+- **`temporal/`**: Handles time-dilated biological processing.
+
+---
+
+## 📐 Interaction Pattern
+
+The Orchestrator interacts with the LLM using a **Recursive Function Call** pattern:
+
+- LLM calls `sync_biocognitive_state()` → Orchestrator executes Gap logic → Returns results → LLM continues.
+
+---
+
+## ⚖️ Governance
+
+- **State Dominance**: The Orchestrator ensures no reasoning happens without fresh biological state.
+- **Registry Authority**: The order of system execution is defined in `registry/eva_master_registry.yaml`.
+
+---
+
+*Orchestration is the art of synchronization.*

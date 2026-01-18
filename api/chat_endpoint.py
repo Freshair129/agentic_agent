@@ -20,8 +20,8 @@ load_dotenv(Path(__file__).parent / ".env.api")
 
 app = FastAPI(
     title="EVA Chat API",
-    description="WebSocket & REST API for EVA 9.4.3",
-    version="9.4.3"
+    description="WebSocket & REST API for EVA v9.6.2 (Cognitive Flow 2.0)",
+    version="9.6.2"
 )
 
 # CORS configuration

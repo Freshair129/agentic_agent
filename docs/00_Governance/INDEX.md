@@ -1,9 +1,10 @@
 # EVA v9.6.2 Documentation Index
 >
 > **Source of Truth**: master
-> **Last Updated**: 2026-01-18
+> **Last Updated**: 2026-01-19
+> **Version**: 9.6.2 (Cognitive Flow 2.0)
 
-ยินดีต้อนรับสู่คลังความรู้ของ **EVA v9.6.2 (Cognitive Flow 2.0)** เอกสารนี้ถูกจัดเรียงตามลำดับความสำคัญเพื่อให้ง่ายต่อการศึกษาทั้ง AI และ Developer
+ยินดีต้อนรับสู่คลังความรู้ของ **EVA v9.6.2 (Cognitive Flow 2.0)** เอกสารนี้ถูกจัดเรียงตามลำดับความสำคัญเพื่อให้ง่ายต่อการศึกษาทั้ง AI และ Developer โดยยึดหลัก **Registry-Centric Governance**
 
 ---
 
@@ -19,35 +20,32 @@
 
 ### [03. Architecture (สถาปัตยกรรมระดับสูง)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/)
 
-- [**High-Level Architecture**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_v9.4.3_Architecture.md): โครงสร้างโฟลเดอร์และหลักการ Consciousness-Implementation Separation
-- [**Operational Flow (v9.4.3)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/OPERATIONAL_FLOW_v9.4.3.md): ลำดับการทำงานของ Runtime Hooks (Engram -> SLM -> Gap -> LLM)
+- [**EVA System Architecture (SSOT)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_System_Architecture.md): โครงสร้างหลักและ Biological Life Cycle (v9.6.2)
+- [**System Storage ERD (v9.6.2)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_System_Storage_ERD.md): แผนผัง Context Container และการฉีดไฟล์ (Injector)
 - [**Consciousness Domain Structure**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/CONSCIOUSNESS_DOMAIN_STRUCTURE.md): โครงสร้าง Awareness Domain และพื้นที่การทำงานของ LLM
-- [**MSP Storage ERD**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/v9.4.3_SYSTEM_STORAGE_ERD.md): แผนผังการถือครองข้อมูลและการเชื่อมโยง Entity
 
-### [04. Systems (ระบบอวัยวะ)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/04_Systems/)
+### [04. Cognitive Flow (การไหลของความคิด)](file:///e:/The%20Human%20Algorithm/T2/agent/orchestrator/cognitive_flow/)
+
+- [**Cognitive Flow 2.0**](file:///e:/The%20Human%20Algorithm/T2/agent/orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md): Master Protocol การทำงานแบบ Single-Inference Sequentiality
+- [**Stimulus Chunking v2.0**](file:///e:/The%20Human%20Algorithm/T2/agent/orchestrator/cognitive_flow/docs/STIMULUS_CHUNKING_PROTOCOL.md): กระบวนการย่อยอารมณ์แบบ Sequential
+
+### [05. Systems (ระบบอวัยวะ)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/04_Systems/)
 
 - [**PhysioCore (v2.4.3)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/04_Systems/physio_core/circulation_blood_physiology_overview.md): ระบบสรีรวิทยาพื้นฐาน (Verified Stable ✅)
 - [**EVA Matrix (v2.0.0)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/04_Systems/eva_matrix/matrix_logic_concept.md): ระบบประมวลผลสภาวะจิตใจ (Verified Coupled ✅)
-- คู่มือรายละเอียดของแต่ละระบบหลักเพิ่มเติม (MSP, PRN, ฯลฯ)
-
-### [05. Capabilities (ทักษะและบริการ)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/05_Capabilities/)
-
-- ข้อมูลการใช้งาน Tools, Skills และ Services (RAG, Engram, Vector Bridge)
 
 ---
 
 ## 🛠️ หมวดหมู่เพิ่มเติม
 
+- [**05. Capabilities**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/05_Capabilities/): Tools, Skills, Services
 - [**06. Orchestration**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/06_Orchestration/): เจาะลึกการควบคุม Session และ Context
-
-### [07. Protocols (กฎระเบียบระบบ)](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/)
-
-- [**Memory Governance Policy**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/MEMORY_GOVERNANCE_POLICY.md): กฎการโปรโมทและแก้ไขความเชื่อ (Sphere -> Core logic)
-- [**Event Policy Specification**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/eventpolicy.md): ข้อกำหนดการจัดการสัญญาณและเหตุการณ์ (State-Dominant)
-- [**ADR (Architecture Decision Records)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/adr/): บันทึกการตัดสินใจเชิงสถาปัตยกรรมที่สำคัญ
-- [**Archive**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/archive/): คลังเอกสารเก่าสำหรับการอ้างอิงย้อนหลัง
+- [**Memory Governance Policy**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/EVA_Memory_Governance.md): กฎการโปรโมทและแก้ไขความเชื่อ (Sphere -> Core logic)
+- [**Memory Interface Protocol**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/protocols/EVA_Memory_Interface_Protocol.md): มาตรฐานการเชื่อมต่อและแลกเปลี่ยนข้อมูลความจำ
+- [**Versioning**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/00_Governance/VERSIONING_POLICY.md), [**Changelog**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/00_Governance/CHANGELOG.md), [**Rules Audit**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/00_Governance/RULES_ALIGNMENT_AUDIT.md)
+- [**99. Archive**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/99_Archive/): คลังเอกสารเก่า (Legacy Documents)
 
 ---
 
 <!-- markdownlint-disable-next-line MD036 -->
-**Created for EVA v9.4.3 Documentation Management**
+**Created for EVA v9.6.2 Documentation Management**

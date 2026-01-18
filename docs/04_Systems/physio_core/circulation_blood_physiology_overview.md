@@ -1,7 +1,7 @@
 # Circulation & Blood Physiology (v2.4.3) — Overview
-
+>
 > [!IMPORTANT]
-> **Status**: VERIFIED STABLE (v9.4.3 Audit Complete)
+> **Status**: VERIFIED STABLE (v9.6.2 Alignment Complete)
 > **Verification**: Verified endocrine spikes, metabolic decay, and vitals loop feedback via `verify_physio_loop.py`.
 
 ## 1. Purpose
@@ -69,7 +69,7 @@ The system runs as a **continuous background process**.
 
 Time is handled as:
 
-```
+```python
 Δt = now - last_update
 ```
 
@@ -81,14 +81,14 @@ This allows the engine to run indefinitely without drift or CPU spikes.
 
 ### 3.1 BloodEngine (Physiology Core)
 
-**Responsibilities**
+#### Responsibilities
 
 - Maintain blood volume
 - Track hormone concentration in plasma
 - Apply hormone influx (from organs)
 - Apply decay and recovery (half-life model)
 
-**Non-responsibilities**
+#### Non-responsibilities
 
 - Scheduling (Hz control)
 - User interaction
@@ -127,13 +127,13 @@ Flow does **not** represent spatial movement through vessels.
 
 Hormones are modeled as **concentrations in plasma**:
 
-```
+```python
 concentration = mass / distribution_volume
 ```
 
 Clearance uses a **half-life exponential decay model**:
 
-```
+```python
 C(t) = baseline + (C0 - baseline) * exp(-k * Δt)
 ```
 
@@ -247,7 +247,7 @@ The core guarantee:
 
 Think of this system as:
 
-```
+```text
 Organs → Hormone Mass
 Hormone Mass → Blood
 Blood → Concentration

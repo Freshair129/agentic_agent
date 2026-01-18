@@ -1,122 +1,62 @@
 # 🧠 MSP (Memory & Soul Passport)
-**Component ID:** `SYS-MSP-8.2` | **Version:** `8.2.0` | **Role:** The Auditor & Archive
 
-> [!NOTE]
-> **Resonance Bus Integration:** In v8.2.0, MSP acts as the "Ultimate Listener". It subscribes to `bus:audit` and `bus:knowledge` to permanently archive the lived experience of the system.
-
-## 📋 Overview | ภาพรวม
-
-**Memory & Soul Passport (MSP)** is the unified memory validation and persistence layer of EVA. It ensures that every moment of existence—whether biological, psychological, or cognitive—is cryptographically hashed, validated against schema, and stored in the appropriate memory sector.
-
-**Memory & Soul Passport (MSP)** คือระบบปฏิบัติการความจำแบบรวมศูนย์ของ EVA ทำหน้าที่ตรวจสอบ ยืนยัน และจัดเก็บ "ประสบการณ์ชีวิต" ทั้งหมด ไม่ว่าจะเป็นทางกายภาพ จิตใจ หรือความคิด
-
-In the **Resonance Edition (8.2.0)**, MSP has been consolidated from a complex client-server model into a single, robust library (`memory_n_soul_passport_engine.py`) that serves as the **Single Source of Truth** for all memory operations.
-
-ในเวอร์ชัน **Resonance Edition (8.2.0)** เราได้ยุบรวมโครงสร้างที่ซับซ้อนให้เหลือเพียงไลบรารีหลักตัวเดียว (`memory_n_soul_passport_engine.py`) เพื่อเป็น **แหล่งความจริงเพียงหนึ่งเดียว (SSOT)** สำหรับทุกปฏิบัติการที่เกี่ยวกับความจำ
+**Component ID**: `SYS-MSP` | **Version**: v9.6.2 (Cognitive Flow 2.0) | **Role**: The Auditor & Archive
 
 ---
 
-## ⚙️ Core Functions | หน้าที่หลัก
+## 📋 Overview
 
-1.  **Unified Persistence** | **การจัดเก็บแบบรวมศูนย์**: Handles all writes to `consciousness/` (Episodic, Semantic, Sensory, State).
-2.  **State Registry** | **ทะเบียนสถานะ**: Acts as the authoritative ledger for resolving the current system state (`StateHash_S1`).
-3.  **Audit Trail** | **ผู้ตรวจสอบ**: Works with `StreamingAuditor` to ensure no signal is lost.
-4.  **Interface Flatness** | **สัญญาที่เรียบง่าย**: Simplified contract structure for easier LLM reasoning.
+**Memory & Soul Passport (MSP)** is the operating system for EVA's memory. It ensures that every moment of existence — biological, psychological, or cognitive — is validated, hashed, and stored according to the **8-8-8 Distillation Protocol**.
 
----
-
-## 🗂️ The Consciousness Chain
-
-> [!IMPORTANT]
-> **MSP Implementation vs. RMS Architecture**
-> *   MSP is the **Software Module** that performs the writes.
-> *   The storage destination is the **Consciousness Chain** (`consciousness/`).
->
-> For the full architectural specification of the Chain, see:
-> **[RESONANCE_MEMORY_SYSTEM.md](../docs/RESONANCE_MEMORY_SYSTEM.md)**
+In **v9.6.2**, MSP acts as the "Subconscious Observer," listening to the Resonance Bus and capturing state snapshots automatically (Latching).
 
 ---
 
-## 🧠 Memory Sectors | ภาคส่วนความจำ
+## ⚙️ Core Responsibilities
 
-| Sector | Path | Schema | Function |
+1. **Subconscious Latching**: Automatically captures state from `physio_core` and `eva_matrix` via the Bus.
+2. **Episodic Persistence**: Validates and writes "Episodes" (Turns) to `memory/archival_memory`.
+3. **8-8-8 Distillation**: Manages the promotion of memory from **Session** (Tier 1) to **Core** (Tier 2) and **Sphere** (Tier 3).
+4. **Epistemic Integrity**: Assigns confidence levels (`Hypothesis`, `Confirmed`) to memory fragments.
+5. **Registry Management**: Maintains the authoritative `user_registry.json`.
+
+---
+
+## 🗂️ The Memory Stack (8-8-8 Protocol)
+
+| Tier | Duration | Purpose | Location |
 | :--- | :--- | :--- | :--- |
-| **Episodic** | `01_Episodic_memory/` | `Episodic_Memory_Schema_v2` | Narrative logs of "what happened" (Timeline). |
-| **Semantic** | `02_Semantic_memory/` | `Semantic_Memory_Schema_v2` | Concepts, facts, and knowledge graph nodes. |
-| **Sensory** | `03_Sensory_memory/` | `Sensory_Memory_Schema_v2` | High-dimensional vector embeddings of "feelings". |
-| **State** | `08_State_storage/` | Varies | Snapshots of the "Latching" bus state (Bio/Psyche). |
+| **Tier 1 (Session)** | Turn/Session | Active interaction | `consciousness/episodic_memory` |
+| **Tier 2 (Core)** | Cross-Session | Stable world model | `memory/core_memory` |
+| **Tier 3 (Sphere)** | Eternal | Global bias / Wisdom | `memory/sphere_memory` |
 
 ---
 
-## 🔗 Integration Flow | กระบวนการทำงาน
+## 📂 Structure
 
-1.  **Signal**: Any module publishes to Resonance Bus.
-2.  **Stream**: `StreamingAuditor` captures the signal.
-3.  **Latch**: Critical states (Physio/Matrix) are held in MSP's State Registry.
-4.  **Proposal**: At the end of a turn, the LLM proposes a memory entry.
-5.  **Commit**: MSP validates the proposal against `contract/` and writes to `consciousness/`.
-
----
-
-## 🛠️ Usage | การใช้งาน
-
-```python
-from memory_n_soul_passport.msp_client import MSPClient
-
-# Initialize
-msp = MSPClient()
-
-# Read State
-current_bio = msp.get_latest_state("physio_core")
-
-# Save Memory (Episodic)
-msp.save_episodic_memory(
-    content="I felt happy when the user greeted me.",
-    tags=["greeting", "happiness"],
-    sentiment=0.8
-)
-```
+- **`memory_n_soul_passport_engine.py`**: The primary logic engine.
+- **`Module/`**: Specialized modules for validation and distillation.
+- **`configs/`**: Write policies and schema mappings.
+- **`contract/`**: Formal interfaces for the memory proposal tool.
+- **`schema/`**: JSON Schemas (V2) for all memory objects.
 
 ---
 
-## 📂 Module Structure
+## 📐 Interaction Flow (v9.6.2)
 
-```
-memory_n_soul_passport/
-├── configs/                 # [SSOT] Master Configuration
-│   ├── MSP_Interface.yaml         # Bus bindings
-│   ├── MSP_configs.yaml           # Runtime logic
-│   └── MSP_Write_Policy.yaml      # Persistence rules
-│
-├── contract/                # [API] Simplified Interfaces
-│   ├── MSP_Payload_Contract.yaml  # Bus payload spec
-│   ├── MSP_Proposal_*.yaml        # Memory proposal schemas
-│   └── MSP_to_CIN_Interface.yaml  # Output specs
-│
-├── schema/                  # [DATA] V2 Archival Schemas
-│   ├── MSP_Payload_Schema_v2.json
-│   ├── Episodic_Memory_Schema_v2.json
-│   ├── Semantic_Memory_Schema_v2.json
-│   └── Sensory_Memory_Schema_v2.json
-│
-├── docs/                    # [DOCS] Concepts & Integration
-│   ├── MSP_spec.yaml              # Technical specification
-│   └── MSP_CONCEPT.md             # Concepts & integration guides
-│
-├── archive/                 # [ARCHIVE] Deprecated files
-│   └── legacy/                    # Old integration docs
-│
-└── memory_n_soul_passport_engine.py            # [ENGINE] Unified Logic
-```
+1. **Observation**: MSP listens to Resonance Bus pulses.
+2. **Snapshot**: Captures biological/psychological state into a "Latching Node."
+3. **Proposal**: Receives Turn Metadata from the LLM via the `propose_episodic_memory` tool.
+4. **Hydration**: System "hydrates" the proposal with authoritative bio-data.
+5. **Final Commit**: Signed and written to long-term storage.
 
 ---
 
-## 📚 Documentation
+## ⚖️ Governance
 
-- **Technical Specification**: [docs/MSP_spec.yaml](docs/MSP_spec.yaml)
-- **Concepts & Integration**: [docs/MSP_CONCEPT.md](docs/MSP_CONCEPT.md)
-- **Resonance Memory System**: [../docs/RESONANCE_MEMORY_SYSTEM.md](../docs/RESONANCE_MEMORY_SYSTEM.md)
+- **Single Writer Rule**: MSP is the **only** component with write access to the `memory/` directory.
+- **Passive Persistence**: Latching occurs without explicit LLM instructions to ensure biological continuity.
 
 ---
 
-**Last Updated**: 2026-01-04 | **Status**: Production Ready ✅
+*Verified Memory. Unified Identity.*
