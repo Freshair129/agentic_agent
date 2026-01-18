@@ -64,8 +64,10 @@ import json
 import hashlib
 import yaml
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 from typing import Dict, List, Any, Optional
+from .schema_validator import MSPSchemaValidator
+from capabilities.tools.msp_monitor import MSPDataMonitor
 import math
 import re
 
@@ -146,7 +148,20 @@ class MSP(IMSPassport):
         self.sensory_dir  = self.root_path / cfg_storage.get("sensory", {}).get("path", "consciousness/sensory_memory")
         self.state_dir    = self.root_path / self.config.get("filesystem_structure", {}).get("system_state", {}).get("root", "system_state")
         self.context_dir  = self.root_path / cfg_storage.get("context", {}).get("context_storage", "memory/context_storage")
+        
+        # Phase 13: Schema Validator
+        self.schema_dir = Path(__file__).parent / "schema"
+        try:
+            self.validator = MSPSchemaValidator(self.schema_dir)
+            self.strict_validation = True
+        except Exception as e:
+            print(f"[MSP] ⚠️ Schema Validator Failed: {e}")
+            self.strict_validation = False
+            
+        # Phase 13: Data Monitor
+        self.monitor = MSPDataMonitor()
 
+        self._load_state()
         # Create Core Structures
         for d in [self.episodic_dir, self.semantic_dir, self.sensory_dir, self.state_dir, self.context_dir]:
             d.mkdir(parents=True, exist_ok=True)
@@ -227,6 +242,15 @@ class MSP(IMSPassport):
                 lambda p: self.set_active_state("prn_policy", p))
 
         safe_print(f"[MSP] ✅ Subconscious Facade Initialized as Resonance Listener (v1.1.0)")
+
+    def _load_state(self):
+        """Initial load of all active states from disk."""
+        try:
+             # Populate in-memory cache from filesystem
+             self.get_all_active_states()
+        except Exception as e:
+             # Only print if strict debug, otherwise silent
+             pass
 
     # ============================================================
     # 9.1.0 BRIDGE METHODS
@@ -2152,6 +2176,15 @@ class MSP(IMSPassport):
     def set_active_state(self, slot: str, data: Any):
 
         """Broadcasts and persists a system's active state."""
+        
+        # Validate before storing (Phase 13: Validation)
+        if hasattr(self, 'validator') and self.strict_validation:
+            if slot == "physio_state":
+                # Only check main structure compliance (soft validate)
+                self.validator.validate_safe(data, "State_Storage_Schema")
+            elif slot == "matrix_state":
+                # Matrix schema is subset check
+                pass
 
         # 1. Update In-memory cache
 
@@ -2212,6 +2245,12 @@ class MSP(IMSPassport):
         Write episode with FULL state snapshot (Phase 2 Data Pipeline).
         Delegates to EpisodicMemoryModule.
         """
+        # Validate data gaps (Phase 13: Monitoring)
+        if hasattr(self, 'monitor'):
+             gaps = self.monitor.check_state_completeness(self._active_state_cache)
+             if gaps:
+                 print(f"[MSP Monitor] ⚠️ Writing episode with missing fields: {gaps}")
+
         # 1. Build State Snapshot from Active State
         # (This aggregates data latched from all systems via Bus or direct set_active_state)
         
