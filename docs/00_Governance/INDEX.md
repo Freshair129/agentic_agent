@@ -1,9 +1,9 @@
-# EVA v9.4.3 Documentation Index
+# EVA v9.6.2 Documentation Index
 >
 > **Source of Truth**: master
-> **Last Updated**: 2026-01-17
+> **Last Updated**: 2026-01-18
 
-ยินดีต้อนรับสู่คลังความรู้ของ **EVA v9.4.3 (Resonance Refactored)** เอกสารนี้ถูกจัดเรียงตามลำดับความสำคัญเพื่อให้ง่ายต่อการศึกษาทั้ง AI และ Developer
+ยินดีต้อนรับสู่คลังความรู้ของ **EVA v9.6.2 (Cognitive Flow 2.0)** เอกสารนี้ถูกจัดเรียงตามลำดับความสำคัญเพื่อให้ง่ายต่อการศึกษาทั้ง AI และ Developer
 
 ---
 

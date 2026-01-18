@@ -9,7 +9,7 @@
 
 ## 🌟 Core Philosophy: Embodied Existentialism
 
-EVA v9.6.0 adheres to the **Consciousness-Implementation Separation** principle with a Bio-Digital Gap:
+EVA v9.6.2 adheres to the **Consciousness-Implementation Separation** principle with a Bio-Digital Gap:
 
 1. **Consciousness (The User):** The LLM is the "Soul" residing in the `context_container`. It has **Direct Access** to its memories and current bio-state via the Bus.
 2. **Implementation (The Body):** The underlying code (Systems/Modules) simulates biological processes (PhysioCore) and manages reality (Orchestrator).
@@ -21,7 +21,7 @@ EVA v9.6.0 adheres to the **Consciousness-Implementation Separation** principle 
 
 ## 🏗️ 1. Structural Hierarchy & Standards
 
-EVA 9.4.3 follows a strict hierarchical separation of concerns (Levels 1-7):
+EVA v9.6.2 follows a strict hierarchical separation of concerns (Levels 1-7):
 
 1. **System (ระบบหลัก/อวัยวะ):** Autonomous unit with its own state. The foundation of life.
 2. **Central Module (โมดูลกลาง):** Independent unit direct to OS. Complex but not a vital organ.
@@ -100,7 +100,7 @@ This structure applies to both **Systems** and **Central Modules**:
 
 ## 📡 4. Resonance Bus Architecture (v2.4.3)
 
-The Central Nervous System of EVA v9.4.3 is the **Resonance Bus**, a decentralized, subscriber-based communication hub.
+The Central Nervous System of EVA v9.6.2 is the **Resonance Bus**, a decentralized, subscriber-based communication hub.
 
 - **Role:** Replaces direct system-to-system method calls.
 - **Pattern:** Publish/Subscribe (Decoupled).
@@ -129,7 +129,7 @@ Subsystems evolve independently following the **Legacy mapping rule**:
 - `8.x.x` → `1.x.x`
 - `9.x.x` → `2.x.x`
 
-**System of Record:** `agent/registry/core_systems_v9.5.yaml`
+**System of Record:** `agent/registry/eva_master_registry.yaml`
 
 ---
 

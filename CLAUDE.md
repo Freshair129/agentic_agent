@@ -206,6 +206,49 @@ See: `docs/04_Systems/physio_core/hormone_spec_ml.md`
 - `Protocol_Process_Genesis_Block.json` - Workflows
 - `Safety_Block.json` - Ethical guardrails
 
+### Engram System (NEW in v9.6.0)
+Fast memory lookup cache inspired by DeepSeek's Conditional Memory:
+- **Purpose:** O(1) lookup for frequently accessed patterns
+- **Location:** `capabilities/services/engram_system/`
+- **Workflow:** CIM checks Engram before expensive RAG queries
+- **Architecture:** Hash-based scalable lookup
+- See: `Conditional Memory.md` for theoretical background
+
+### Boot Sequence (The Awakening)
+System initialization order (defined in `registry/eva_master_registry.yaml`):
+1. **IdentityManager** - Security first (Who am I?)
+2. **Resonance Bus** - Transport layer (Connect everyone)
+3. **PhysioCore** - Body (Heartbeat must start)
+4. **EVA Matrix** - Mind (Psychology follows physiology)
+5. **MSP** - Memory (Soul wakes up)
+6. **GKS** - Knowledge (Wisdom loads)
+7. **RMS** - Filter (Perception starts)
+8. **Artifact Qualia** - Senses (Phenomenology online)
+9. **Orchestrator** - CNS (Conductor raises baton)
+
+## System Boot & Initialization
+
+### Starting EVA
+```bash
+# Standard initialization (from orchestrator or main.py)
+python orchestrator/orchestrator.py
+
+# The boot sequence follows this order:
+# IdentityManager → Bus → PhysioCore → Matrix → MSP → GKS → RMS → Qualia → Orchestrator
+```
+
+### Verifying System Health
+```bash
+# Check version alignment
+python scripts/check_versions.py
+
+# Check documentation alignment
+python scripts/check_doc_alignment.py
+
+# Verify registry integrity
+# (Registry audit tools in development)
+```
+
 ## Common Tasks
 
 ### Adding a New Hormone Response
@@ -231,6 +274,18 @@ See: `docs/04_Systems/physio_core/hormone_spec_ml.md`
 1. Edit system identity: `orchestrator/cim/system_contexts/core_identity.md`
 2. Soul/personality: `orchestrator/cim/prompt_rule/configs/identity/soul.md`
 3. Architecture diagram: `orchestrator/cim/system_contexts/system_architecture_visual.md`
+
+### Working with Context Container
+The Context Container is the "active working memory" for each turn:
+1. **Location:** `consciousness/context_container/`
+2. **Files injected by CIM:**
+   - `task.md` - Current turn objective
+   - `self_note_epXX.md` - Self-reflection from previous turn
+   - `user_profile.md` - User grounding facts
+   - `context_summary_epXX.md` - Turn summary
+   - `goal.md`, `instructions.md` - Persistent directives
+3. **LLM reads these directly** via function calls (no text prompts)
+4. **MSP archives** container contents after turn completion
 
 ## Configuration Locations
 
@@ -307,9 +362,13 @@ Schema locations:
 
 **Hormone imbalances:** Check baselines in `endocrine_configs.yaml`, verify decay rates
 
-**Memory not persisting:** MSP write policy in `MSP_Write_Policy.yaml`
+**Memory not persisting:** MSP write policy in `MSP_Write_Policy.yaml`. Remember: LLM cannot write to `memory/` directly - must use MSP function calls.
 
-**LLM context too large:** Reduce prompt size via CIM tier settings
+**Context not loading:** Check if files exist in `consciousness/context_container/`. Verify CIM injection is working.
+
+**Boot order failures:** Check `registry/eva_master_registry.yaml` runtime_sequence. PhysioCore must start before Matrix.
+
+**Version mismatches:** Run `python scripts/check_versions.py` to detect inconsistencies
 
 ### Logging
 - Console logs use structured format: `[MODULE] [LEVEL] Message`
