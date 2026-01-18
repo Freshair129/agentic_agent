@@ -108,6 +108,30 @@ async def health_check():
         "active_sessions": len(manager.orchestrators)
     }
 
+@app.get("/api/mind/state")
+async def get_mind_state(session_id: str):
+    """Get the current bio-cognitive state snapshot"""
+    try:
+        orch = manager.get_orchestrator(session_id)
+        
+        # Construct snapshot from MSP active cache
+        matrix = orch.msp.get_active_state("matrix_state") or {}
+        physio = orch.msp.get_active_state("physio_state") or {}
+        qualia = orch.msp.get_active_state("qualia_state") or {}
+        
+        return {
+            "eva_matrix": matrix.get("axes_9d", {}),
+            "physio": {
+                "hormones": physio.get("hormones", {}),
+                "vitals": physio.get("vitals", {})
+            },
+            "qualia": qualia,
+            "resonance_index": orch.msp.get_active_state("resonance_index") or 0.5,
+            "emotion_label": matrix.get("emotion_label", "Neutral")
+        }
+    except Exception as e:
+         return {"error": str(e)}
+
 # --- WebSocket Endpoint ---
 
 @app.websocket("/ws/chat/{client_id}")
@@ -129,23 +153,22 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                 "message": "EVA is processing..."
             })
             
-            # 3. Process (Synchronous for now, essentially blocking)
-            # In a future async-native version, this could stream intermediate thoughts
+            # 3. Process (Synchronous)
             result = orch.process_user_input(user_message)
             
-            # 4. Extract Data
-            bot_response = result.get("final_response", "")
-            matrix_state = result.get("psychological_state", {})
-            rms_coloring = result.get("bio_state", {}).get("rms_coloring", {})
+            # 4. Extract Data (Unified Snapshot)
+            snapshot = result.get("state_snapshot", {})
             
             # 5. Send Full State Update
             await websocket.send_json({
                 "type": "response",
-                "text": bot_response,
+                "text": result.get("final_response", ""),
                 "state": {
-                    "matrix": matrix_state,
-                    "rms": rms_coloring,
-                    "emotion_label": result.get("emotion_label", "neutral")
+                    "eva_matrix": snapshot.get("eva_matrix_state", {}),
+                    "physio": snapshot.get("physio_state", {}),
+                    "resonance_index": result.get("resonance_index", 0.5),
+                    "emotion_label": result.get("emotion_label", "Neutral"),
+                    "qualia": snapshot.get("qualia", {})
                 }
             })
             
