@@ -30,19 +30,21 @@ This document outlines the "System-Propelled Hydration" and "Bio-Digital Gap" wo
   - **User Text:** Raw input.
 - **Cognitive Gateway (SLM):**
   - **Model:** Llama-3.2-1B (System 1).
-  - **Action:** Rapidly extracts Intent and Emotional Signal.
+  - **Action:** Rapidly extracts Intent and Emotional Signal (Intuition Candidate).
   - **Salience Anchor:** Identifies the specific phrase triggering the reaction.
+  - **Role:** **Intuition Only**. SLM does not perform chunking.
 - **System Action (Pre-Inference):**
-  - **Initial RIM Calculation:** Using `RIMCalculator` to map SLM signals to base impact.
+  - **Initial RIM Calculation:** Using `RIMCalculator` to map SLM signals to base impact (Initial Guess).
 - **AI Action (Gemini):**
   - **Refined Perception:** Receives SLM data as "Intuitive Gut Feeling."
-  - **Resonance Confidence:** Gemini evaluates the alignment between its reasoning and the SLM's instinct.
+  - **Resonance Confidence:** Gemini evaluates the alignment between its reasoning and the SLM's instinct (Confidence Reflection).
+  - **Decision:** Gemini decides whether to use the SLM's candidate or re-extract Stimulus data for higher fidelity.
   - **Tool:** `SYNC_BIOCOGNITIVE_STATE_TOOL` with `confidence_score`.
   - **Partial Write:** Buffers the `turn_user` fragment (Raw Text + Initial RIM) to memory instantly.
 
 ### 2. The Gap: Parallel Processing
 
-- **Process A (Body)**: `Physio Core` chunking + **30Hz Continuous Loop**. Hormones exhibit pure exponential decay toward zero, balanced by **Basal Secretion**.
+- **Process A (Body)**: **Physio Core chunking** (30Hz Continuous Loop) of the validated Stimulus. Hormones exhibit pure exponential decay toward zero, balanced by **Basal Secretion**.
 - **Vitals Integration**: Heart Rate (BPM) and Respiration (RPM) are calculated in the backend (`VitalsEngine`). RPM drives **Vagus Tone**, which provides negative feedback to inhibit stress hormone production during the gap.
 - **Process B (Memory - Two-Stage)**:
   - **Stage 1 (Quick Recall):** Runs parallel with Physio. Retrieves Narrative (20%), Intuition (5%), Reflection (5%) streams using only semantic tags.

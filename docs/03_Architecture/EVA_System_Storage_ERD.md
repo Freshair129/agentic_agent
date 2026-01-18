@@ -48,7 +48,8 @@ flowchart TD
         MSP -- "Snapshots" --> SESSION_MEM["Session Memory"]
         MSP -- "Distills" --> CORE_MEM["Core Memory"]
         MSP -- "Distills" --> SPHERE_MEM["Sphere Memory"]
-        MSP -- "User Modeling" --> USER_MEM["User Profile"]
+        MSP -- "Manages" --> REGISTRY["User Registry"]
+        REGISTRY -- "Produces" --> USER_MEM["User Profile"]
     end
 
     %% Systems Interaction
@@ -80,6 +81,12 @@ flowchart TD
 - **Active Slot (Hot)**: พื้นที่วางงานปัจจุบัน (Reference)
 - **History (Cold)**: ตู้เก็บเอกสารเก่า (Archived Turns)
 - **Rule**: เมื่อจบ Turn, Dynamic Content ใน Container จะถูกย้าย (Move) ไปลง History
+
+### 2.4 User Registry (The Identification)
+
+- **Role**: **"Identity Manager" สำหรับผู้ใช้**. จัดการการลงทะเบียนและระบุตัวตน (Speaker identification)
+- **Storage**: `/agent/memory/user_registry.json`
+- **Output**: สร้าง `user_id` (เช่น `FD_01`, `U_01`) และบริหารจัดการ `User Profile`
 
 ### 2.4 Consciousness (Direct Access RAM)
 

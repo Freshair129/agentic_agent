@@ -182,7 +182,7 @@ graph TD
     %% 2. PERCEPTION & QUICK RECALL
     %% ==========================================
     subgraph Perception ["Layer 2: PERCEPTION (SLM)"]
-        SLM["SLM Gateway<br/>(Intent Extraction)"]
+        SLM["SLM Gateway<br/>(Intuition Candidate)"]
         QuickRecall["Stage 1: Quick Recall<br/>(Intent-Based)"]
     end
     
@@ -194,12 +194,12 @@ graph TD
     subgraph BodyMind ["Layer 3: REASONING & EMBODIMENT"]
         direction TB
         
-        LLM_Start["LLM System 2<br/>(Generate Stimulus)"]
-        FnCall{{"Fn: sync_bio_state(Stimulus)"}}
+        LLM_Start["LLM System 2<br/>(Refine/Generate Stimulus)"]
+        FnCall{{"Fn: sync_bio_state(Validated Stimulus)"}}
         
         %% The Gap
         subgraph Gap ["The Gap (Bio-Digital Sync)"]
-            Physio["PhysioCore<br/>(Update Hormones)"]
+            Physio["PhysioCore<br/>(30Hz Chunking)"]
             Matrix["EVA Matrix<br/>(State Drift)"]
         end
         

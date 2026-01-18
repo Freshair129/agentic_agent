@@ -22,7 +22,7 @@ trigger: always_on
 ## 2. System Inventory (Master Registry)
 
 - **Transport**: Resonance_Bus (Central Module)
-- **Memory**: MSP (Core System - Episodic/Semantic/Sensory)
+- **Memory**: MSP (Core System - Episodic/Semantic/Sensory), User_Registry (Logic Module)
 - **Bio/Psych**: PhysioCore (System Authority), EVA_Matrix (Core System)
 - **Phenomenology**: Artifact_Qualia (Core System)
 - **Orchestration**: Orchestrator (System Authority), CIM (Core System), RMS (System Authority)

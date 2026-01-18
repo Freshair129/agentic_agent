@@ -12,30 +12,40 @@ The **Context Container** is EVA's "Short-Term Working Memory." It is a dynamic 
 
 ---
 
-## 📂 Standard Files
+## 📂 Unified Markdown Schema (The 5 Pillars)
 
-1. **`task.md`**: The objective for the current turn.
-2. **`instructions.md`**: Persistent system directives and behavioral constraints.
-3. **`self_note_epXX.md`**: Evaluation and reflections from the *previous* turn.
-4. **`user_profile.md`**: Active grounding facts about the user.
-5. **`goal.md`**: The long-term conversational goal.
-6. **`context_summary_epXX.md`**: A summary of the immediate history.
+To ensure **Psychological Unity** and eliminate format parsing load, all files strictly follow this standard. Each file begins with a **Bridging Narrative** prompt.
 
----
+### 1. The Binder (`00_BINDER.md`)
+>
+> **Role:** The Ego / Self-Controller.
+> **Content:** System Instructions that force the integration of all other files. tells the LLM that these files are NOT external documents, but parts of its own mind.
 
-## ⚙️ Lifecycle
+### 2. The Soul (`01_IDENTITY.md`)
+>
+> **Role:** Personality & Values.
+> **Content:** Replaces `instructions.md`. Contains Persona, Tone, Empathy Rules, and Core Directives.
 
-1. **Phase 1 (Pre-Inference)**: CIM clears the container and injects fresh files.
-2. **Phase 2 (Inference)**: LLM reads files from this directory to inform its response.
-3. **Phase 3 (Post-Inference)**: MSP archives the container's contents into episodic memory.
+### 3. The Body (`02_BIOLOGY.md`)
+>
+> **Role:** Physical Sensation.
+> **Content:** Markdown-formatted Bio-State. No raw JSON.
+> *Narrative:* "My heart is beating at [BPM]. I feel a surge of [Hormone]..."
+
+### 4. The Past (`03_MEMORY.md`)
+>
+> **Role:** Episodic & Semantic Recall.
+> **Content:** User Profile (Narrative), Chat History (Dialogue), and Retrieved Context.
+
+### 5. The Will (`04_INTENTION.md`)
+>
+> **Role:** Executive Function.
+> **Content:** Replaces `task.md` and `goal.md`. Contains Current Objective, Strategic Plan, and Self-Reflection from the previous turn.
 
 ---
 
 ## 📐 Governance
 
-- **Volatility**: This directory is **TRANSIENT**. It is cleared at the start of every new turn.
-- **Access**: Only the **Orchestrator**, **CIM**, and **MSP** are authorized to write to this directory.
-
----
-
-*The focused lens of awareness.*
+- **Format Inconsistency Policy**: All data must be wrapped in Markdown. Raw JSON is FORBIDDEN.
+- **Redundancy Policy**: Information must exist in only ONE of the 5 pillars.
+- **Volatility**: **TRANSIENT**. Cleared every turn.

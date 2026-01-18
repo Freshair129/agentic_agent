@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import Dict, Optional, List
 from datetime import datetime
+from operation_system.identity_manager import IdentityManager
 
 
 class UserRegistryManager:
@@ -85,21 +86,24 @@ class UserRegistryManager:
         Returns:
             user_id (e.g., "U_002", "FD_02")
         """
-        # Determine prefix based on role
+        # Determine the next index for this role/prefix
+        # (This remains local to registry management to ensure unique IDs within the registry)
         prefix_map = {
-            "founder": "FD",        # Founder
-            "primary_admin": "FD",  # Founder/Primary Admin
-            "dev": "DV",            # Developer
-            "admin": "AD",          # Admin
-            "superuser": "SU",      # Superuser (elevated privileges)
-            "user": "U"             # Regular user
+            "founder": "FD",
+            "primary_admin": "FD",
+            "dev": "DV",
+            "admin": "AD",
+            "superuser": "SU",
+            "user": "U"
         }
         prefix = prefix_map.get(role, "U")
         
         # Generate next user_id for this prefix
         same_prefix_ids = [int(uid.split('_')[1]) for uid in self.users.keys() if uid.startswith(prefix)]
         next_id = max(same_prefix_ids) + 1 if same_prefix_ids else 1
-        user_id = f"{prefix}_{next_id:02d}"
+        
+        # Delegate to IdentityManager for the actual ID string
+        user_id = IdentityManager.generate_user_id(role, next_id)
         
         # Create user entry
         self.users[user_id] = {

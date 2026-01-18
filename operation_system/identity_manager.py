@@ -106,3 +106,21 @@ class IdentityManager:
         """
         return f"{session_id}_{episode_id}"
 
+    @staticmethod
+    def generate_user_id(role: str, index: int) -> str:
+        """
+        Generate a User ID based on the role and index.
+        Pattern: {PREFIX}_{index:02d}
+        Prefixes: FD (Founder/Admin), DV (Dev), AD (Admin), SU (Superuser), U (User)
+        """
+        prefix_map = {
+            "founder": "FD",
+            "primary_admin": "FD",
+            "dev": "DV",
+            "admin": "AD",
+            "superuser": "SU",
+            "user": "U"
+        }
+        prefix = prefix_map.get(role, "U")
+        return f"{prefix}_{index:02d}"
+

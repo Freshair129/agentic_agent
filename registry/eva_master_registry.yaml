@@ -554,6 +554,17 @@ systems:
       files: [operation_system/nexus_mind/nexus_mind_engine.py]
       entry_point: operation_system.nexus_mind.nexus_mind_engine.NexusMindEngine
 
+  - id: User_Registry
+    name: User_Registry
+    version: 1.0.0
+    domain: identity_management
+    role: central_module
+    root_presence: false
+    manifest:
+      files: [memory_n_soul_passport/user_registry_manager.py]
+    permissions:
+      fs_write: [memory/user_registry.json]
+
 
 
 # ============================================================

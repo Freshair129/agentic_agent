@@ -144,16 +144,16 @@
 1. **Input -> CNS -> CIM:** CNS รับ Input มาแล้วโยนให้ **CIM** (Context Assembler) ทันที เพื่อเริ่มตั้งต้น Context
 2. **CIM -> Engram:** CIM ส่งข้อมูลไปเช็คกับ **Engram** (Reflex Cache)
 3. **CIM Bundle (Body+Engram):** CIM รับค่า **Body State** (จาก Bus) มารวมร่างกับผลลัพธ์ของ Engram แล้วส่งก้อนนี้ให้ **SLM**
-4. **SLM -> CNS:** SLM วิเคราะห์เสร็จ ส่ง Intent/Signal กลับมาให้ **CNS**
+4. **SLM -> CNS (Intuition Candidate):** SLM วิเคราะห์เสร็จ ส่ง Intent/Signal กลับมาให้ **CNS** เพื่อเป็น **"ข้อเสนอแนะเบื้องต้น" (Intuition Candidate)** เท่านั้น **(SLM ไม่ได้ทำ Chunking)**
 5. **CNS -> MSP/RAG:** CNS ทำหน้าที่ Router ส่งคำสั่งไปดึงความทรงจำ (Quick Recall) จาก MSP หรือ Agentic RAG
 6. **Memory -> CIM:** ผลลัพธ์ความจำถูกส่งกลับมารวมที่ **CIM** เพื่อประกอบร่าง (Final Context Assembly)
-7. **CIM -> LLM:** CIM ฉีด Context ที่สมบูรณ์ (Input + Body + Engram + Intent + Memory) เข้าสู่ **LLM**
+7. **CIM -> LLM:** CIM ฉีด Context ที่สมบูรณ์ (Input + Body + Engram + Intent + Memory) เข้าสู่ **LLM** เพื่อให้ LLM ทำการพิจารณาเปรียบเทียบกับสัญญาณสัญชาตญาณจาก SLM
 8. **CNS Context Save:** ก่อนเริ่มคิด CNS จะสั่งบันทึก Context ชุดนี้ลง `memory/context_storage` ไว้เป็นหลักฐาน
 
-**สรุป:** **CIM คือ "ชามผสมอาหาร"* **Step 3 (LLM Decision):** LLM ประมวลผลและส่ง Output กลับมาให้ **CNS**
+**สรุป:** **CIM คือ "ชามผสมอาหาร"** และ **LLM คือ "ผู้ตัดสินใจสูงสุด" (The Decision Maker)**
 
-* **CNS Router (The Gap Trigger):** CNS รับ Function Call จาก LLM แล้ว Route คำสั่งไปยัง **Physio Core** (ผ่าน Bus) เพื่อกระตุ้นร่างกาย
-* **Step 4 (The Gap):** ร่างกายประมวลผลและส่งค่ากลับ CNS
+* **CNS Router (The Gap Trigger):** CNS รับคำสั่งจาก LLM (เช่น `sync_biocognitive_state`) แล้ว Route สัญญาณแรงกระตุ้น (Stimulus) ไปยัง **Physio Core**
+* **Step 4 (The Gap - Embodied Reaction):** **Physio Core** รับ Stimulus มาแล้วทำหน้าที่ **"Stimulus Chunking"** (ย่อยแรงกระตุ้นตามมิติเวลา 30Hz) เพื่อคำนวณการเปลี่ยนแปลงของร่างกายที่เหมือนจริง
 * **CNS Confidence Check:**
   * **Conf < 0.8:** **LLM Self-Audit:** เมื่อได้รับ Body State กลับมา **LLM จะประเมินตัวเอง** (Self-Reflection):
     * ถ้า **Confidence ต่ำ:** LLM จะเรียก Tool `request_deep_recall` => **CNS** รับคำสั่งแล้วไปประสานงานให้ (Arms & Legs)
@@ -161,7 +161,9 @@
 * **CNS (Nervous System):** ทำหน้าที่เป็น **"ระบบประสาท"** (Neural Pathways) ที่คอยรับคำสั่งจาก **LLM (สมอง)** ส่งต่อไปยังอวัยวะต่างๆ (แขนขา/Body)
   * ไม่ได้คิดเอง (No Cognitive Load)
   * ทำหน้าที่ส่งสัญญาณประสาท (Signal Transmission) ให้ไวที่สุด
-* **LLM (Brain):** คือ "สมอง" ที่ทำหน้าที่คิด ตัดสินใจ และสั่งการลงมาผ่าน CNS
+* **LLM (Brain):** คือ "สมอง" ที่ทำหน้าที่คิด ตัดสินใจ (Confidence Reflection) และสั่งการ
+  * **Decision Authority:** LLM ตัดสินใจว่าจะใช้ Stimulus Candidate จาก SLM หรือจะทำการสกัด (Extract) Stimulus ใหม่ด้วยตัวเองเพื่อให้ได้ความแม่นยำสูงสุด
+  * **Control Flow:** สั่งการลงมาผ่าน CNS ไปยังอวัยวะต่างๆ
 * **Context Storage Structure:**
   * **Location:** เก็บที่ `agent/memory/context_storage` (Persistent Layer)
   * **Active Slot (Hot):** พื้นที่ทำงานสำหรับ "Turn ปัจจุบัน"
