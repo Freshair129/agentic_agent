@@ -32,6 +32,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Registered `Cognitive_Flow_2_0`, `Memory_Philosophy_888`, and `Memory_Interface_Protocol` as formal Master Protocols.
   - Linked documentation for `CIM` (06_Orchestration) and `NexusMind`.
   - Registered `NexusMind` as a Central Module and integrated it into the **Boot Flow** (Step 6: Reasoning & Knowledge).
+  - **Enhanced root_slots** with `logical_type` classification (organ, infra, memory, knowledge, governance).
+- **Directory Structure Optimization** (Multi-Model Consensus):
+  - **Phase 1 (Root Cleanup)**: Moved 7 loose files from root to appropriate locations:
+    - Documentation → `docs/10_References/` and `docs/99_Archive/`
+    - Task definitions → `.agent/tasks/`
+  - **Phase 2 (Registry Enhancement)**: Added semantic `type` field to all root_slots for logical organization without physical restructuring.
+  - **Phase 3 (Enforcement)**: Created `.agent/governance/root_policy.yaml` whitelist to prevent future root pollution.
+  - **Result**: Root directory reduced to 5 essential files. Flat anatomy preserved per Embodied Organism philosophy.
 
 ## [9.6.0-ResonanceRefined] - 2026-01-18
 
