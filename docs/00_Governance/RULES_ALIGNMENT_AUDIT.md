@@ -1,31 +1,32 @@
-# EVA v9.4.3 Rules Alignment Audit
+# EVA v9.6.2 Rules Alignment Audit
 
-This report evaluates the current implementation against the authoritative rules defined in `.agent/rules/`.
+This report evaluates the current implementation against the authoritative rules defined in `.agent/rules/` and the master registry.
 
 ## 📊 Compliance Summary
 
 | Rule Category | Key Requirement | Implementation Status | Alignment |
 |:---|:---|:---|:---:|
-| **Orchestration** | **Single LLM Session** (Sequential Function Calling) for the 3-Phase flow. | Verified in `orchestrator.py:L455-558` using `continue_with_result`. | ✅ |
-| **Bio-Gap** | The system must pause for parallel Physio & Memory sync between perception and response. | `_execute_the_gap()` performs system-level hydration before Phase 2 Reasoning. | ✅ |
-| **Event Policy** | State-dominant logic. Events must be normalized into `StimulusVector` before affecting state. | Stimulus extracted via SLM/LLM and normalized by CIM before Physio injection. | ✅ |
-| **Memory Governance** | 8-8-8 Tiered Protocol & Belief Revision (v9.4.3). | MSP Engine enforces domain boundaries and Epistemic State tracking. | ✅ |
-| **Classification** | Hierarchy enforcement (Systems vs Modules vs Nodes). | `core_systems.yaml` defines authority; Systems own state via Bus. | ✅ |
+| **Orchestration** | **Cognitive Flow 2.0** (Single-Inference / Pause-Resume). | Verified in `Cognitive_Flow_2_0.md` as Master Protocol. | ✅ |
+| **Bio-Gap** | The system must pause for parallel Physio & Memory sync via CIM Injection. | `sync_bio_state` tool triggers CIM to inject Context Container. | ✅ |
+| **Event Policy** | State-dominant logic. Events must be normalized into `StimulusVector`. | **Stimulus Chunking v2.0** ensures LLM generates strict schema. | ✅ |
+| **Memory Governance** | 8-8-8 Tiered Protocol & Active/History Slots. | Context Storage separation (Hot/Cold) implemented. | ✅ |
+| **Classification** | Hierarchy enforcement (SSOT Registry). | `eva_master_registry.yaml` governs all IDs and Criticality. | ✅ |
 
-## 🧬 Bio-Gap Implementation Deep Dive
+## 🧬 Cognitive Flow 2.0 Implementation Deep Dive
 
-The "Bio-Digital Gap" is the most critical architectural constraint. The current system adheres to the **Sequential Function Calling** pattern as follows:
+The "Bio-Digital Gap" has evolved into **Cognitive Flow 2.0**:
 
-1. **Phase 1 (Perception)**: Orchestrator calls `llm.generate()` with available tools (`sync_biocognitive_state`).
-2. **Tool Call**: LLM identifies the stimulus and calls `sync_biocognitive_state`.
-3. **The Gap**: Instead of finishing the turn, the Orchestrator executes the function locally.
-    - It triggers `PhysioCore` to process the stimulus.
-    - It triggers `AgenticRAG` for deep recall based on the *new* physiological state.
-4. **Phase 2 (Reasoning)**: The results are fed back using `llm.continue_with_result()`. The LLM then generates the final natural language response and the memory proposal in the **SAME** session.
+1. **Prompt (Input)**: Input + Bio-State (Read from Bus/View).
+2. **Tool Call (The Gap)**: LLM calls `sync_bio_state(Stimulus_List)`.
+3. **Hydration (CIM)**:
+    * **Physio**: `PhysioCore` digests Stimulus.
+    * **Memory**: `AgenticRAG` retrieves Bio-Relevant Memories.
+    * **Injection**: CIM *injects* (writes) these results into the `Context Container` (RAM).
+4. **Resume (Reasoning)**: LLM resumes generation with full, hydrated context.
 
 > [!TIP]
-> **Why this matters**: This pattern ensures that EVA's response is "hydrated" by the actual biological reaction that occurred during the "pause," creating an embodied rather than purely linguistic response.
+> **Why v9.6.2 is better**: Previous versions "Assembled" text prompts. v9.6.2 "Injects" files into a workspace, allowing the LLM to access data on-demand (Pull) rather than being force-fed (Push).
 
 ## ⚖️ Conclusion: **FULLY COMPLIANT**
 
-The system successfully enforces the bio-digital bridge without session fragmentation.
+The system successfully enforces the **Cognitive Flow 2.0** and **Stimulus Chunking Protocol v2.0** standards.

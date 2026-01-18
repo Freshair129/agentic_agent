@@ -23,7 +23,7 @@ policies:
   cognitive_standards:
     flow_current: "Cognitive_Flow_2_0"     # Defined in orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md
     flow_legacy:  "Cognitive_Flow_1_0"     # Defined in docs/03_Architecture/OPERATIONAL_FLOW_v9.4.3.md
-    core_model:   "Bio-Driven Embodied Cognition" (CIM-Injector / Bus-Reader)
+    core_model:   "Bio-Driven Embodied Cognition (CIM-Injector / Bus-Reader)"
 
   # [Boot Order: The Awakening Sequence]
   runtime_sequence:
@@ -272,6 +272,16 @@ systems:
     chains:
       folders: [memory_n_soul_passport/memory]
       files: []
+      
+    protocols:
+      - id: Memory_Philosophy_888
+        name: Memory_Philosophy_and_888_Protocol
+        path: docs/01_Philosophies/MEM_PHILOSOPHY_888.md
+        criticality: L0_CRITICAL
+      - id: Memory_Interface_Protocol
+        name: Memory_Interface_Contract
+        path: docs/protocols/MEMORY_INTERFACE_PROTOCOL.md
+        criticality: L1_CORE
 
 
   # ----------------------------------------------------------
@@ -294,8 +304,8 @@ systems:
       follows_standard: false
       config_location: local
       folders: [orchestrator/cim, orchestrator/session_manager]
-      folders: [orchestrator/cim, orchestrator/session_manager]
       files: [orchestrator/orchestrator.py]
+      doc_folders: [docs/06_Orchestration/cim]
       entry_point: orchestrator.orchestrator.EVAOrchestrator
       
     permissions:
@@ -464,6 +474,17 @@ systems:
       files: [operation_system/identity_manager.py]
     dependencies: [] # Standalone Utility
 
+  - id: NexusMind
+    name: Nexus_Mind_Engine
+    version: 1.0.0
+    domain: reasoning
+    role: central_module
+    root_presence: false
+    manifest:
+      folders: [operation_system/nexus_mind]
+      files: [operation_system/nexus_mind/nexus_mind_engine.py]
+      entry_point: operation_system.nexus_mind.nexus_mind_engine.NexusMindEngine
+
 
 
 # ============================================================
@@ -620,9 +641,15 @@ execution_graph:
 
     # --- Step 6-8: Cognition & Senses ---
     - step: 6
-      mode: serial
-      system: GKS
-      entry_point: genesis_knowledge_system.gks_interface.GKSInterface
+      mode: parallel_group
+      description: "Initialize Reasoning and Knowledge"
+      targets:
+        - id: NexusMind
+          role: reasoning_engine
+          entry_point: operation_system.nexus_mind.nexus_mind_engine.NexusMindEngine
+        - id: GKS
+          role: knowledge_authority
+          entry_point: genesis_knowledge_system.gks_interface.GKSInterface
     
     - step: 7
       mode: serial

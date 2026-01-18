@@ -6,10 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 EVA (Embodied Virtual Agent) is a bio-inspired AI architecture implementing the "Resonance Intelligence" framework. The system mimics biological cognitive processes through hormones, psychological states, and memory systems to create emotionally embodied AI responses.
 
-**Current Version:** 9.1.0 (Resonance Edition)
-**Architecture:** Dual-Phase One-Inference with Bio-Digital Gap
+**Current Version:** 9.6.2 (Cognitive Flow 2.0)
+**Architecture:** Single-Inference Sequentiality with Bio-Digital Gap
 **Language:** Python 3.13
 **Core Pattern:** Schema-First ("Doc-to-Code" Protocol)
+**Master Registry:** `registry/eva_master_registry.yaml` (SSOT for system topology)
 
 ## Running the System
 
@@ -41,20 +42,42 @@ python -m pytest memory_n_soul_passport/tests/
 
 ## System Architecture
 
-### One-Inference Flow
-EVA uses a single LLM inference session with function calling:
+### Cognitive Flow 2.0 (Single-Inference Sequentiality)
+EVA operates in a **single LLM session** with sequential function calling. The flow is:
 
-1. **Phase 1 (Perception):** LLM receives user input → calls `sync_biocognitive_state()`
-2. **The Gap (Bio-Digital Processing):** Local CPU executes PhysioCore → Matrix → Qualia → Memory RAG
-3. **Phase 2 (Reasoning):** LLM receives bio-state → generates embodied response → calls `propose_episodic_memory()`
+**Step 0-2: Pre-Processing (CIM-Centric)**
+1. User Input → CNS (Orchestrator) → CIM (Context Assembler)
+2. CIM checks **Engram** (reflex cache for fast memory lookup - DeepSeek-inspired)
+3. CIM bundles: Input + Engram Result + Body State (from Resonance Bus)
+4. Bundle sent to **SLM** (Small LLM for gut-feeling/intent extraction)
+5. SLM Intent → CNS routes to MSP/RAG for **Quick Recall**
+6. Memory + Context → CIM finalizes injection
 
-See: `docs/adr/004_one_inference_architecture.md`
+**Step 3: LLM Reasoning (System 2)**
+7. LLM receives full context (Input + Body + Engram + Intent + Memory)
+8. LLM performs **Confidence Check**: "Do I need deep recall?"
+
+**Step 4: The Gap (Bio-Digital Sync)**
+9. LLM calls `sync_bio_state()` with **Stimulus Chunks** (sequential emotion processing)
+10. PhysioCore digests chunks sequentially → hormone cascade → vitals update
+11. State returned to LLM
+
+**Step 5-7: Response & Persistence**
+12. If low confidence: LLM calls `request_deep_recall()` (Agentic RAG)
+13. LLM generates embodied response
+14. Self-reflection: LLM writes `self_note.md` for next turn
+15. MSP archives episodic memory
+
+**Critical Concept:** Unlike multi-turn architectures, the LLM never "forgets" - it pauses (function call), receives data, and resumes from the same mental state.
+
+See: `orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md`
 
 ### Core Modules
 
 ```
-orchestrator/          # Central flow control, manages dual-phase loop
-├── cim/              # Context Injection Manager (CIM) - builds LLM prompts
+orchestrator/          # CNS (Central Nervous System) - flow control
+├── cognitive_flow/   # Cognitive Flow 2.0 protocol (NEW in v9.6.0)
+├── cim/              # Context Injection Manager (File Injector, not text builder)
 ├── prompt_rule/      # Governance & identity management (PRN)
 └── temporal/         # Session management
 
@@ -88,10 +111,18 @@ capabilities/
     ├── resonance_index/   # Resonance scoring
     └── resonance_impact/  # Memory importance calculation
 
-consciousness/       # Runtime state & episodic memory storage
-├── episodic_memory/ # Conversation logs (episodes_user/, episodes_ai/)
-├── state_memory/    # Current bio/psych/qualia snapshots
-└── context_storage/ # Full-context prompts per turn
+consciousness/       # "Awareness Domain" - Direct Access RAM
+├── context_container/  # Active Turn Object (task.md, self_note.md, etc.)
+├── episodic_memory/    # Conversation logs (episodes_user/, episodes_ai/)
+├── state_memory/       # Current bio/psych/qualia snapshots
+└── context_storage/    # Archived turns (Hot/Cold slots)
+
+memory/              # "Subconscious" - LLM cannot write here (MSP-governed)
+├── context_storage/ # Persistent context archive
+├── session_memory/  # Session snapshots
+├── core_memory/     # Distilled long-term facts
+├── sphere_memory/   # Domain-specific knowledge
+└── user_registry.json  # Multi-user grounding facts
 
 operation_system/    # Infrastructure
 ├── llm_bridge/      # LLM API abstraction (Ollama, Gemini, Claude)
@@ -105,6 +136,7 @@ operation_system/    # Infrastructure
 - All features start as YAML config definitions
 - Code implements what's defined in config
 - "Ghost Keys" = unimplemented config → your job ticket
+- Master Registry (`registry/eva_master_registry.yaml`) defines system topology
 - See: `docs/07_Protocols/DOC_TO_CODE.md`
 
 **2. Centralized Identity Management**
@@ -112,19 +144,35 @@ operation_system/    # Infrastructure
 - Never hardcode IDs like `"bus:physical"` → use `IdentityManager.BUS_PHYSICAL`
 - See: `docs/adr/007_centralized_identity_management.md`
 
-**3. Memory Centralization**
-- MSP = Single source of truth for all lived experience
-- GKS = Read-only innate knowledge (frameworks, safety rules)
-- See: `docs/adr/008_Memory_Architecture_Centralized_MSP.md`
+**3. Memory Architecture (Consciousness vs Subconscious)**
+- **Consciousness** (`consciousness/`) = Direct Access RAM (LLM can read/write)
+  - Context Container, Episodic Buffer, State Memory
+- **Subconscious** (`memory/`) = MSP-governed permanent storage (LLM cannot write)
+  - Session Memory, Core Memory, Sphere Memory, User Registry
+- Constitutional Principle: LLM proposes memories via function calls, MSP writes them
+- See: `docs/adr/008_Memory_Architecture_Centralized_MSP.md`, `docs/03_Architecture/EVA_System_Storage_ERD.md`
+
+**4. CIM as File Injector (v9.6.0)**
+- CIM no longer generates text prompts
+- Instead, it **copies files** into `Context Container` (hydration)
+- LLM reads files directly via function calls
+- See: `docs/03_Architecture/EVA_System_Storage_ERD.md`
 
 ## Key Concepts
 
 ### The Bio-Digital Gap
-The sequential processing that happens between LLM perception and reasoning:
+Sequential biological processing during `sync_bio_state()`:
 ```
-stimulus → hormone release → blood distribution → receptor activation →
-psychological state → phenomenological qualia → memory retrieval → response
+LLM generates Stimulus Chunks → PhysioCore sequential digestion →
+hormone release → blood distribution (30Hz) → receptor activation →
+psychological state (EVA Matrix) → phenomenological qualia → state snapshot
 ```
+
+**Stimulus Chunking v2.0:** LLM breaks complex input into emotional "chunks" processed sequentially to preserve the emotional journey. Example:
+- Chunk 1: "I love you" (Dopamine spike)
+- Chunk 2: "...but I'm leaving" (Cortisol shock)
+
+This prevents emotional averaging. See: `orchestrator/cognitive_flow/docs/STIMULUS_CHUNKING_PROTOCOL.md`
 
 ### Resonance Intelligence (RTI)
 Multi-level resonance scoring system:
@@ -186,7 +234,9 @@ See: `docs/04_Systems/physio_core/hormone_spec_ml.md`
 
 ## Configuration Locations
 
+- **Master Registry:** `registry/eva_master_registry.yaml` (SSOT for system topology, boot order, permissions)
 - **System-wide:** `orchestrator/configs/orchestrator_configs.yaml`
+- **Cognitive Flow:** `orchestrator/cognitive_flow/docs/` (protocols, not configs)
 - **Biology:** `physio_core/configs/` (endocrine, receptor, blood, vitals)
 - **Psychology:** `eva_matrix/configs/matrix_configs.yaml`
 - **Memory:** `memory_n_soul_passport/configs/MSP_configs.yaml`
@@ -215,19 +265,32 @@ Schema locations:
 - Magic numbers → Define in YAML
 
 ### File Ownership
-- `consciousness/` = Runtime state (modified during execution)
+- `consciousness/` = "Awareness Domain" (LLM can read/write, runtime state)
+  - `context_container/` = Active turn working files
+  - `episodic_memory/`, `state_memory/` = Current session data
+- `memory/` = "Subconscious" (MSP-governed, LLM cannot write directly)
+  - All writes go through MSP function calls
 - `genesis_knowledge_system/` = Read-only innate knowledge
 - `docs/` = Documentation only
 - `archive/` = Deprecated code (do not modify)
+- `registry/` = System topology definitions
 
 ### Commit Discipline
 - One commit per system when making cross-module changes
 - Follow convention: `[ModuleName] Description`
 - Tag version bumps: `v9.1.0-C10`
 
-## Architecture Decision Records (ADRs)
+## Documentation Structure (v9.6.2)
 
-Critical ADRs to understand:
+**Primary Navigation:** `docs/00_Governance/INDEX_v9.6.2.md` - Official reading order
+
+**Critical Documents:**
+- `orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md` - **Current standard** (v9.6.0+)
+- `docs/03_Architecture/EVA_System_Architecture.md` - System overview & Biological Life Cycle
+- `docs/03_Architecture/EVA_System_Storage_ERD.md` - Memory domains & data ownership
+- `docs/01_Philosophies/MEM_PHILOSOPHY_888.md` - Memory extraction & 8-8-8 protocol
+
+**Architecture Decision Records (ADRs):**
 - `001_cim_prompt_rule_transition.md` - Why CIM replaced CIN
 - `004_one_inference_architecture.md` - Single-session LLM flow
 - `005_Unified_Resonance_Architecture.md` - Resonance system design
@@ -255,19 +318,32 @@ Critical ADRs to understand:
 
 ## Project Versioning
 
-Semantic versioning: `MAJOR.MINOR.PATCH-BUILD`
-- Example: `9.1.0-C10` = Version 9.1.0, Commit 10
-- MAJOR = Architecture changes
-- MINOR = New modules/features
-- PATCH = Bug fixes
-- BUILD = Sequential commit counter
+**System-level:** `9.6.2` (EVA version)
+- Format: `MAJOR.MINOR.PATCH`
+- Current: 9.6.2 = Cognitive Flow 2.0 architecture
+
+**Module-level:** Decoupled versioning (per ADR-011)
+- PhysioCore: v2.4.3 (Verified Stable - structural exception)
+- EVA_Matrix: v2.0.0 (Verified Coupled)
+- GKS: v2.0.0
+- IdentityManager: v2.4.0
+
+**Commit Convention:** `[Module] Description`
+- Example: `[Docs] v9.6.2: Established Cognitive Flow 2.0`
+
+See: `docs/00_Governance/CHANGELOG.md` for version history
 
 ## Special Files
 
+- `registry/eva_master_registry.yaml` - **Master Registry** (SSOT for topology, boot order)
 - `.agent/workflows/` - Automated workflow scripts (archivist, doc_to_code)
 - `.agent/rules/` - Agent behavior policies (eventpolicy, gapflow)
+- `consciousness/context_container/` - Active turn working files (task.md, self_note.md, etc.)
 - `consciousness/indexes/memory_index.json` - Fast memory lookup index
 - `memory/user_registry.json` - Multi-user grounding facts
+- `docs/00_Governance/INDEX_v9.6.2.md` - Official documentation index
+- `scripts/check_versions.py` - Version consistency checker
+- `scripts/check_doc_alignment.py` - Documentation alignment auditor
 
 ## Notes on Multilingual Content
 

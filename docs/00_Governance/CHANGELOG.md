@@ -8,33 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [9.6.2-CognitiveFlow2.0] - 2026-01-18
 
+### Added
+
+- **Storage ERD**: Renamed `v9.4.3_SYSTEM_STORAGE_ERD.md` to `EVA_System_Storage_ERD.md` and updated for v9.6.2 (Context Container, Active/History Slots, CIM Injection).
+- **Stimulus Protocol**: Restored and upgraded `STIMULUS_CHUNKING_PROTOCOL.md` to **v2.0**, aligning with LLM-driven generation in Cognitive Flow 2.0.
+- **Verification Tools**: Created `scripts/check_doc_alignment.py` for automated version verification across the Documentation Hub.
+
 ### Changed
 
-- **Architecture Documentation**:
+- **Architecture Documentation (SSOT)**:
   - Upgraded `EVA_System_Architecture.md` to **v9.6.2**.
-  - Merged "Logical Execution Pipeline" (Reflex -> Perception -> Body -> Reasoning) from Audit View into Section 7.
+  - Merged "Logical Execution Pipeline" from Audit View into Section 7.
   - Consolidated all conflicting architecture files into a single SSOT.
 - **Cognitive Flow Protocol**:
   - Established **Cognitive Flow 2.0** as the Master Protocol.
   - Defined **"Single-Inference Sequentiality"** rule (Pause-Resume Pattern).
   - Clarified CIM's role as **"File Injector"** (Container Hydration) vs Text Assembler.
   - Corrected Diagram Logic: Explicitly assigned `Stimulus` generation to **LLM**, removing it from SLM/Perception layer.
-- **Registry**: Registered `Cognitive_Flow_2_0` under `protocols` in `eva_master_registry.yaml`.
-
-## [9.6.2-CognitiveFlow2.0] - 2026-01-18
-
-### Changed
-
-- **Architecture Documentation**:
-  - Upgraded `EVA_System_Architecture.md` to **v9.6.2**.
-  - Merged "Logical Execution Pipeline" (Reflex -> Perception -> Body -> Reasoning) from Audit View into Section 7.
-  - Consolidated all conflicting architecture files into a single SSOT.
-- **Cognitive Flow Protocol**:
-  - Established **Cognitive Flow 2.0** as the Master Protocol.
-  - Defined **"Single-Inference Sequentiality"** rule (Pause-Resume Pattern).
-  - Clarified CIM's role as **"File Injector"** (Container Hydration) vs Text Assembler.
-  - Corrected Diagram Logic: Explicitly assigned `Stimulus` generation to **LLM**, removing it from SLM/Perception layer.
-- **Registry**: Registered `Cognitive_Flow_2_0` under `protocols` in `eva_master_registry.yaml`.
+- **Documentation Hub**:
+  - Upgraded `README.md` and `INDEX.md` to **v9.6.2**.
+  - Updated `RULES_ALIGNMENT_AUDIT.md` to **v9.6.2**.
+- **Registry**:
+  - Registered `Cognitive_Flow_2_0`, `Memory_Philosophy_888`, and `Memory_Interface_Protocol` as formal Master Protocols.
+  - Linked documentation for `CIM` (06_Orchestration) and `NexusMind`.
+  - Registered `NexusMind` as a Central Module and integrated it into the **Boot Flow** (Step 6: Reasoning & Knowledge).
 
 ## [9.6.0-ResonanceRefined] - 2026-01-18
 
