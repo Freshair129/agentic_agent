@@ -14,11 +14,11 @@ This diagram visualizes the **Logical Execution Path** of a single user interact
 ```mermaid
 graph TD
     %% ==========================================
-    %% 1. INPUT & REFLEX (STEP 0)
+    %% 1. INPUT & REFLEX (STEP 0-1)
     %% ==========================================
     UserIn(["👤 User Input"]) --> EngramCheck
     
-    subgraph Reflex ["Layer 1: REFLEX (Engram)"]
+    subgraph Reflex ["Layer 1: REFLEX (Effectors)"]
         EngramCheck{"Engram System<br/>(Cache Hit?)"}
         FastOut(["⚡ Fast Response<br/>(O(1) Return)"])
     end
@@ -27,58 +27,63 @@ graph TD
     EngramCheck -- "NO" --> SLM
 
     %% ==========================================
-    %% 2. PERCEPTION (STEP 1)
+    %% 2. PERCEPTION & QUICK RECALL (STEP 2)
     %% ==========================================
     subgraph Perception ["Layer 2: PERCEPTION (SLM)"]
-        SLM["SLM Bridge<br/>(Extract Intent & Sentiment)"]
-        Stimulus["Stimulus Vector<br/>(Intent + Anchor)"]
+        SLM["SLM Gateway<br/>(Intent Extraction)"]
+        QuickRecall["Stage 1: Quick Recall<br/>(Intent-Based)"]
+        Stimulus["Stimulus Vector"]
     end
     
-    SLM --> Stimulus
+    SLM --> QuickRecall
+    QuickRecall --> Stimulus
 
     %% ==========================================
-    %% 3. EMBODIMENT & REASONING (STEP 2-3)
+    %% 3. THE GAP & EMBODIMENT (STEP 3-4)
     %% ==========================================
-    subgraph BodyMind ["Layer 3: REASONING & EMBODIMENT (One API Call)"]
+    subgraph BodyMind ["Layer 3: REASONING & EMBODIMENT"]
         direction TB
         
-        %% Phase 1
-        Stimulus --> LLM_Start["LLM Start<br/>(Phase 1 Probe)"]
-        
-        %% Function Call
-        LLM_Start --> FnCall{{"Fn: sync_bio_state()"}}
+        LLM_Start["LLM System 2<br/>(Confidence Check 1)"]
+        FnCall{{"Fn: sync_bio_state()"}}
         
         %% The Gap
         subgraph Gap ["The Gap (Bio-Digital Sync)"]
-            direction TB
-            Physio["PhysioCore"]
-            Matrix["EVA Matrix"]
-            MemRetrieval["RAG & RMS"]
+            Physio["PhysioCore<br/>(Update Hormones)"]
+            Matrix["EVA Matrix<br/>(State Drift)"]
         end
         
-        FnCall -->|Pause| Physio
+        %% Wiring
+        Stimulus --> LLM_Start
+        LLM_Start --> FnCall
+        FnCall -->|Mandatory Sync| Physio
         Physio --> Matrix
-        Matrix --> MemRetrieval
         
-        %% Phase 2
-        MemRetrieval -->|Resume| LLM_Resume["LLM Resume<br/>(Phase 2 Reasoning)"]
+        %% Confidence Split
+        ConfCheck{"Confidence > 0.8?"}
+        Matrix --> ConfCheck
     end
 
     %% ==========================================
-    %% 4. PERSISTENCE & PREDICTION (STEP 4)
+    %% 4. DEEP RECALL & RESPONSE (STAGE 2)
     %% ==========================================
-    subgraph Phase3 ["Layer 4: PERSISTENCE & PREDICTION"]
-        FinalOut(["💬 Final Response"])
-        Prediction["🔮 Phase 3<br/>(Loopback & Sponge)"]
-        MSP["MSP Authority<br/>(Archival)"]
+    subgraph DeepSearch ["Stage 2: DEEP RECALL (Conditional)"]
+        AgenticRAG["Agentic RAG<br/>(Filter by Body State)"]
     end
 
-    LLM_Resume --> FinalOut
-    FinalOut --> Prediction
-    Prediction -->|Context| MSP
-    
-    %% Loopback
-    Prediction -.->|Next Turn Context| EngramCheck
+    ConfCheck -- "YES (Confident)" --> Hydration
+    ConfCheck -- "NO (Unsure)" --> AgenticRAG
+    AgenticRAG -->|Embodied Context| Hydration
+
+    subgraph Output ["Layer 4: RESPONSE"]
+        Hydration["Step 5: Hydration<br/>(Final Reasoning)"]
+        Resp(["💬 Response to User"])
+        Reflection["Step 6: Reflection<br/>(Self-Note / Forecast)"]
+    end
+
+    Hydration --> Resp
+    Resp --> Reflection
+    Reflection -.->|Next Turn Context| EngramCheck
 
     %% ==========================================
     %% STYLING
@@ -88,37 +93,25 @@ graph TD
     classDef Logic fill:#ffffff,stroke:#16537e,stroke-width:3px;
     classDef Fast fill:#ffffff,stroke:#f1c232,stroke-width:3px;
 
-    class UserIn,FastOut,FinalOut Node;
+    class UserIn,FastOut,Resp Node;
     class EngramCheck,EngramAction Fast;
-    class SLM,Stimulus,LLM_Start,LLM_Resume,FnCall,Prediction Logic;
-    class Physio,Matrix,MemRetrieval Critical;
+    class SLM,Stimulus,LLM_Start,Hydration,Prediction,Reflection Logic;
+    class Physio,Matrix,AgenticRAG Critical;
     class MSP Node;
 ```
 
 ---
 
-## 🔍 Logic Flow Explanation (Audit Checklist)
+## 🔍 Bio-Driven Deep Recall Logic (v9.6.0)
 
-1. **Reflex Layer (Engram)**:
-    * **Engram System**: ตรวจสอบ Cache ก่อนเข้าสู่ Perception
-    * **Hit**: ตอบกลับทันที (O1 Fast Response)
-    * **Miss**: ส่งต่อให้ SLM (Deep Process)
-
-2. **Perception Layer (SLM)**:
-    * **SLM Bridge**: แปลง Input เป็น `Stimulus Vector` (Intent/Sentiment)
-    * **No Hallucination**: ใช้ Llama-3.2 1B เพื่อ Cross-check เจตนา
-
-3. **Reasoning & Embodiment (The Gap)**:
-    * **LLM Phase 1**: รับ Stimulus -> ตัดสินใจเรียก Tool `sync_bio_state`
-    * **The Gap**:
-        * **PhysioCore**: ร่างกายตอบสนอง (หัวใจ/ฮอร์โมน)
-        * **Matrix**: อารมณ์เปลี่ยน (Drift)
-        * **Retrieval**: ดึงความจำด้วย "อารมณ์" เป็น Key
-    * **LLM Phase 2**: รับข้อมูล Embodied State ทั้งหมดแล้วตอบสนอง
-
-4. **Prediction & Persistence**:
-    * **Loopback**: ส่ง Context Family และ Self-Note กลับไปที่ CIM (Turn หน้า)
-    * **MSP**: บันทึก Episode ลงฐานข้อมูลถาวร
+1. **Reflex Layer**: **Engram** ดักจับก่อน ถ้าเจอ Pattern เดิม ตอบทันที (O1)
+2. **Perception**: **SLM** สกัด Intent และทำ **Quick Recall** (ความจำตื้น) เพื่อประเมินสถานการณ์เบื้องต้น
+3. **The Gap (Mandatory)**: **LLM** สั่ง `sync_bio_state` ทันที เพื่อให้ร่างกาย "รู้สึก" (Hormones/BPM update)
+4. **Confidence Check**:
+    * ถ้า **Confidence > 0.8**: ใช้ข้อมูลที่มีอยู่ตอบได้เลย (Fast Path)
+    * ถ้า **Confidence < 0.8**: เข้าสู่ **Deep Recall** โดยใช้ **Body State** ที่เพิ่งได้จาก Gap เป็นตัวกรอง (เช่น "หาเหตุการณ์ที่ฉันเคยโกรธระดับ cortisol 80%")
+5. **Hydration**: ผสมผสาน ความจำ + ร่างกาย + เหตุผล เข้าด้วยกันเป็นคำตอบสุดท้าย
+6. **Reflection**: Loop ข้อมูลกลับไปที่ Engram/CIM สำหรับ Turn ถัดไป
 
 ---
 
