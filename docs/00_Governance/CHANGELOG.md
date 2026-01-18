@@ -6,6 +6,36 @@ All notable changes to the EVA Core project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.6.2-CognitiveFlow2.0] - 2026-01-18
+
+### Changed
+
+- **Architecture Documentation**:
+  - Upgraded `EVA_System_Architecture.md` to **v9.6.2**.
+  - Merged "Logical Execution Pipeline" (Reflex -> Perception -> Body -> Reasoning) from Audit View into Section 7.
+  - Consolidated all conflicting architecture files into a single SSOT.
+- **Cognitive Flow Protocol**:
+  - Established **Cognitive Flow 2.0** as the Master Protocol.
+  - Defined **"Single-Inference Sequentiality"** rule (Pause-Resume Pattern).
+  - Clarified CIM's role as **"File Injector"** (Container Hydration) vs Text Assembler.
+  - Corrected Diagram Logic: Explicitly assigned `Stimulus` generation to **LLM**, removing it from SLM/Perception layer.
+- **Registry**: Registered `Cognitive_Flow_2_0` under `protocols` in `eva_master_registry.yaml`.
+
+## [9.6.2-CognitiveFlow2.0] - 2026-01-18
+
+### Changed
+
+- **Architecture Documentation**:
+  - Upgraded `EVA_System_Architecture.md` to **v9.6.2**.
+  - Merged "Logical Execution Pipeline" (Reflex -> Perception -> Body -> Reasoning) from Audit View into Section 7.
+  - Consolidated all conflicting architecture files into a single SSOT.
+- **Cognitive Flow Protocol**:
+  - Established **Cognitive Flow 2.0** as the Master Protocol.
+  - Defined **"Single-Inference Sequentiality"** rule (Pause-Resume Pattern).
+  - Clarified CIM's role as **"File Injector"** (Container Hydration) vs Text Assembler.
+  - Corrected Diagram Logic: Explicitly assigned `Stimulus` generation to **LLM**, removing it from SLM/Perception layer.
+- **Registry**: Registered `Cognitive_Flow_2_0` under `protocols` in `eva_master_registry.yaml`.
+
 ## [9.6.0-ResonanceRefined] - 2026-01-18
 
 ### Added

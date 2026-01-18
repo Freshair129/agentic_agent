@@ -19,7 +19,11 @@ policies:
     archive_immutability: true
     state_isolation: true
 
-    L3: "OPTIONAL_ENHANCEMENT - Log Warning (Ignorable)"        # Tools, Experiments
+  # [Cognitive Standards]
+  cognitive_standards:
+    flow_current: "Cognitive_Flow_2_0"     # Defined in orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md
+    flow_legacy:  "Cognitive_Flow_1_0"     # Defined in docs/03_Architecture/OPERATIONAL_FLOW_v9.4.3.md
+    core_model:   "Bio-Driven Embodied Cognition" (CIM-Injector / Bus-Reader)
 
   # [Boot Order: The Awakening Sequence]
   runtime_sequence:
@@ -321,6 +325,14 @@ systems:
       - system: MSP
       - system: GKS
       - system: RMS
+      
+    protocols:
+      - id: Cognitive_Flow_2_0
+        type: master_protocol
+        description: "Standard Bio-Digital Gap Flow (CIM-Injector -> Bus-Reader)"
+        owner: Orchestrator
+        path: orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md
+        criticality: L0
       
     modules:
       - id: CIM

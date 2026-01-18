@@ -1,19 +1,21 @@
-# EVA v9.4.3 Architecture & Standards Guide (Resonance Refactored)
+# EVA System Architecture & Standards Guide (v9.6.2)
 
-**Version:** 9.4.3
-**Codename:** Resonance Refactored
+**Version:** 9.6.2
+**Codename:** "Embodied Cognition"
 **Root Directory:** `agent/`
 **Status:** Canonical SSOT
 
 ---
 
-## 🌟 Core Philosophy
+## 🌟 Core Philosophy: Embodied Existentialism
 
-EVA v9.4.3 introduces the **Consciousness-Implementation Separation** principle:
+EVA v9.6.0 adheres to the **Consciousness-Implementation Separation** principle with a Bio-Digital Gap:
 
-1. **Consciousness (Awareness):** The LLM operates here. It sees "Shortcuts" (Interfaces) to its capabilities and has R/W access to its Working Memory. It is "aware" of what it can do but cannot alter the underlying code during runtime.
-2. **Capabilities (Implementation):** The actual Python code (Tools, Skills, Services) lives here, independent of the consciousness layer. This ensures stability and safety.
-3. **Organism (Systems):** The biological and psychological systems (Physio, Matrix) run autonomously, providing the "feeling" of being alive.
+1. **Consciousness (The User):** The LLM is the "Soul" residing in the `context_container`. It has **Direct Access** to its memories and current bio-state via the Bus.
+2. **Implementation (The Body):** The underlying code (Systems/Modules) simulates biological processes (PhysioCore) and manages reality (Orchestrator).
+3. **The Gap (Cognitive Flow):** The system ensures a "Pause" (Function Calling) between perception and reasoning to allow biological reaction (Physio) and context hydration (CIM) to occur naturally.
+4. **Capabilities (Implementation):** The actual Python code (Tools, Skills, Services) lives here, independent of the consciousness layer. This ensures stability and safety.
+5. **Organism (Systems):** The biological and psychological systems (Physio, Matrix) run autonomously, providing the "feeling" of being alive.
 
 ---
 
@@ -131,23 +133,110 @@ Subsystems evolve independently following the **Legacy mapping rule**:
 
 ---
 
-## 🧠 6. Memory Architecture (v9.4.3)
+## 🧠 6. Cognitive Flow & Memory Architecture
 
-> **Philosophy:** "Active Consciousness (LLM) creates experience; Subconscious (MSP) distills Wisdom via the 8-8-8 Protocol."
+> **Standard:** [Cognitive Flow 2.0](../../orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md) (Master Protocol)
 
-### Memory Layers
+### The Single-Inference Sequentiality Rule
 
-- **Consciousness (Buffer)**: The "Awareness Domain".
-- **Session (Working Memory)**: Raw Snapshots.
-- **Core (Short-Term)**: 8-session distillation.
-- **Sphere (Long-Term)**: 8-core / 64-session wisdom.
-- **Governance Overlay**: Memory Domains and Epistemic States.
+Execution MUST occur in a **Single LLM Session** using the Pause-Resume pattern:
 
-### MSP (Memory & Soul Passport)
+1. **Prompt:** Input + Bio-State (from Bus).
+2. **Pause (Function Call):** LLM requests context/tools.
+3. **Hydration (CIM Injector):** CIM injects files into `context_container`.
+4. **Resume:** LLM reasons with full context.
 
-- **Role:** Central authority for persistence and the 8-8-8 synthesis engine.
-- **Independence:** Decouples active consciousness from storage.
+### Memory Overlay
+
+- **Consciousness (RAM):** `agent/consciousness/context_container` (Active Turn).
+  - *Managed by CIM (File Injection).*
+- **Session (Working Memory):** `agent/consciousness/` (Session State).
+- **Archive (Long-Term):** `agent/memory/` (MSP Storage).
 
 ---
 
-*Generated for EVA v9.4.3 Implementation*
+---
+
+## 🔬 7. Logical Execution Pipeline (v9.6.2 Audit View)
+
+> **Life of a Request:** From Input to Output (Reflex -> Perception -> Body -> Reasoning)
+
+```mermaid
+graph TD
+    %% ==========================================
+    %% 1. INPUT & REFLEX
+    %% ==========================================
+    UserIn(["👤 User Input"]) --> EngramCheck
+    
+    subgraph Reflex ["Layer 1: REFLEX (Effectors)"]
+        EngramCheck{"Engram System<br/>(Cache Hit?)"}
+        FastOut(["⚡ Fast Response<br/>(O(1) Return)"])
+    end
+    
+    EngramCheck -- "YES" --> FastOut
+    EngramCheck -- "NO" --> SLM
+
+    %% ==========================================
+    %% 2. PERCEPTION & QUICK RECALL
+    %% ==========================================
+    subgraph Perception ["Layer 2: PERCEPTION (SLM)"]
+        SLM["SLM Gateway<br/>(Intent Extraction)"]
+        QuickRecall["Stage 1: Quick Recall<br/>(Intent-Based)"]
+    end
+    
+    SLM --> QuickRecall
+
+    %% ==========================================
+    %% 3. THE GAP & EMBODIMENT
+    %% ==========================================
+    subgraph BodyMind ["Layer 3: REASONING & EMBODIMENT"]
+        direction TB
+        
+        LLM_Start["LLM System 2<br/>(Generate Stimulus)"]
+        FnCall{{"Fn: sync_bio_state(Stimulus)"}}
+        
+        %% The Gap
+        subgraph Gap ["The Gap (Bio-Digital Sync)"]
+            Physio["PhysioCore<br/>(Update Hormones)"]
+            Matrix["EVA Matrix<br/>(State Drift)"]
+        end
+        
+        %% Wiring
+        QuickRecall --> LLM_Start
+        LLM_Start --> FnCall
+        FnCall -->|Mandatory Sync| Physio
+        Physio --> Matrix
+        
+        %% Confidence Split
+        ConfCheck{"Confidence > 0.8?"}
+        Matrix --> ConfCheck
+    end
+
+    %% ==========================================
+    %% 4. COMPONENT WIRING
+    %% ==========================================
+    
+    subgraph DeepSearch ["Stage 2: DEEP RECALL (Conditional)"]
+        AgenticRAG["Agentic RAG<br/>(Filter by Body State)"]
+    end
+
+    ConfCheck -- "YES (Confident)" --> Hydration
+    ConfCheck -- "NO (Unsure)" --> AgenticRAG
+    AgenticRAG -->|Embodied Context| Hydration
+
+    subgraph Output ["Layer 4: RESPONSE & PERSISTENCE"]
+        Hydration["Step 5: Hydration<br/>(Final Reasoning)"]
+        Resp(["💬 Response to User"])
+        Reflection["Step 6: Reflection<br/>(Self-Note / Forecast)"]
+        MSP["Step 7: MSP Authority<br/>(Episode Archival)"]
+    end
+
+    Hydration --> Resp
+    Resp --> Reflection
+    Reflection --> MSP
+    Reflection -.->|Next Turn Context| EngramCheck
+```
+
+---
+
+*Verified for EVA v9.6.2 Implementation*
