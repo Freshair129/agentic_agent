@@ -114,6 +114,13 @@ root_slots:
   - name: consciousness
     type: memory
     description: Active working memory (RAM)
+    manifest:
+      folders:
+        - consciousness/context_container
+        - consciousness/state_memory
+        - consciousness/data
+      files:
+        - consciousness/README.md
   
   - name: data
     type: knowledge
@@ -302,8 +309,7 @@ systems:
     manifest:
       follows_standard: false
       config_location: local
-      folders: [memory_n_soul_passport/modules]
-      folders: [memory_n_soul_passport/modules]
+      folders: [memory_n_soul_passport/Module]
       files: [memory_n_soul_passport/memory_n_soul_passport_engine.py]
       entry_point: memory_n_soul_passport.memory_n_soul_passport_engine.MSP
       
@@ -333,7 +339,7 @@ systems:
           sequence: "5_ASYNC_B"
 
     chains:
-      folders: [memory_n_soul_passport/memory]
+      folders: [memory_n_soul_passport/archive]
       files: []
       
     protocols:

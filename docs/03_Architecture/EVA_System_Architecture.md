@@ -148,8 +148,10 @@ Execution MUST occur in a **Single LLM Session** using the Pause-Resume pattern:
 
 ### Memory Overlay
 
-- **Consciousness (RAM):** `agent/consciousness/context_container` (Active Turn).
-  - *Managed by CIM (File Injection).*
+- **Consciousness (RAM):** `agent/consciousness/` (Awareness Domain).
+  - `context_container/`: Active Turn Workspace (Task, Self-Note, User-Profile).
+  - `data/`: Runtime Workspace (Uploads, Outputs, Processing).
+  - `state_memory/`: Hot state snapshots (Physio, Matrix).
 - **Session (Working Memory):** `agent/consciousness/` (Session State).
 - **Archive (Long-Term):** `agent/memory/` (MSP Storage).
 

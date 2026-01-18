@@ -22,6 +22,7 @@ flowchart TD
         CONTAINER["Context Container (Active Turn)"]
         STATE_MEM["State Memory (Bio-State View)"]
         EPISODIC["Episodic Buffer (Sliding Window)"]
+        DATA_MEM["Data Workspace (Scratchpad)"]
     end
 
     %% Context Storage (Persistent)
@@ -87,6 +88,7 @@ flowchart TD
   - **Context Container**: สิ่งที่ต้องคิดตอนนี้
   - **State Memory**: ความรู้สึกตอนนี้ (Bio-State)
   - **Episodic Buffer**: ความจำระยะสั้น (5 Turns ล่าสุด)
+  - **Data Workspace (`data/`)**: พื้นที่ทำงานชั่วคราว (Transient Scratchpad) สำหรับไฟล์อัปโหลดหรือไฟล์ที่สร้างจากโค้ด
 
 ---
 

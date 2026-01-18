@@ -162,12 +162,17 @@ class StructureAuditorNode:
         print("\n[1] Checking Root Slots...")
         root_slots = registry.get('root_slots', [])
         for slot in root_slots:
-            slot_path = root_path / slot
+            # Handle both string (legacy) and dict (v9.6.2) formats
+            slot_name = slot.get('name') if isinstance(slot, dict) else slot
+            if not slot_name:
+                continue
+                
+            slot_path = root_path / slot_name
             if not slot_path.exists():
-                errors.append(f"[ROOT] Missing root slot: {slot}")
-                print(f"  ❌ {slot} (Missing)")
+                errors.append(f"[ROOT] Missing root slot: {slot_name}")
+                print(f"  ❌ {slot_name} (Missing)")
             else:
-                print(f"  ✅ {slot}")
+                print(f"  ✅ {slot_name}")
 
         # 2. Check System Manifests
         print("\n[2] Checking System Manifests...")

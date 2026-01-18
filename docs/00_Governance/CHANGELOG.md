@@ -12,7 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Inner Organ Documentation**: Created/Updated READMEs for all 18 major root directories and 13 internal sub-modules (slm_bridge, engram_system, resonance_engine, nexus_mind, rim, umbrella, llm_bridge, etc.), establishing a consistent documentation layer.
 - **Protocol Mirroring**: Synchronized critical rules from `.agent/rules/` to `docs/03_Architecture/` and `docs/07_Protocols/` (Gap Flow, Event Policy, Permissions).
-- **Context Workspace Docs**: Added a dedicated guide for the `consciousness/context_container/` awareness area.
+- **Active Workspace**: Added a guide for the `consciousness/context_container/` transient area.
+- **Consciousness Data Workspace**: Implemented `consciousness/data/` for transient runtime assets (Uploads, Outputs, Processing) with strict "must know" transience constraints.
+- **Tooling Upgrades**: Enhanced `ris_subagent.py` to support v9.6.2 registry schema and corrected MSP manifest paths.
 
 ### Changed
 

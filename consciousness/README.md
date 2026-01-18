@@ -30,11 +30,15 @@ Real-time JSON snapshots of the system organs.
 - `eva_matrix_state.json`: Emotional 9D Matrix.
 - `artifact_qualia_state.json`: Phenomenological Texture.
 
-### 3. `episodic_memory / semantic_memory / sensory_memory`
+### 4. `data/` (Runtime Workspace)
 
-The "Hot" memory caches for the current session before they are archived to MSP.
+A transient "Scratchpad" for runtime assets. **(Must Know: Session จบ = หาย, ไม่ใช่ Memory ของระบบ)**
 
-### 4. `services / skills / tools`
+- **Uploads**: User-provided files.
+- **Outputs**: Generated assets (Images, CSVs, PDFs).
+- **Processing**: Intermediate workspace for capabilities.
+
+### 5. `services / skills / tools`
 
 Contains **Shortcuts (.lnk or wrappers)** to the actual implementations in the `capabilities/` directory.
 
