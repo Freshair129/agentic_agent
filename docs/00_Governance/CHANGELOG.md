@@ -6,11 +6,27 @@ All notable changes to the EVA Core project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v9.6.2-CognitiveFlow2.0] - 2026-01-19
+## [v9.6.3-ResonanceIntegrated] - 2026-01-19
 
 ### Added
 
-- **Inner Organ Documentation**: Created/Updated READMEs for all 18 major root directories and 13 internal sub-modules (slm_bridge, engram_system, resonance_engine, nexus_mind, rim, umbrella, llm_bridge, etc.), establishing a consistent documentation layer.
+- **WebUI Portfolio Dashboard**: Launched a premium React-based dashboard at `agent/webui/`.
+  - **Visualization**: Implemented real-time Radar Charts for 9D Matrix and animated Hormone/Vitals panels.
+  - **Interaction**: Integrated a sleek Chat Interface with status indicators (Thinking/Ready).
+  - **Stack**: Built with Vite 7, React 19, and TailwindCSS v4 with Glassmorphism aesthetics.
+- **API Mind-State Extension**:
+  - Added `GET /api/mind/state` endpoint for on-demand bio-cognitive snapshots.
+  - Enhanced `/ws/chat` to push authoritative state updates during responses.
+- **MSP Data Flow Gaps (Resolved)**:
+  - **Validation**: Implemented `MSPSchemaValidator` to enforce strict JSON schema compliance during memory persistence.
+  - **Monitoring**: Created `MSPDataMonitor` to detect and alert on missing bio-field telemetry.
+  - **Schema Coverage**: Achieved 100% coverage across all 8 major output streams (Hormones, Vitals, Matrix, Qualia, etc.).
+
+### Changed
+
+- **Schema Standardization**: Refactored internal storage keys from CamelCase (e.g., `Resonance_index`) to standard `snake_case` (`resonance_index`) across MSP and Orchestrator.
+- **Robust Retrieval**: Updated `EpisodicMemoryModule` to support dual-key reading, ensuring backward compatibility with legacy memory records.
+- **Inner Organ Documentation**: Created/Updated READMEs for all 18 major root directories and 13 internal sub-modules...
 - **Protocol Mirroring**: Synchronized critical rules from `.agent/rules/` to `docs/03_Architecture/` and `docs/07_Protocols/` (Gap Flow, Event Policy, Permissions).
 - **Active Workspace**: Added a guide for the `consciousness/context_container/` transient area.
 - **Consciousness Data Workspace**: Implemented `consciousness/data/` for transient runtime assets (Uploads, Outputs, Processing) with strict "must know" transience constraints.
