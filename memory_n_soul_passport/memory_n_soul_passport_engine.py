@@ -2156,6 +2156,70 @@ class MSP(IMSPassport):
 
 
 
+    def write_episode(self, episode_data: Dict[str, Any]) -> str:
+        """
+        Write episode with FULL state snapshot (Phase 2 Data Pipeline).
+        Delegates to EpisodicMemoryModule.
+        """
+        # 1. Build State Snapshot from Active State
+        # (This aggregates data latched from all systems via Bus or direct set_active_state)
+        
+        # Retrieve active states safely
+        matrix = self.get_active_state("matrix_state") or {}
+        qualia = self.get_active_state("qualia_state") or {}
+        physio = self.get_active_state("physio_state") or {}
+        
+        # Helper for scalar/simple states
+        def get_state(key, default):
+            return self.get_active_state(key) or default
+
+        # Construct Snapshot (Schema Compliance)
+        state_snapshot = {
+            "EVA_matrix": {
+                **matrix.get("axes_9d", {}),
+                "emotion_label": matrix.get("emotion_label", "Neutral"),
+                "momentum": matrix.get("momentum", {})
+            },
+            "Resonance_index": get_state("resonance_index", 0.0),
+            "memory_encoding_level": get_state("memory_encoding_level", "L1_light"),
+            "memory_color": get_state("memory_color", "#808080"),
+            "qualia": {
+                "intensity": qualia.get("intensity", 0.3),
+                "tone": qualia.get("tone"),
+                "coherence": qualia.get("coherence"),
+                "depth": qualia.get("depth"),
+                "texture": qualia.get("texture", {})
+            },
+            "resonance_texture": get_state("resonance_texture", {}),
+            "trauma_flag": get_state("trauma_flag", False),
+            "reflex_directives": get_state("reflex_directives", {}),
+            "reflex": {
+                "threat_level": get_state("threat_level", 0.0)
+            },
+            # Include Physio Vitals (Phase 2 Requirement)
+            "physio": {
+                 "vitals": physio.get("vitals", {})
+            }
+        }
+
+        # 2. Enrich Episode Data
+        # Ensure timestamp
+        if "timestamp" not in episode_data:
+            episode_data["timestamp"] = datetime.now().isoformat()
+            
+        # Merge snapshot
+        episode_data["state_snapshot"] = state_snapshot
+        
+        # 3. Delegate to Module
+        # We call consolidate_interaction directly to get the ID string
+        episode_id = self.episodic_module.consolidate_interaction(
+            episode_data, 
+            system_meta={}, 
+            user_registry=self.user_registry
+        )
+        
+        return episode_id
+
     def log_episodic_event(self, event_data: Dict[str, Any]) -> str:
         """Standard log operation mapping to write_episode."""
         return self.write_episode(event_data)
