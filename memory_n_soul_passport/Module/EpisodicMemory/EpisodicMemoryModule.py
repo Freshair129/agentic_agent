@@ -166,32 +166,41 @@ class EpisodicMemoryModule(IMemoryRetrieval, IMemoryStorage):
     def retrieve_by_state_similarity(self, state_snapshot: Dict[str, Any], limit: int = 3) -> List[Dict[str, Any]]:
         """
         Retrieves memories with similar biological/emotional states.
-        Calculation logic migrated from monolithic MSP.
+        Uses Phase 2 snapshot schema (Resonance, Qualia, Texture).
         """
-        summaries = self.journal.read_log() # We still need summaries to know IDs
-        matches = []
+        summaries = self.journal.read_log()
         
-        # For state similarity, we need full endocrine data, which is only in full episodes.
-        # To avoid loading ALL episodes, we might need a bio-index in the log.
-        # For now, we load until limit.
+        target_ri = state_snapshot.get("Resonance_index", 0.5)
+        target_int = state_snapshot.get("qualia", {}).get("intensity", 0.3)
+        target_tex = state_snapshot.get("resonance_texture", {}) # Dict[str, float]
         
+        scored_episodes = []
+
         for summary in summaries:
             full_ep = self.journal.read_full_episode(summary["episode_id"])
             if not full_ep: continue
             
-            # Simple similarity calculation (Place Holder for Vector/Cosine)
-            # Logic: Check if valence/arousal match within 20%
-            target_physio = state_snapshot.get("Endocrine", {})
-            ep_physio = full_ep.get("state_snapshot", {}).get("Endocrine", {})
+            curr_snap = full_ep.get("state_snapshot", {})
+            curr_ri = curr_snap.get("Resonance_index", 0.5)
+            curr_int = curr_snap.get("qualia", {}).get("intensity", 0.3)
+            curr_tex = curr_snap.get("resonance_texture", {})
+
+            # 1. Scalar Delta (RI + Intensity)
+            delta_scalar = abs(target_ri - curr_ri) + abs(target_int - curr_int)
             
-            if not target_physio or not ep_physio: continue
+            # 2. Texture Distance (Manhattan)
+            delta_tex = 0.0
+            for k in ["stress", "warmth", "clarity", "drive", "calm"]:
+                delta_tex += abs(target_tex.get(k, 0) - curr_tex.get(k, 0))
             
-            # For brevity/GSD, we just check arousal
-            if abs(target_physio.get("arousal", 0) - ep_physio.get("arousal", 0)) < 0.2:
-                matches.append(full_ep)
-                
-            if len(matches) >= limit:
-                break
-                
-        return matches
+            # Total Score (Lower is better)
+            total_score = delta_scalar + (delta_tex * 0.5)
+            
+            # Valid match candidate
+            scored_episodes.append((total_score, full_ep))
+
+        # Sort by score ascending (closest matches first)
+        scored_episodes.sort(key=lambda x: x[0])
+        
+        return [x[1] for x in scored_episodes[:limit]]
 

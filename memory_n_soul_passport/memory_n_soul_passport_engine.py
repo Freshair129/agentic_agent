@@ -878,6 +878,43 @@ class MSP(IMSPassport):
             "archive_path": str(archive_path)
         }
 
+    def _calculate_session_biostats(self, episodes: List[Dict]) -> Dict[str, Any]:
+        """
+        Calculate session-wide bio-cognitive statistics.
+        """
+        if not episodes:
+            return {}
+
+        bpm_sum = 0
+        vagus_sum = 0
+        trauma_count = 0
+        
+        # Texture sums
+        tex_sums = {"stress": 0.0, "warmth": 0.0, "clarity": 0.0, "drive": 0.0, "calm": 0.0}
+        
+        count = len(episodes)
+        
+        for ep in episodes:
+            snap = ep.get("state_snapshot", {})
+            physio = snap.get("physio", {}).get("vitals", {})
+            
+            bpm_sum += physio.get("bpm", 0)
+            vagus_sum += physio.get("vagus_tone", 0)
+            
+            if snap.get("trauma_flag"):
+                trauma_count += 1
+                
+            tex = snap.get("resonance_texture", {})
+            for k in tex_sums:
+                tex_sums[k] += tex.get(k, 0.0)
+
+        return {
+            "avg_bpm": round(bpm_sum / count, 1),
+            "avg_vagus": round(vagus_sum / count, 2),
+            "trauma_count": trauma_count,
+            "avg_texture": {k: round(v / count, 2) for k, v in tex_sums.items()}
+        }
+
     def _compress_session_data(self, session_id: str, episodes: List[Dict], analysis: Dict = None) -> Dict[str, Any]:
         """
         Compress explicit episodes into a session digest with event classification.
@@ -994,13 +1031,18 @@ class MSP(IMSPassport):
                     "summary": f"Discussion focused on {common_tag} involving episodes {len(chunk)} turns."
                 })
 
+        # Calculate Bio-Stats
+        bio_stats = self._calculate_session_biostats(episodes)
+
         # Construct Digest
         digest_summary = {
             "knowledge_synthesis": "Session analysis complete.",
             "accumulated_turns": len(episodes),
             "session_objective": "N/A",
             "session_status": "Unknown",
-            "session_motto": "N/A"
+            "session_motto": "N/A",
+            # Merge Bio Stats
+            **bio_stats
         }
         
         if analysis:
@@ -1036,6 +1078,7 @@ class MSP(IMSPassport):
         }
         
         return digest
+
 
 
     def _increment_episode_counter(self) -> int:
@@ -1354,6 +1397,14 @@ class MSP(IMSPassport):
             stats = evt.get('rim_stats', {})
             md_content.append(f"> **RIM Stats:** Max {stats.get('RIM_MAX', 0.0)} | Mean {stats.get('RIM_MEAN', 0.0)} | Min {stats.get('RIM_MIN', 0.0)}")
             md_content.append("")
+
+        # 6.5 Bio-Cognitive Profile
+        md_content.append("## 🧬 Bio-Cognitive Profile (Avg)")
+        md_content.append(f"- **Vitals:** BPM {summary.get('avg_bpm', 'N/A')} | Vagus {summary.get('avg_vagus', 'N/A')}")
+        md_content.append(f"- **Trauma Flags:** {summary.get('trauma_count', 0)}")
+        tex = summary.get("avg_texture", {})
+        md_content.append(f"- **Resonance Texture:** S:{tex.get('stress',0)} | W:{tex.get('warmth',0)} | Cl:{tex.get('clarity',0)} | D:{tex.get('drive',0)} | Ca:{tex.get('calm',0)}")
+        md_content.append("")
 
         # 7. Knowledge Synthesis
         md_content.append("## 📝 Knowledge Synthesis")
