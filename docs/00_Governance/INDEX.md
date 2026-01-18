@@ -22,6 +22,8 @@
 
 - [**EVA System Architecture (SSOT)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_System_Architecture.md): โครงสร้างหลักและ Biological Life Cycle (v9.6.2)
 - [**System Storage ERD (v9.6.2)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_System_Storage_ERD.md): แผนผัง Context Container และการฉีดไฟล์ (Injector)
+- [**Operational Flow**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_Operational_Flow.md): ลำดับการทำงานของ Runtime Hooks
+- [**GAP Flow Protocol**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/EVA_Gap_Flow.md): ข้อกำหนดทางเทคนิคของ Bio-Digital Gap
 - [**Consciousness Domain Structure**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/03_Architecture/CONSCIOUSNESS_DOMAIN_STRUCTURE.md): โครงสร้าง Awareness Domain และพื้นที่การทำงานของ LLM
 
 ### [04. Cognitive Flow (การไหลของความคิด)](file:///e:/The%20Human%20Algorithm/T2/agent/orchestrator/cognitive_flow/)
@@ -40,8 +42,11 @@
 
 - [**05. Capabilities**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/05_Capabilities/): Tools, Skills, Services
 - [**06. Orchestration**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/06_Orchestration/): เจาะลึกการควบคุม Session และ Context
-- [**Memory Governance Policy**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/EVA_Memory_Governance.md): กฎการโปรโมทและแก้ไขความเชื่อ (Sphere -> Core logic)
-- [**Memory Interface Protocol**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/protocols/EVA_Memory_Interface_Protocol.md): มาตรฐานการเชื่อมต่อและแลกเปลี่ยนข้อมูลความจำ
+- [**07. Protocols (กฎระเบียบระบบ)**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/)
+  - [**Event Policy Specification**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/EVA_Event_Policy.md): ข้อกำหนดการจัดการเหตุการณ์ (State-Dominant)
+  - [**Memory Governance Policy**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/EVA_Memory_Governance.md): กฎการโปรโมทและแก้ไขความเชื่อ
+  - [**System Permissions**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/EVA_Permissions.md): การแบ่งระดับสิทธิ์และการจัดระดับชั้นระบบ
+  - [**Doc-to-Code Protocol**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/DOC_TO_CODE.md): มาตรฐานการพัฒนา
 - [**Versioning**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/00_Governance/VERSIONING_POLICY.md), [**Changelog**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/00_Governance/CHANGELOG.md), [**Rules Audit**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/00_Governance/RULES_ALIGNMENT_AUDIT.md)
 - [**99. Archive**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/99_Archive/): คลังเอกสารเก่า (Legacy Documents)
 
