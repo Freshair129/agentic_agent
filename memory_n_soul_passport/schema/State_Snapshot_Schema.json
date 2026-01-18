@@ -10,6 +10,95 @@
         "memory_color",
         "qualia"
     ],
+    "definitions": {
+        "EmotionalState": {
+            "description": "9-Dimensional Matrix State",
+            "type": "object",
+            "properties": {
+                "joy": {
+                    "type": "number"
+                },
+                "trust": {
+                    "type": "number"
+                },
+                "fear": {
+                    "type": "number"
+                },
+                "surprise": {
+                    "type": "number"
+                },
+                "sadness": {
+                    "type": "number"
+                },
+                "disgust": {
+                    "type": "number"
+                },
+                "anger": {
+                    "type": "number"
+                },
+                "anticipation": {
+                    "type": "number"
+                },
+                "neutral": {
+                    "type": "number"
+                }
+            }
+        },
+        "HormonePanel": {
+            "description": "Endocrine system state",
+            "type": "object",
+            "properties": {
+                "cortisol": {
+                    "type": "number"
+                },
+                "oxytocin": {
+                    "type": "number"
+                },
+                "dopamine": {
+                    "type": "number"
+                },
+                "serotonin": {
+                    "type": "number"
+                },
+                "adrenaline": {
+                    "type": "number"
+                }
+            }
+        },
+        "VitalsData": {
+            "description": "Physiological metrics",
+            "type": "object",
+            "properties": {
+                "bpm": {
+                    "type": "number"
+                },
+                "hrv": {
+                    "type": "number"
+                },
+                "vagus_tone": {
+                    "type": "number"
+                }
+            }
+        },
+        "StimulusVector": {
+            "description": "Normalized stimulus input",
+            "type": "object",
+            "properties": {
+                "valence": {
+                    "type": "number"
+                },
+                "arousal": {
+                    "type": "number"
+                },
+                "dominance": {
+                    "type": "number"
+                },
+                "text_hash": {
+                    "type": "string"
+                }
+            }
+        }
+    },
     "properties": {
         "EVA_matrix": {
             "type": "object",

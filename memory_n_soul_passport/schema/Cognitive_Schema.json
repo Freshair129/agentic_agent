@@ -1,0 +1,46 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Cognitive Output Schema",
+    "description": "Schema for LLM reasoning and final response structure",
+    "type": "object",
+    "definitions": {
+        "FinalResponse": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "reasoning_trace": {
+                    "type": "string"
+                },
+                "confidence_score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "tokens_used": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "content"
+            ]
+        }
+    },
+    "properties": {
+        "turn_id": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "response": {
+            "$ref": "#/definitions/FinalResponse"
+        }
+    },
+    "required": [
+        "turn_id",
+        "response"
+    ]
+}
