@@ -490,6 +490,19 @@ class EVAOrchestrator:
                 }
                 safe_print(f"  💾 Partial Write: Buffered turn_user fragment.")
 
+        # [NEW] Log stimulus to MSP BEFORE sending to PhysioCore
+        if hasattr(self, 'msp') and self.msp and stimulus:
+             stimulus_data = {
+                 "turn_id": IdentityManager.generate_turn_id(self.session_id, (self.turn_count * 2) - 1),
+                 "eva_stimuli": stimulus.get("stimulus_vector", {}),
+                 "stimulus_context": {
+                     "reasoning": stimulus.get("salience_anchor", "N/A"),
+                     "confidence": stimulus.get("confidence_score", 0.5)
+                 },
+                 "timestamp": datetime.now().isoformat()
+             }
+             self.msp.log_stimulus_output(stimulus_data)
+
         stimulus_chunks = self.cim.normalize_stimulus(stimulus)
         safe_print(f"  ✓ Normalized {len(stimulus_chunks)} stimulus chunk(s).")
 

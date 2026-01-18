@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "EVA-State-Snapshot-Schema",
-    "description": "Schema for bio-cognitive state snapshots within episodic memory.",
+    "description": "EXPANDED: Now includes full bio-cognitive state",
     "type": "object",
     "required": [
         "EVA_matrix",
@@ -49,6 +49,14 @@
                 },
                 "emotion_label": {
                     "type": "string"
+                },
+                "momentum": {
+                    "type": "object",
+                    "properties": {
+                        "intensity": {
+                            "type": "number"
+                        }
+                    }
                 }
             }
         },
@@ -70,11 +78,63 @@
         },
         "qualia": {
             "type": "object",
+            "required": [
+                "intensity"
+            ],
             "properties": {
                 "intensity": {
                     "type": "number"
+                },
+                "tone": {
+                    "type": "string",
+                    "description": "Qualitative feel (warm, sharp, soft, heavy, etc.)"
+                },
+                "coherence": {
+                    "type": "number",
+                    "description": "Unity of experience (0-1)"
+                },
+                "depth": {
+                    "type": "number",
+                    "description": "Existential significance (0-1)"
+                },
+                "texture": {
+                    "type": "object",
+                    "description": "Multi-dimensional phenomenological texture",
+                    "additionalProperties": {
+                        "type": "number"
+                    }
                 }
             }
+        },
+        "resonance_texture": {
+            "type": "object",
+            "description": "5D RMS color axes (detailed emotional coloring)",
+            "properties": {
+                "stress": {
+                    "type": "number"
+                },
+                "warmth": {
+                    "type": "number"
+                },
+                "clarity": {
+                    "type": "number"
+                },
+                "drive": {
+                    "type": "number"
+                },
+                "calm": {
+                    "type": "number"
+                }
+            }
+        },
+        "trauma_flag": {
+            "type": "boolean",
+            "description": "Whether trauma protection was triggered"
+        },
+        "reflex_directives": {
+            "type": "object",
+            "description": "Fast-path emotional commands from EVA Matrix",
+            "additionalProperties": true
         },
         "reflex": {
             "type": "object",

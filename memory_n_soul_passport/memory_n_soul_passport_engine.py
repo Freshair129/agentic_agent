@@ -2128,6 +2128,32 @@ class MSP(IMSPassport):
 
             print(f"[MSP] Error persisting active state {slot}: {e}")
 
+    def log_stimulus_output(self, stimulus_data: Dict[str, Any]):
+        """
+        Log LLM-generated stimulus vectors for causal chain tracking.
+
+        Args:
+            stimulus_data: Dict containing turn_id, eva_stimuli, timestamp
+        """
+        # TODO: Add schema validation when validator is implemented
+        # For now, basic validation
+        required_fields = ["turn_id", "eva_stimuli", "timestamp"]
+        for field in required_fields:
+            if field not in stimulus_data:
+                print(f"[MSP] Warning: Missing required field '{field}' in stimulus_data")
+                return
+
+        # Store in active turn buffer
+        if not hasattr(self, '_current_turn_stimulus'):
+            self._current_turn_stimulus = []
+
+        self._current_turn_stimulus.append(stimulus_data)
+
+        # Also store in active_state for immediate access
+        self.set_active_state("last_stimulus", stimulus_data)
+
+        print(f"[MSP] Logged stimulus output for turn {stimulus_data['turn_id']}")
+
 
 
     def log_episodic_event(self, event_data: Dict[str, Any]) -> str:

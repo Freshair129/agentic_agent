@@ -53,11 +53,51 @@
                         "sympathetic",
                         "parasympathetic"
                     ]
+                },
+                "vitals": {
+                    "type": "object",
+                    "description": "Cardiovascular and respiratory vitals",
+                    "properties": {
+                        "bpm": {
+                            "type": "number",
+                            "description": "Heart rate (beats per minute)",
+                            "minimum": 40,
+                            "maximum": 200
+                        },
+                        "rpm": {
+                            "type": "number",
+                            "description": "Respiration rate (breaths per minute)",
+                            "minimum": 8,
+                            "maximum": 40
+                        },
+                        "vagus_tone": {
+                            "type": "number",
+                            "description": "Parasympathetic activation (0-1)",
+                            "minimum": 0.0,
+                            "maximum": 1.0
+                        }
+                    },
+                    "required": [
+                        "bpm",
+                        "rpm",
+                        "vagus_tone"
+                    ]
+                },
+                "receptor_signals": {
+                    "type": "object",
+                    "description": "Transduced hormone to neural signals",
+                    "additionalProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "number"
+                        }
+                    }
                 }
             },
             "required": [
                 "blood",
-                "autonomic"
+                "autonomic",
+                "vitals"
             ]
         },
         "eva_matrix_state": {

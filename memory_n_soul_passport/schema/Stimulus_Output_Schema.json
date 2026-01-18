@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Stimulus_Output_Schema",
+    "description": "Schema for LLM-generated stimulus vectors sent to PhysioCore",
+    "type": "object",
+    "required": [
+        "turn_id",
+        "eva_stimuli",
+        "timestamp"
+    ],
+    "properties": {
+        "turn_id": {
+            "type": "string",
+            "description": "Reference to LLM turn that generated this stimulus"
+        },
+        "eva_stimuli": {
+            "type": "object",
+            "description": "Stimulus vector mapping (stimulus_id -> intensity)",
+            "additionalProperties": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            "examples": [
+                {
+                    "threat": 0.7,
+                    "novelty": 0.3,
+                    "social_warmth": 0.5,
+                    "cognitive_load": 0.6
+                }
+            ]
+        },
+        "stimulus_context": {
+            "type": "object",
+            "description": "Optional contextual metadata",
+            "properties": {
+                "reasoning": {
+                    "type": "string",
+                    "description": "Why LLM generated these stimuli"
+                },
+                "confidence": {
+                    "type": "number",
+                    "description": "LLM confidence in stimulus assessment"
+                }
+            }
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time"
+        }
+    }
+}
