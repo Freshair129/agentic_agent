@@ -181,6 +181,16 @@ Smoothing (EMA) prevents abrupt frequency jumps.
 
 ---
 
+### 4.5 Resonance Bus Integration (Signal-First)
+
+As of v9.6.2, PhysioCore adheres to the **Signal-First** architecture.
+
+- **Reactive Trigger**: Subscribes to `IdentityManager.BUS_PHYSICAL`.
+- **Signal Handling**: When a `STIMULUS_PERCEIVED` event is detected, PhysioCore automatically executes a `step()` (60s dt) to process the stimulus without waiting for direct Orchestrator command.
+- **State Feedback**: Automatically publishes the updated physiological snapshot back to `BUS_PHYSICAL` for downstream consumption (e.g., EVA Matrix).
+
+---
+
 ## 5. Interaction Signals
 
 User interaction is treated as **context**, not physiology.

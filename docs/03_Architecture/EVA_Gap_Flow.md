@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-# Bio-Digital Gap Orchestration Flow (EVA 9.1.0)
+# Bio-Digital Gap Orchestration Flow (EVA 9.6.2)
 
 > [!CAUTION]
 > **CRITICAL IMPLEMENTATION RULE**
@@ -28,6 +28,10 @@ This document outlines the "System-Propelled Hydration" and "Bio-Digital Gap" wo
 - **Input:**
   - **Live Physio Snapshot:** Immediate biological state.
   - **User Text:** Raw input.
+- **⚡ Engram Check (O(1) Reflex):**
+  - **Action:** Orchestrator performs a rapid check against the `Engram System`.
+  - **Candidate:** If a match exists, it is injected into the Phase 1 prompt as a **Reflex Candidate**.
+  - **Logic:** The LLM evaluates the candidate against the live context. It can choose to adopt, refine, or reject the Engram response.
 - **Cognitive Gateway (SLM):**
   - **Model:** Llama-3.2-1B (System 1).
   - **Action:** Rapidly extracts Intent and Emotional Signal.
@@ -135,21 +139,30 @@ All core modules (Orchestrator, CIM, MSP) now adhere to a unified `_Interface.ya
 ```mermaid
 sequenceDiagram
     participant User
-    participant SLM as Cognitive Gateway (SLM)
-    participant LLM_P1 as LLM (Phase 1)
     participant System as Orchestrator/System
-    participant Physio as Physio Core
-    participant Memory as RAG/RMS
-    participant LLM_P2 as LLM (Phase 2)
-    participant MSP
+    participant Bus as Resonance Bus (Transport)
+    participant Engram as Engram System (Reflex)
+    participant SLM as Cognitive Gateway (SLM)
+    participant Physio as Physio Core (Body)
+    participant Memory as RAG/RMS (Subconscious)
+    participant LLM_P1 as LLM (Phase 1: Perception)
+    participant LLM_P2 as LLM (Phase 2: Reasoning)
+    participant MSP as MSP (Archive)
 
     User->>System: Input Text
+
+    rect rgb(40, 40, 40)
+        note right of System: ⚡ ENGRAM CHECK (Reflex Suggestion)
+        System->>Engram: O(1) Pattern Match
+        Engram-->>System: Candidate / None
+    end
+
     System->>SLM: Extract Intent & Anchor (Llama-3.2-1B)
     SLM-->>System: Intent + Signal + Anchor
-    System->>System: Calc Initial RIM (Instinctual Impact)
+    System->>Bus: Publish Perception Signal (Intent/Anchor)
     System->>Physio: Get Live Snapshot
-    System->>LLM_P1: Phase 1 Prompt (Context + Live Physio + SLM Instinct)
-    LLM_P1->>System: Tool: sync_biocognitive_state (Stimulus + Salience Anchor + Confidence)
+    System->>LLM_P1: Phase 1 Prompt (Context + Live Physio + SLM + Engram Candidate)
+    LLM_P1->>System: Tool: sync_biocognitive_state (Stimulus + Confidence)
     
     rect rgb(30, 30, 50)
         note right of System: 🧠 PERCEPTION & PARTIAL WRITE (First Impression)
@@ -158,16 +171,16 @@ sequenceDiagram
     end
 
     rect rgb(50, 20, 40)
-        note right of System: ⚡ THE GAP (Parallel Processing)
-        par Physio Chunking
-            System->>Physio: Process Stimulus (dt=60s)
-            Physio->>System: Updated Hormones & Matrix
+        note right of System: ⚡ THE GAP (Parallel Processing via Bus)
+        System->>Bus: Emit Validated Stimulus Signal
+        par Biological Reaction
+            Bus->>Physio: Trigger Hormonal Shift
+            Physio-->>Bus: State Updated Signal
         and Context Retrieval
-            System->>Memory: Agentic RAG (Hept-Stream)
-            System->>Memory: RMS (Color Match)
-            Memory->>System: Retrieved Contexts
+            Bus->>Memory: Trigger Hept-Stream RAG
+            Memory-->>Bus: Retrieved Context Signal
         end
-        System->>System: Aggregate "Deep State" (Body + Memory)
+        Bus-->>System: Aggregate "Deep State" (Body + Memory)
     end
 
     System->>LLM_P2: Phase 2 Prompt (Deep State + Memory)
@@ -182,7 +195,8 @@ sequenceDiagram
         System->>System: Hydrate & Merge Fragments
     end
 
-    System->>MSP: Write Verified Episode
+    System->>Bus: Emit Final Episode Log
+    Bus->>MSP: Passive Persistence (Write Verified Episode)
 
     rect rgb(30, 50, 60)
         note right of System: 🛰️ PHASE 3: AUTONOMIC PREDICTION

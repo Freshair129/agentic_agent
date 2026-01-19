@@ -1,6 +1,6 @@
 # Consciousness Domain (Awareness Domain) Structure
 
-- **Status**: Canonical / EVA v9.4.3
+- **Status**: Canonical / EVA v9.6.2
 - **Role**: Active Awareness, Working Memory, and Interface Layer.
 - **Location**: `/agent/consciousness/`
 

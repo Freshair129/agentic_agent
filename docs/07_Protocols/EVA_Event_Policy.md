@@ -2,11 +2,11 @@
 trigger: always_on
 ---
 
-# EVA 9.1.0 – Event Policy Specification
+# EVA 9.6.2 – Event Policy Specification
 
 > **Status**: Canonical / Enforced
 >
-> This document defines how *events* are treated inside EVA 9.1.0.
+> This document defines how *events* are treated inside EVA 9.6.2.
 > It is normative and overrides any generic “event-driven” interpretation.
 
 ---
@@ -198,7 +198,7 @@ This policy is mandatory for all EVA 9.1.0 components.
 
 ## 12. Persistent State Policy (Context & Matrix)
 
-With the introduction of **Granular Context Storage** (`eva/memory/context_storage/`) and **EmotiveHash** (`eva_matrix_state.json`), the following policies apply:
+With the introduction of **Granular Context Storage** (`agent/memory/context_storage/`) and **EmotiveHash** (`eva_matrix_state.json`), the following policies apply:
 
 ### 12.1 Context is Not an Event
 
@@ -211,3 +211,7 @@ With the introduction of **Granular Context Storage** (`eva/memory/context_stora
 - **EmotiveHash (H9/H5)** is a *compression of feeling*, not a summary of text.
 - It must be treated as a **Biological Signal** (State), never as linguistic content.
 - Restoring state from H9 MUST respect the `scale_factor` (1000x) to prevent "Emotional Hallucination" (e.g., interpreting `0.9` as `900`).
+
+---
+
+**As of EVA v9.6.2 Implementation**

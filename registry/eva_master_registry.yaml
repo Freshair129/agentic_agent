@@ -1,10 +1,10 @@
 schema: EVA-MasterRegistry-v9.6
-version: 9.6.2
-updated: 2026-01-17
+master_link: registry/master_configs.yaml
 description: >
   The ULTIMATE Registry (The Map & The Law combined).
   Defines Existence (Topology), Structure (Manifest), and Rights (Permissions).
   Single Source of Truth for Subagent Auditing.
+  Global metadata (Paths, Versions) are offloaded to Master Configs.
 
 # ============================================================
 # 1. GLOBAL POLICIES (The Constitution)
@@ -21,9 +21,9 @@ policies:
 
   # [Cognitive Standards]
   cognitive_standards:
-    flow_current: "Cognitive_Flow_2_0"     # Defined in orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md
-    flow_legacy:  "Cognitive_Flow_1_0"     # Defined in docs/03_Architecture/OPERATIONAL_FLOW_v9.4.3.md
-    core_model:   "Bio-Driven Embodied Cognition (CIM-Injector / Bus-Reader)"
+    flow_current: "Cognitive_Flow_2_0"
+    organism_epoch: "Resonance" # Grounded in master_configs
+    core_model: "Bio-Driven Embodied Cognition (CIM-Injector / Bus-Reader)"
 
   # [Boot Order: The Awakening Sequence]
   runtime_sequence:
@@ -122,10 +122,6 @@ root_slots:
       files:
         - consciousness/README.md
   
-  - name: data
-    type: knowledge
-    description: Static assets
-  
   - name: memory # Archival Storage
     type: memory
     description: Archival Storage
@@ -145,6 +141,7 @@ systems:
     version: 2.4.3  # Maps from EVA 9.4.3 (9.x -> 2.x per ADR-011)
     domain: biological
     role: system_authority
+    auth_doc: docs/04_Systems/physio_core/circulation_blood_physiology_overview.md
     runtime:
       sequence: 3
     
@@ -199,7 +196,15 @@ systems:
       - id: Endocrine_Engine
         type: functional_module
         domain: biological.endocrine
+        auth_doc: docs/04_Systems/physio_core/ENDOCRINE_LOGIC.md
         criticality: L0 # Hormone foundation
+        nodes:
+          - id: EndocrineController
+            role: Orchestrator node for endocrine glands
+          - id: EndocrineGland
+            role: Biological unit node for hormone production
+          - id: HPARegulator
+            role: Homeostatic feedback node (Stress-Cortex loop)
         dependencies:
           - system: PhysioCore
         communication:
@@ -210,6 +215,7 @@ systems:
       - id: Blood_Engine
         type: functional_module
         domain: biological.blood
+        auth_doc: docs/04_Systems/physio_core/circulation_blood_physiology_overview.md
         criticality: L0 # Transport foundation
         dependencies:
           - system: PhysioCore
@@ -221,6 +227,7 @@ systems:
       - id: ANS_Engine
         type: functional_module
         domain: biological.autonomic
+        auth_doc: docs/04_Systems/physio_core/circulation_blood_physiology_overview.md
         criticality: L0 # Reflex foundation
         dependencies:
           - system: PhysioCore
@@ -232,6 +239,7 @@ systems:
       - id: Vitals_Engine
         type: functional_module
         domain: biological.vitals
+        auth_doc: docs/04_Systems/physio_core/circulation_blood_physiology_overview.md
         criticality: L0 # Life sign foundation
         dependencies:
           - system: PhysioCore
@@ -243,17 +251,17 @@ systems:
   # ----------------------------------------------------------
   - id: EVA_Matrix
     name: EVA_Matrix
-    version: 2.4.3  # Maps from EVA 9.4.3
+    version: 2.5.0  # MINOR Bump: Structural refactor to V9 hierarchy
     domain: psychological
     role: core_system
+    auth_doc: docs/04_Systems/eva_matrix/matrix_logic_concept.md
     
     structure_standard: v9.4.3
     root_presence: true
     manifest:
       follows_standard: true
       config_location: local
-      folders: [eva_matrix/Module]  # Note: Module/ exists, Node/ needed
-      folders: [eva_matrix/Module]  # Note: Module/ exists, Node/ needed
+      folders: [eva_matrix/Module]
       files: [eva_matrix/eva_matrix.py]
       entry_point: eva_matrix.eva_matrix.EVAMatrixSystem
       
@@ -280,9 +288,13 @@ systems:
     
     modules:
       - id: MatrixPsychModule
-        type: logic_node
+        type: functional_module
+        auth_doc: docs/04_Systems/eva_matrix/PSYCH_ENGINE_LOGIC.md
         criticality: L1 # Core Logic
-        dependencies: [system: EVA_Matrix]
+        nodes:
+          - id: TransitionNode
+            role: 9D state transition math provider
+            path: eva_matrix/Module/psych_engine/Node/transition_node.py
         permissions:
           bus_subscribe: [BUS_PHYSICAL]
           bus_publish: [BUS_PSYCHOLOGICAL]
@@ -298,6 +310,7 @@ systems:
     version: 2.1.0  # Updated from 1.1.0 (2026-01-18: Version Control Baseline)
     domain: memory_persistence
     role: core_system
+    auth_doc: docs/01_Philosophies/MEM_PHILOSOPHY_888.md
     runtime:
       sequence: 5
     
@@ -325,12 +338,14 @@ systems:
     modules:
       - id: Episodic_Memory
         type: storage_module
+        auth_doc: docs/01_Philosophies/MEM_PHILOSOPHY_888.md
         criticality: L1 # Identity Storage
         dependencies: [system: MSP]
         runtime:
           sequence: "5_ASYNC_A"
       - id: Semantic_Memory
         type: storage_module
+        auth_doc: docs/01_Philosophies/MEM_PHILOSOPHY_888.md
         criticality: L1 # Knowledge Storage
         dependencies: [system: MSP, service: ChromaBridge]
         permissions:
@@ -358,21 +373,19 @@ systems:
   # ----------------------------------------------------------
   - id: Orchestrator
     name: EVA_Orchestrator
-    version: 1.2.0  # Independent versioning (legacy system)
+    version: 1.3.0  # MINOR Bump: Major structural modularization
     domain: central_nervous_system
     role: system_authority
+    auth_doc: docs/06_Orchestration/cognitive_flow/Cognitive_Flow_2_0.md
     runtime:
       sequence: 9
     
-    # NOTE: Orchestrator is a STRUCTURAL EXCEPTION (ADR-017)
-    # Reason: Central control (931 lines + 49 CIM files), 3-Phase flow complexity, tightly coupled
-    structure_standard: exception
-    exception_reason: "Central control system (931 lines + 49 CIM files), highly coupled to all systems"
+    structure_standard: v9.4.3
     root_presence: true
     manifest:
-      follows_standard: false
+      follows_standard: true
       config_location: local
-      folders: [orchestrator/cim, orchestrator/session_manager]
+      folders: [orchestrator/Module, orchestrator/Execution, orchestrator/configs]
       files: [orchestrator/orchestrator.py]
       doc_folders: [docs/06_Orchestration/cim]
       entry_point: orchestrator.orchestrator.EVAOrchestrator
@@ -410,24 +423,39 @@ systems:
         type: master_protocol
         description: "Standard Bio-Digital Gap Flow (CIM-Injector -> Bus-Reader)"
         owner: Orchestrator
-        path: orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md
+        path: docs/06_Orchestration/cognitive_flow/Cognitive_Flow_2_0.md
         criticality: L0
       
     modules:
-      - id: CIM
-        type: core_system
+      - id: CIM_Module
+        type: functional_module
+        auth_doc: docs/06_Orchestration/cim/CIM_ORCHESTRATION_PHASES.md
         criticality: L0 # Context Loop
-        dependencies: [system: Orchestrator]
-        permissions:
-          bus_publish: [BUS_OPERATIONAL]
-        runtime:
-          sequence: 9
+        nodes:
+          - id: CIM_Node
+            role: Context assembly and SLM initial guess
+            path: orchestrator/Module/CIM/Node/cim_node.py
+          - id: PromptRuleNode
+            role: Persona grounding and rule enforcement
+            path: orchestrator/Module/CIM/Node/prompt_rule/prompt_rule_node.py
         protocols:
           - id: Phase_3_Loopback (The Sponge)
             type: cognitive_loop
             description: "Post-Response state persistence, prediction, and self-note buffering for next turn."
             owner: CIM
             criticality: L2
+    
+    nodes:
+      - id: Session_Node
+        role: Session lifecycle and timeout management
+        auth_doc: docs/06_Orchestration/SESSION_LIFECYCLE_CONTROL.md
+        path: orchestrator/Node/session_node.py
+    
+    specialized_slots:
+      - id: cognitive_flow
+        type: execution_logic
+        description: "CNS Master Flow Logic and Runtime Configuration"
+        path: orchestrator/Execution/CognitiveFlow/
 
   # ----------------------------------------------------------
   # 5. INFRASTRUCTURE & KNOWLEDGE
@@ -436,6 +464,7 @@ systems:
     name: Genesis_Knowledge_System
     version: 2.0.0  # Maps from EVA 9.0.0 (introduced in v9)\n    domain: epistemology
     role: knowledge_authority
+    auth_doc: genesis_knowledge_system/Master_Block.json # Knowledge Base is self-documenting in Blocks
     criticality: L2 # Ignorant (Cant access wisdom)
     runtime:
       sequence: 6
@@ -470,38 +499,63 @@ systems:
 
   - id: RMS
     name: Resonance_Memory_System
-    version: 6.2.0  # Independent versioning (not mapped from EVA)
+    version: 2.5.0  # MINOR Bump: Refactored to V9 Standard Hierarchy
     domain: memory_filtration
     role: system_authority
+    auth_doc: docs/04_Systems/resonance_engine/RESONANCE_MEMORY_SYSTEM.md
     criticality: L2 # Unfiltered (Raw input/output)
     runtime:
       sequence: 7
     root_presence: true
     manifest:
-      folders: [resonance_memory_system/configs, resonance_memory_system/contract]
-    manifest:
-      folders: [resonance_memory_system/configs, resonance_memory_system/contract]
-      files: [resonance_memory_system/rms.py]
-      entry_point: resonance_memory_system.rms.RMSEngineV6
+      folders: [resonance_memory_system/configs, resonance_memory_system/contract, resonance_memory_system/Module]
+      files: [resonance_memory_system/resonance_memory_system.py]
+      entry_point: resonance_memory_system.resonance_memory_system.ResonanceMemorySystem
     permissions:
       bus_subscribe: [BUS_ALL]
       state_ownership: [rms_state.json]
     dependencies:
       - system: Resonance_Bus
+    
+    # [Components: Modules]
+    modules:
+      - id: Resonance_Encoding_Module
+        type: functional_module
+        domain: memory_filtration.encoding
+        auth_doc: docs/04_Systems/resonance_engine/RESONANCE_MEMORY_SYSTEM.md
+        criticality: L2
+        nodes:
+          - id: ColorGenerationNode
+            role: Mapping 9D axes to R/G/B memory colors
+          - id: IntensityCalculationNode
+            role: Quantifying affective load and salience
+          - id: TraumaProtectionNode
+            role: Gating memory depth during high threat
+
+      - id: Latching_Module
+        type: functional_module
+        domain: memory_filtration.latching
+        auth_doc: docs/04_Systems/resonance_engine/RESONANCE_MEMORY_SYSTEM.md
+        criticality: L2
+        nodes:
+          - id: TemporalSmoothingNode
+            role: Recursive smoothing of affective signals (alphas)
+          - id: OutputPackagingNode
+            role: Formatting snapshots for Episodic/Sensory archives
 
   - id: Artifact_Qualia
     name: Artifact_Qualia (AQI)
-    version: 2.4.3  # Updated from 2.3.0 (matches code)
+    version: 2.5.0  # MINOR Bump: Structural refactor to V9 hierarchy
     domain: phenomenology
     role: core_system
+    auth_doc: docs/03_Architecture/CONSCIOUSNESS_DOMAIN_STRUCTURE.md # Qualia defines sensory awareness
     
     structure_standard: v9.4.3
     root_presence: true
     manifest:
       follows_standard: true
       config_location: local
-      folders: [artifact_qualia/Module, artifact_qualia/configs]  # Module/ exists, Node/ needed
-      folders: [artifact_qualia/Module, artifact_qualia/configs]  # Module/ exists, Node/ needed
+      folders: [artifact_qualia/Module, artifact_qualia/configs]
       files: [artifact_qualia/artifact_qualia.py]
       entry_point: artifact_qualia.artifact_qualia.ArtifactQualiaSystem
     permissions:
@@ -515,6 +569,7 @@ systems:
     version: 1.1.0  # Independent versioning (not mapped from EVA)
     domain: knowledge_retrieval
     role: central_module
+    auth_doc: docs/05_Capabilities/AGENTIC_RAG_ENGINE.md # Placeholder or actual doc link
     root_presence: false
     permissions:
       bus_subscribe: [BUS_KNOWLEDGE]
@@ -577,6 +632,7 @@ capabilities:
       domain: knowledge_retrieval
       path: capabilities/services/agentic_rag
       description: "Autonomous RAG service with tool use"
+      auth_doc: docs/05_Capabilities/services/agentic_rag/Agentic_RAG_CONCEPT.md
       dependencies:
         - service: Vector_Bridge
         - service: SLM_Bridge
@@ -595,6 +651,7 @@ capabilities:
         - system: MSP
       permissions:
         bus_subscribe: [BUS_PSYCHOLOGICAL] # Listen for high-arousal events
+      auth_doc: docs/05_Capabilities/services/ENGRAM_SYSTEM.md
       criticality: L3 # Enhancement only
 
     - id: SLM_Bridge
@@ -605,6 +662,7 @@ capabilities:
       dependencies: [] # Standalone bridge
       permissions:
         bus_publish: []
+      auth_doc: docs/05_Capabilities/services/SLM_BRIDGE.md
       criticality: L2 # Bridge for L2 systems
 
     - id: Vector_Bridge
@@ -612,6 +670,7 @@ capabilities:
       domain: memory_storage
       path: capabilities/services/vector_bridge
       description: "ChromaDB vector store interface"
+      auth_doc: docs/05_Capabilities/services/VECTOR_BRIDGE.md
       dependencies: [] # Standalone bridge
       permissions:
         bus_publish: []
@@ -624,6 +683,7 @@ capabilities:
       description: "Knowledge graph interface (Future)"
       dependencies: []
       permissions: []
+      auth_doc: docs/05_Capabilities/services/graph_bridge/GRAPH_BRIDGE_CONCEPT.md
       criticality: L3
 
   tools:
@@ -634,6 +694,7 @@ capabilities:
       path: capabilities/tools/subagents/archivist_subagent.py
       description: "System maintenance and rule synchronization"
       dependencies: [registry/eva_master_registry.yaml]
+      auth_doc: docs/05_Capabilities/tools/ARCHIVIST_SUBAGENT.md
       permissions: [fs_write]
 
     - id: RIS
@@ -643,6 +704,7 @@ capabilities:
       path: capabilities/tools/subagents/ris_subagent.py
       description: "Resonance Integrity Subagent (Structure/Config Auditor)"
       dependencies: [registry/eva_master_registry.yaml]
+      auth_doc: docs/05_Capabilities/tools/RIS_SUBAGENT.md
       permissions: [fs_read] # Auditor only reads
 
     - id: Technician
@@ -652,7 +714,27 @@ capabilities:
       path: capabilities/tools/subagents/technician_subagent.py
       description: "Mass code modification specialist"
       dependencies: [task_order.yaml]
+      auth_doc: docs/05_Capabilities/tools/TECHNICIAN_SUBAGENT.md
+      auth_doc: docs/05_Capabilities/tools/TECHNICIAN_SUBAGENT.md
       permissions: [fs_write, fs_read]
+
+    - id: Logger
+      active: true
+      type: utility
+      domain: infrastructure
+      path: capabilities/tools/logger.py
+      description: "Standardized thread-safe logging interface"
+      auth_doc: docs/05_Capabilities/tools/LOGGER.md
+      permissions: [fs_write]
+
+    - id: MSPMonitor
+      active: true
+      type: utility
+      domain: audit
+      path: capabilities/tools/msp_monitor.py
+      description: "Real-time MSP storage and health monitor"
+      auth_doc: docs/05_Capabilities/tools/MSP_MONITOR.md
+      permissions: [fs_read]
 
 
 # ============================================================
@@ -734,7 +816,7 @@ execution_graph:
     - step: 7
       mode: serial
       system: RMS
-      entry_point: resonance_memory_system.rms.RMSEngineV6
+      entry_point: resonance_memory_system.resonance_memory_system.ResonanceMemorySystem
 
     - step: 8
       mode: serial

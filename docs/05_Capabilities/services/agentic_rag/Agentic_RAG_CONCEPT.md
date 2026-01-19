@@ -78,6 +78,8 @@ Agentic RAG returns a list of `memory_matches`, each containing:
 * `stream_source`: The stream from which it was retrieved.
 * `metadata`: Contextual data (timestamp, resonance index, original tags, physio snapshot).
 
+**Signal-Driven Delivery**: In v9.6.2, results are also buffered internally in `self.state["last_retrieval"]` when triggered by a Bus signal.
+
 This output is then incorporated by the CIM into the final prompt for the LLM.
 
 ## 4. Infrastructure & Persistence
@@ -93,6 +95,19 @@ Agentic RAG relies on:
 * **Latency**: Target < 800ms for a comprehensive retrieval cycle.
 * **Accuracy**: High emotional congruence (Emotion Stream matching > 70%).
 * **Scalability**: Efficient indexing and querying for large memory archives.
+
+---
+
+## 6. Signal-Driven Recall (v9.6.2)
+
+Agentic RAG now functions as a reactive listener on the Resonance Bus.
+
+* **Subscription**: Monitors `IdentityManager.BUS_KNOWLEDGE`.
+* **Reactive Retrieval**: When `STIMULUS_PERCEIVED` is emitted by the Orchestrator:
+    1. Agentic RAG performs an immediate **Quick Recall (Fast)**.
+    2. Results are stored in the `last_retrieval` buffer.
+    3. Emits `RECORDS_RETRIEVED` signal to notify the system that fast contexts are ready.
+* **Orchestrator Integration**: The Orchestrator pulls from this buffer during Phase 2 reasoning, ensuring near-zero latency for fast recall.
 
 ---
 

@@ -6,12 +6,26 @@ Centralized Factory for all IDs (Episodes, Sessions, Cores, Spheres, Contexts)
 """
 
 import os
+import yaml
 from datetime import datetime
-import time
+from pathlib import Path
 
 class IdentityManager:
-    # --- System & Bus Registry (V9.5 Centralized Edition) ---
-    # Source: agent/registry/core_systems_v9.5.yaml
+    # --- Load Master Configuration (SSOT) ---
+    _master_config = {}
+    _config_path = Path(__file__).parent.parent / "registry" / "master_configs.yaml"
+    
+    if _config_path.exists():
+        try:
+            with open(_config_path, "r", encoding="utf-8") as f:
+                _master_config = yaml.safe_load(f)
+        except Exception as e:
+            print(f"⚠️ IdentityManager: Failed to load master_configs: {e}")
+
+    ORGANISM_VERSION = _master_config.get("organism_version", "9.0.0")
+    DEVELOPER_ID = _master_config.get("identity", {}).get("developer_id", "THA-06")
+    
+    # --- System & Bus Registry ---
     
     # Core System IDs
     SYSTEM_MSP = "MSP"

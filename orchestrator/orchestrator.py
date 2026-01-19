@@ -1,5 +1,5 @@
 """
-EVA Orchestrator (Independent Version: 1.2.0)
+EVA Orchestrator (Independent Version: 1.3.0)
 Architecture:
     User Input
         ↓
@@ -38,10 +38,10 @@ from operation_system.resonance_bus import bus
 from physio_core.physio_core import PhysioCore
 from eva_matrix.eva_matrix import EVAMatrixSystem
 from artifact_qualia.artifact_qualia import ArtifactQualiaSystem
-from orchestrator.cim.prompt_rule.prompt_rule_node import PromptRuleNode
+from orchestrator.Module.CIM.Node.prompt_rule.prompt_rule_node import PromptRuleNode
 
 # Cognitive & Memory
-from orchestrator.cim.cim import ContextInjectionModule
+from orchestrator.Module.CIM.cim_module import CIMModule as ContextInjectionModule
 from capabilities.services.agentic_rag.agentic_rag_engine import AgenticRAG
 from memory_n_soul_passport.memory_n_soul_passport_engine import MSP
 from operation_system.llm_bridge.llm_bridge import LLMBridge, SYNC_BIOCOGNITIVE_STATE_TOOL, PROPOSE_EPISODIC_MEMORY_TOOL
@@ -56,9 +56,11 @@ from resonance_memory_system.rms import RMSEngineV6
 # [NEW] Engram System (Conditional Memory)
 from capabilities.services.engram_system.engram_engine import EngramEngine
 # [NEW] Session Manager
-from orchestrator.session_manager.session_manager import SessionManager
+from orchestrator.Node.session_node import SessionNode as SessionManager
 # [NEW] Trajectory System
 from operation_system.trajectory.trajectory_manager import TrajectoryManager
+# [NEW] Execution Engine
+from orchestrator.Execution.CognitiveFlow.master_flow_engine import MasterFlowEngine
 
 class EVAOrchestrator:
     """
@@ -134,7 +136,7 @@ class EVAOrchestrator:
         # Memory & RAG handles follow initialization
 
         safe_print("  - Initializing AgenticRAG...")
-        self.agentic_rag = AgenticRAG(msp_client=self.msp)
+        self.agentic_rag = AgenticRAG(msp_client=self.msp, bus=self.bus)
 
         # --------------------------------------------------
         # 3. Initialize Biological & Psychological Mind (The Gap)
@@ -236,80 +238,11 @@ class EVAOrchestrator:
         if not self.session_manager.recording_active:
              self.session_manager._start_new_session()
 
+        # [NEW] Master Flow Engine (Logic Delegation)
+        self.master_flow = MasterFlowEngine(self)
+
         print(f"✅ EVA Orchestrator ready! (Session: {self.session_id})\n")
 
-    def _execute_the_gap(self, stimulus: Dict[str, Any], query_text: str = "") -> Dict[str, Any]:
-        """
-        Execute The Gap: Biological processing without LLM.
-        Signal driven via Resonance Bus (9.4.3 Architecture).
-        """
-        safe_print("\n⚡ STEP 2: The Gap - Bio-Digital Sync")
-        
-        # 1. Start Physio Step (Starts the chain: Physio -> Matrix -> Qualia)
-        # We still call .step() to control the 'clock', but result propagation is via BUS.
-        physio_result = self.physio.step(
-            eva_stimuli=[stimulus],
-            zeitgebers={"active": 0.5},
-            dt=60.0
-        )
-        safe_print(f"  - [Bus Trigger] Physiological step completed. Signals propagated.")
-        
-        # 2. Wait/Process: Matrix & Qualia were updated via Bus Subscription
-        # We pull the latest result from MSP (which acts as ground truth) for LLM injection
-        matrix_snap = self.matrix.axes_9d
-        emotion_label = self.matrix.emotion_label
-        qualia_snap = self.qualia.last_qualia
-        
-        qualitative_exp = f"Intensity: {qualia_snap.intensity:.2f}, Tone: {qualia_snap.tone}"
-        safe_print(f"  - Latest Qualia: {qualitative_exp}")
-        
-        # 3. Two-Stage RAG (Keep as direct call for sync response)
-        safe_print("  - [Process C] Two-Stage RAG: Retrieving memories...")
-        
-        quick_query = {"tags": stimulus.get("tags", []), "context_id": "auto"}
-        quick_matches = self.agentic_rag.retrieve_fast(quick_query)
-
-        deep_query = {
-            "tags": stimulus.get("tags", []),
-            "ans_state": physio_result.get("autonomic", {}),
-            "blood_levels": physio_result.get("blood", {}),
-            "qualia_texture": self.qualia.integrator.get_internal_state().get("last_snapshot", {})
-        }
-        deep_matches = self.agentic_rag.retrieve_deep(deep_query)
-        unique_memories = self.agentic_rag.merge_results(quick_matches, deep_matches, user_query=query_text)
-        
-        # 4. RMS scan
-        # 4. RMS Processing (Active)
-        safe_print(f"  - RMS: Processing Resonance Coloring for '{emotion_label}'...")
-        try:
-            rms_out = self.rms.process(
-                eva_matrix=matrix_snap,
-                rim_output={"impact_level": "medium"}, # Placeholder RIM linkage
-                reflex_state=physio_result.get("autonomic", {}),
-                ri_total=0.5
-            )
-            safe_print(f"    ✓ RMS Color: {rms_out.get('memory_color')} (Level: {rms_out.get('memory_encoding_level')})")
-            bio_state['rms_coloring'] = rms_out
-        except Exception as e:
-            safe_print(f"    ⚠️ RMS Failure: {e}")
-
-        
-        # 6. Format for LLM Continuation
-        return {
-            "biological_state": {
-                "hormones": {k: round(v, 4) for k, v in physio_result.get("blood", {}).items()},
-                "autonomic": physio_result.get("autonomic", {})
-            },
-            "psychological_state": matrix_result.get("axes_9d", {}),
-            "emotion_label": matrix_result.get("emotion_label", "neutral"),
-            "embodied_sensation": qualitative_exp,
-            "qualia_tone": qualia_snap.get("tone", "neutral"),
-            "retrieved_memories": [
-                {"content": m.content[:150] + "...", "emotion": getattr(m, "emotion_label", "N/A")}
-                for m in list(unique_memories)[:3]
-            ],
-            "instruction": "Use this biological and psychological state to formulate an embodied response. Your response should reflect the current emotional state."
-        }
 
     def process_user_input(self, user_input: str) -> Dict[str, Any]:
         """
@@ -331,7 +264,6 @@ class EVAOrchestrator:
         if not self.session_manager.recording_active:
              return {"final_response": "Recording Paused. Type '/start' to begin.", "emotion_label": "Neutral", "resonance_hash": "IDLE"}
              
-        # Update local session_id reference from manager
         self.session_id = self.session_manager.session_id
         self.last_interaction = datetime.now()
 
@@ -345,391 +277,15 @@ class EVAOrchestrator:
              msg = "เซสชั่นเก่าปิดไปแล้วครับ 🔒 หากต้องการคุยต่อ กรุณาพิมพ์ /start เพื่อเริ่มเซสชั่นใหม่ (Previous session ended. Type /start to begin a new one.)"
              return {"final_response": msg, "emotion_label": "Neutral", "resonance_hash": "OFF"}
 
-        self.turn_count += 1
-        self.bus_log = [] # Clear log for fresh monitoring
-        
-        # [NEW] Start trajectory capture for this turn
-        self.trajectory.start_turn(self.session_id, self.turn_count)
-        
-        print(f"\n{'='*60}")
-        print(f"🎯 Turn {self.turn_count} (Resonance Exchange)")
-        print(f"{'='*60}")
-
-        # Trigger CIM to start a new turn context (Store-Centric)
-        self.cim.start_new_turn_context()
-        context_id = self.cim.current_context_id
-        
-        
-        # ============================================================
-        # SINGLE LLM SESSION: PHASE 1 - Initial Call & Stimulus Extraction
-        # ============================================================
-        safe_print("🧠 STEP 1: Single-Session Orchestration - Perception")
-        
-        # [NEW] Phase 2: User Identification
-        current_speaker_profile = None
-        try:
-            # 1. Identify Speaker
-            speaker_info = self.msp.user_registry.identify_speaker(user_input)
-            user_id = speaker_info.get("user_id", "unknown")
-            confidence = speaker_info.get("confidence", 0.0)
-            
-            safe_print(f"  - 👤 Speaker Identified: {speaker_info.get('username')} (ID: {user_id}, Conf: {confidence:.2f})")
-            
-            # 2. Get Full Profile (Grounding Facts)
-            if user_id != "unknown":
-                current_speaker_profile = self.msp.user_registry.get_user_profile(user_id)
-                
-            # 3. Update Interaction Count
-            if user_id != "unknown":
-                self.msp.user_registry.increment_interaction(user_id)
-                
-        except Exception as e:
-            safe_print(f"  ⚠️ User Identification Failed: {e}")
-
-        
-        # Capture live physio snapshot (Background state)
-        live_physio = None
-        if self.enable_physio:
-            live_physio = self.physio.get_state()
-            safe_print("  - Captured live physio snapshot.")
-
-        # [NEW] Pre-Inference: Intent & Fast Recall
-        safe_print("  - [Cognitive Gateway] Extracting intent (SLM) & retrieving fast memories...")
-        try:
-            slm_result = slm.extract_intent(user_input)
-            
-            # [NEW] 4-Layer Resonance (L1/L2: Literal & Interpretive)
-            res_output = self.resonance.process(user_input)
-            slm_result["resonance_l2"] = {
-                 "archetype": res_output.archetype,
-                 "mrf_interpretation": res_output.mrf_interpretation,
-                 "layer_depth": res_output.layer_depth
-            }
-            slm_impact = res_output.ri_score
-            slm_result["r_impact_score"] = slm_impact
-            
-            safe_print(f"    > Intent: {slm_result.get('intent')}")
-            safe_print(f"    > Resonance (L2): {res_output.archetype if res_output.archetype else 'None'} (RI: {slm_impact:.2f})")
-            safe_print(f"    > Salience Anchor: {slm_result.get('salience_anchor')}")
-            
-            # [NEW] Engram Lookup (Fast Path)
-            engram_hit = self.engram.lookup(user_input)
-            if engram_hit:
-                safe_print(f"    ⚡ [Engram] Hit! O(1) Memory retrieved (Conf: {engram_hit.get('confidence',0):.2f})")
-                fast_mems = [engram_hit] # Use cached memory
-                # Option: You could skip Vector Search entirely here
-            else:
-                fast_mems = self.vector_db.query_memory(user_input, n_results=3)
-                safe_print(f"    > Fast Recall: Found {len(fast_mems)} memories")
-        except Exception as e:
-            safe_print(f"    > ⚠️ Gateway Error: {e}")
-            slm_result = {"intent": "unknown", "emotional_signal": "neutral", "salience_anchor": "None", "rim_impact": 0.0}
-            fast_mems = []
-
-        # Build initial context for perception
-        phase1_context = self.cim.inject_phase_1(
-            user_input, 
-            live_physio=live_physio,
-            slm_data=slm_result,
-            long_term_memory=fast_mems,
-            user_profile=current_speaker_profile  # [NEW] Pass Profile
-        )
-        phase1_prompt = self.cim.build_phase_1_prompt(phase1_context)
-        self.cim.save_markdown_context("step1_perception", phase1_prompt)
-
-        # Initial LLM call with both tools available
-        safe_print(f"  - Calling {self.llm_backend.upper()} (Session Start) with tools: sync + propose...")
-        llm_response = self.llm.generate(
-            phase1_prompt,
-            tools=[SYNC_BIOCOGNITIVE_STATE_TOOL, PROPOSE_EPISODIC_MEMORY_TOOL],
-            temperature=0.7
-        )
-
-        # Extract stimulus from function call
-        if not llm_response.tool_calls:
-            safe_print("  ⚠️ Warning: LLM skipped stimulus extraction")
-            stimulus = {"valence": 0.5, "arousal": 0.3, "intensity": 0.3, "tags": ["greeting"], "salience_anchor": "N/A"}
-        else:
-            tool_call = llm_response.tool_calls[0]
-            if tool_call.name != "sync_biocognitive_state":
-                safe_print(f"  ⚠️ Unexpected tool call: {tool_call.name}")
-                stimulus = {"valence": 0.5, "arousal": 0.3, "intensity": 0.3, "tags": ["unknown"], "salience_anchor": "N/A"}
-            else:
-                stimulus = tool_call.args
-                confidence = stimulus.get('confidence_score', 0.5)
-                
-                # [NEW] Perception Delegation Logic
-                # If LLM is confident (>0.9) and didn't provide a vector, use SLM gut vector
-                if not stimulus.get("stimulus_vector") and confidence > 0.9:
-                    safe_print(f"  ✓ High Confidence ({confidence:.2f}): Accepting SLM Gut Instinct vector.")
-                    stimulus["stimulus_vector"] = slm_result.get("gut_vector", {})
-                elif not stimulus.get("stimulus_vector"):
-                     safe_print(f"  ⚠️ Low Confidence ({confidence:.2f}) but no vector provided. Using SLM fallback.")
-                     stimulus["stimulus_vector"] = slm_result.get("gut_vector", {})
-                else:
-                    safe_print(f"  ✓ Reflection: LLM provided refined stimulus vector (Confidence: {confidence:.2f})")
-                
-                safe_print(f"  ✓ Stimulus extracted: '{stimulus.get('salience_anchor', 'N/A')}'")
-                safe_print(f"  ✓ RIM R-Impact: {stimulus.get('r_impact_score', 0.5):.2f}")
-                
-                # Partial write: Buffer user fragment
-                self.current_turn_user_fragment = {
-                    "speaker": "user",
-                    "raw_text": user_input,
-                    "salience_anchor": {
-                        "phrase": stimulus.get("salience_anchor", "unknown"),
-                        "Resonance_impact": stimulus.get("r_impact_score", 0.5)
-                    },
-                    "semantic_frames": stimulus.get("tags", []),
-                    "affective_inference": {
-                        "intent": stimulus.get("intent", "unknown"),
-                        "emotion_signal": stimulus.get("emotional_signal", "neutral"),
-                        "confidence": confidence,
-                        "slm_gut_vector": slm_result.get("gut_vector", {})
-                    }
-                }
-                safe_print(f"  💾 Partial Write: Buffered turn_user fragment.")
-
-        # [NEW] Log stimulus to MSP BEFORE sending to PhysioCore
-        if hasattr(self, 'msp') and self.msp and stimulus:
-             stimulus_data = {
-                 "turn_id": IdentityManager.generate_turn_id(self.session_id, (self.turn_count * 2) - 1),
-                 "eva_stimuli": stimulus.get("stimulus_vector", {}),
-                 "stimulus_context": {
-                     "reasoning": stimulus.get("salience_anchor", "N/A"),
-                     "confidence": stimulus.get("confidence_score", 0.5)
-                 },
-                 "timestamp": datetime.now().isoformat()
-             }
-             self.msp.log_stimulus_output(stimulus_data)
-
-        stimulus_chunks = self.cim.normalize_stimulus(stimulus)
-        safe_print(f"  ✓ Normalized {len(stimulus_chunks)} stimulus chunk(s).")
-
-
-        # ============================================================
-        # STEP 2: THE GAP - Bio Processing (Function Execution)
-        # ============================================================
-        
-        if self.enable_physio:
-            bio_state = self._execute_the_gap(stimulus, query_text=user_input)
-            
-            # [NEW] NexusMind Strategic Guidance (DeepThink) in The Gap
-            if self.nexus_mode:
-                safe_print(f"  - [NexusMind] Executing Strategic Decision Matrix...")
-                try:
-                    strategy = gks_interface.get_strategic_guidance({
-                        "stress": bio_state.get('matrix_state', {}).get('stress', 0)/1000.0,
-                        "confidence": stimulus.get('confidence_score', 1.0)
-                    })
-                    # Add strategic guidance to bio_state for LLM consumption
-                    bio_state['strategic_guidance'] = strategy
-                    safe_print(f"    ✓ Strategic guidance injected.")
-                except Exception as e:
-                    safe_print(f"    ⚠️ Strategy generation failed: {e}")
-                    
-        else:
-            # Fallback: minimal state
-            safe_print("\n⚡ STEP 2: The Gap - Skipped (Physio disabled)")
-            bio_state = {
-                "biological_state": {"hormones": {}, "autonomic": {}},
-                "psychological_state": {},
-                "emotion_label": "neutral",
-                "embodied_sensation": "Baseline state",
-                "retrieved_memories": [],
-                "instruction": "Generate a response based on baseline state."
-            }
-
-        # [NEW] Persist Step 2 result (Markdown)
-        step2_md = f"# [STEP 2: GAP PROCESSING]\n\n## 🧬 BIOLOGICAL STATE\n{yaml.dump(bio_state.get('biological_state', {}), allow_unicode=True)}\n\n## 🧠 PSYCHOLOGICAL STATE\n{yaml.dump(bio_state.get('psychological_state', {}), allow_unicode=True)}\n\n## 🌈 QUALIA\n{bio_state.get('embodied_sensation', 'N/A')}\n\n## 📑 RETRIEVED MEMORIES\n"
-        for m in bio_state.get('retrieved_memories', []):
-            step2_md += f"- {m.get('content')} (Emotion: {m.get('emotion')})\n"
-            
-        self.cim.save_markdown_context("step2_processing", step2_md)
-
-
-        # ============================================================
-        # STEP 3: CONTINUATION - Embodied Response Generation
-        # ============================================================
-        safe_print("\n💭 STEP 3: Continuation - Embodied Reasoning")
-        safe_print("  - Sending bio state back to LLM...")
-        
-        # Continue LLM session with bio state
-        final_response = self.llm.continue_with_result(
-            function_result=bio_state,
-            function_name="sync_biocognitive_state"
-        )
-        
-        # Extract final text
-        final_text = final_response.text
-        safe_print(f"  ✓ Generated response ({len(final_text)} chars)")
-        
-        # Extract memory proposal (if LLM called it)
-        memory_proposal = {}
-        if final_response.tool_calls:
-            for tool_call in final_response.tool_calls:
-                if tool_call.name == "propose_episodic_memory":
-                    memory_proposal = tool_call.args
-                    safe_print(f"  ✓ Captured episodic memory proposal")
-                    break
-        else:
-            safe_print("  ⚠️ No memory proposal generated")
-
-        # [NEW] Persist Step 3 result (Markdown)
-        step3_md = f"# [STEP 3: REASONING]\n\n## 🤖 FINAL RESPONSE\n{final_text}\n\n## 🧠 MEMORY PROPOSAL\n{yaml.dump(memory_proposal, allow_unicode=True)}"
-        self.cim.save_markdown_context("step3_reasoning", step3_md)
-
-
-        # ============================================================
-        # STEP 4: PERSISTENCE - Archive to MSP
-        # ============================================================
-        safe_print("\n💾 STEP 4: Archiving turn to MSP")
-        
-        # [NEW] Final Resonance Evaluation (L3/L4: Resonant & Transcendent)
-        # Capture paradox signal from MRF if present
-        paradox_signal = slm_result.get("resonance_l2", {}).get("mrf_interpretation", {}).get("meta", {}).get("paradox_detected", False)
-        
-        # Deep Process includes Memory and Qualia simulation
-        res_output_final = self.resonance.process(final_text, context={
-            "paradox_detected": paradox_signal,
-            "physio_state": bio_state.get('biological_state'),
-            "matrix_state": bio_state.get('psychological_state')
-        })
-        
-        final_ri = res_output_final.ri_score
-        
-        safe_print(f"  ✓ Calculated Final RI: {final_ri:.2f} (Depth: {res_output_final.layer_depth})")
-        if self.umbrella_active:
-             safe_print(f"  ☂️ [UMBRELLA ACTIVE] Strategy: {res_output_final.mrf_interpretation.get('transcendental', {}).get('transcendental_insight', 'Stability Mode')}")
-
-        # [NEW] Archival Data Preparation
-        ai_confidence = slm_result.get("confidence", 0.85)
-        stimulus_ref = slm_result # Use SLM data as primary stimulus reference if sync tool wasn't called
-        
-        # [NEW] Generate Sequential Turn IDs via IdentityManager
-        user_turn_num = (self.turn_count * 2) - 1
-        llm_turn_num = (self.turn_count * 2)
-        user_turn_id = IdentityManager.generate_turn_id(self.session_id, user_turn_num)
-        llm_turn_id = IdentityManager.generate_turn_id(self.session_id, llm_turn_num)
-
-        # Prepare fragments with IDs
-        user_frag = getattr(self, 'current_turn_user_fragment', None) or {
-             "speaker": "user",
-             "raw_text": user_input,
-             "salience_anchor": {"phrase": "unknown", "Resonance_impact": 0.5},
-             "semantic_frames": []
-        }
-        user_frag["turn_id"] = user_turn_id
-
-        llm_frag = {
-            "turn_id": llm_turn_id,
-            "speaker": "llm",
-            "raw_text": final_text,
-            "salience_anchor": {
-                "phrase": memory_proposal.get("llm_fragment_proposal", {}).get("turn_llm", {}).get("salience_anchor", {}).get("phrase", "N/A"),
-                "Resonance_impact": stimulus_ref.get("rim_impact", 0.5)
-            },
-            "epistemic_mode": memory_proposal.get("llm_fragment_proposal", {}).get("turn_llm", {}).get("epistemic_mode", "reflect"),
-            "confidence": ai_confidence
-        }
-
-        # Build episode data
-        episode_data = {
-            "context_id": context_id,
-            "turn_index": self.turn_count,
-            "timestamp": datetime.now().isoformat(),
-            "episode_type": memory_proposal.get("context_proposal", {}).get("episode_type", "interaction"),
-            "episode_tag": memory_proposal.get("context_proposal", {}).get("episode_tag", "unlabeled"),
-            "intent": stimulus.get("intent", "unknown"),
-            "confidence_score": ai_confidence,
-            "turn_id": user_turn_id,  # Root turn_id usually matches initial user turn? Or episode ID? Schema requires it.
-            "turn_1": user_frag,
-            "turn_llm": llm_frag,
-            "state_snapshot": {
-                "physio_state": bio_state.get("biological_state", {}),
-                "eva_matrix_state": bio_state.get("psychological_state", {}),
-                "emotion_label": bio_state.get("emotion_label", "neutral"),
-                "qualia": self.msp.get_active_state("qualia_state"), # Capture phenomenology
-                "Resonance_index": final_ri  # The authoritative combined score
-            },
-            "session_id": self.session_id,
-            "crosslinks": memory_proposal.get("llm_fragment_proposal", {}).get("crosslinks", {})
-        }
-        
-        # FINAL SANITIZATION: Remove Protobuf/SDK objects before persistence
-        from operation_system.llm_bridge.llm_bridge import LLMBridge
-        episode_data = LLMBridge.deep_clean(episode_data)
-        
-        # Write to MSP
-        self.msp.write_episode(episode_data, persist=self.recording_active)
-        self.msp.log_state_history() # Finalize state history for this turn
-        
-        # [NEW] Add to Vector DB (Cognitive Learning Loop)
-        # We index the raw user input with the REFINED metadata from Step 1
-        if self.recording_active and hasattr(self, 'vector_db'):
-            safe_print("  - [Learning] Indexing interaction in Vector DB with refined metadata...")
-            self.vector_db.add_memory(
-                text=user_input,
-                metadata={
-                    "intent": stimulus.get("intent", "unknown"),
-                    "emotional_signal": stimulus.get("emotional_signal", "neutral"),
-                    "tags": stimulus.get("tags", []),
-                    "salience_anchor": stimulus.get("salience_anchor", "None"),
-                    "resonance_index": final_ri,
-                    "confidence": ai_confidence,
-                    "session_id": self.session_id,
-                    "timestamp": datetime.now().isoformat()
-                },
-                memory_id=context_id
-            )
-            
-            # [NEW] Engram Memorization (Conditional)
-            if ai_confidence > self.engram.min_conf:
-                 saved = self.engram.memorize(
-                     text=user_input, 
-                     context_data={
-                         "intent": stimulus.get("intent"),
-                         "response": final_text[:100], # Store brief response
-                         "emotion": bio_state.get("emotion_label")
-                     },
-                     confidence=ai_confidence
-                 )
-                 if saved:
-                     safe_print(f"    ⚡ [Engram] Memorized new pattern (Conf: {ai_confidence:.2f})")
-
-        safe_print(f"  ✓ Episode archived (ID: {context_id[:8]}...)")
-        
-        # Increment turn counter (2 per interaction: user + llm)
-        self.turn_count += 2
-        
-        # Update CIM turn state and persist turn_index
-        self.cim.update_turn_state({
-            "user_input": user_input,
-            "final_response": final_text,
-            "emotion_label": bio_state.get("emotion_label", "neutral"),
-            "salience_anchor": stimulus.get("salience_anchor", "unknown"),
-            "turn_index": self.turn_count
-        })
-        
-        # Persist turn count for session continuity
-        self.msp.save_turn_context({
-            "turn_index": self.turn_count,
-            "context_id": context_id,
-            "session_id": self.session_id
-        })
+        # --------------------------------------------------
+        # DELEGATION: CNS Master Flow Engine (The Brain)
+        # --------------------------------------------------
+        result = self.master_flow.run_turn(user_input)
         
         # Resonance Report
         self._print_resonance_report()
 
-        return {
-            "final_response": final_text,
-            "emotion_label": bio_state.get("emotion_label", "neutral"),
-            "resonance_hash": self.bus.generate_state_hash(),
-            "confidence_score": ai_confidence,
-            "salience_anchor": stimulus.get("salience_anchor", "None"),
-            "resonance_index": final_ri,
-            "state_snapshot": episode_data.get("state_snapshot", {})
-        }
+        return result
 
     def _print_resonance_report(self):
         """Displays chronological signal propagation on the Resonance Bus."""

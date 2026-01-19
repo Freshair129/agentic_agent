@@ -31,14 +31,14 @@ trigger: always_on
 ## 3. Authority Rules
 
 - **Bus Access**: Only Systems & Approved Central Modules. Modules/Nodes MUST go through Parent.
-- **State Ownership**: Only Systems own eva/consciousness/state_memory/.
+- **State Ownership**: Only Systems own agent/consciousness/state_memory/.
 - **Root Slots**: Modules/Nodes cannot create root files.
 
 ## 4. Memory Ownership Maps
 
-- **Consciousness** (eva/consciousness/): LLM Read/Write. Mutable.
-- **Archive** (eva/memory/archival_memory/): MSP Write Only. Immutable. LLM CANNOT Write.
-- **System State** (eva/system_state/): System Private. LLM Read-Only via Context.
+- **Consciousness** (agent/consciousness/): LLM Read/Write. Mutable.
+- **Archive** (agent/memory/archival_memory/): MSP Write Only. Immutable. LLM CANNOT Write.
+- **System State** (agent/system_state/): System Private. LLM Read-Only via Context.
 
 ## 5. Violation Protocols
 

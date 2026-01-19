@@ -2,16 +2,24 @@
 
 **"Config is the Law. Code is the Enforcer."**
 
-This protocol enforces a strict direction of flow for all changes in the EVA system. No code should be written without a preceding definition in the Configuration/Documentation (YAML).
+This protocol enforces a strict direction of flow for all changes in the EVA system. No code should be written without a preceding definition in the Configuration/Documentation (YAML) **and** adherence to the mandatory structural hierarchy.
 
-## The Principle
+## 1. The Principle
 
 **Configuration (YAML) = Source of Truth (The What)**
 **Code (Python) = Implementation (The How)**
+**Directory Structure = Governance (The Where)**
 
-We do not "hardcode" logic and then optionally expose it. We define the *capability* in the Schema, then write code to fulfill it.
+### 1.1 Structural Hierarchy: [System -> Module -> Node]
+To be compliant with EVA v9.6+, every component must follow the atomic directory standard:
+- **System**: The high-level authority folder (e.g., `physio_core/`).
+- **Module/**: Mandatory subdirectory containing functional modules (e.g., `Module/endocrine/`).
+- **Node/**: Mandatory subdirectory inside each Module containing individual logic nodes (e.g., `Module/endocrine/Node/glands.py`).
 
-## The Workflow: "Ghost Key Driven Development"
+> [!IMPORTANT]
+> A "System" without Modules, or a "Module" without Nodes, is a violation of Architectural Integrity.
+
+## 2. The Workflow: "Ghost Key Driven Development"
 
 ### Step 1: Define (The Doc)
 

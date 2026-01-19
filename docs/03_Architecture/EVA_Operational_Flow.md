@@ -81,16 +81,15 @@ sequenceDiagram
 | **8** | Artifact_Qualia | `serial` | `artifact_qualia.artifact_qualia` | Registry (`#5`) |
 | **9** | **Orchestrator** | `loop_start` | `orchestrator.orchestrator` | Registry (`#5`) |
 
-## 🔑 Terminology Enforcement (v9.4.3)
+## 🔑 Terminology Enforcement (v9.6.2)
 
-* **CIM (Context Injection Module)**: *[REPLACES CIN]* หน่วยงานจัดเตรียม Context ให้ LLM
+* **CIM (Context Injection Module)**: หน่วยงานจัดเตรียม Context ให้ LLM
 * **The Gap**: ช่วงเวลาประมวลผลระบบสรีรวิทยาและจิตวิทยาข้าม Token
-* **State-Dependent Memory**: การดึงความจำที่เน้นความสอดคล้องกับอารมณ์ความรู้สึกปัจจุบัน
+* **Engram**: หน่วยความจำรีเฟล็กซ์ที่ทำงานระดับ O(1) (Bypass System 2)
+* **Embodied RAG**: การดึงความจำที่ใช้สภาวะชีวภาพ (Body State) เป็นฟิลเตอร์
 * **Hydrate**: (State) การกู้คืนสภาวะความจำเก่าลงสู่ Consciousness โดย MSP/RAG
-* **Contextualize**: (Process) การปรับปรุงบริบทของเทิร์นปัจจุบันด้วยข้อมูลจากความจำถาวร
-* **Engram**: หน่วยความจำรีเฟล็กซ์ที่ทำงานระดับ O(1)
+* **Resonance Bus**: ระบบสื่อสารแบบ Signal-First (Decoupled)
 
 ---
 
-<!-- markdownlint-disable-next-line MD036 -->
-**Created for EVA v9.4.3 Implementation**
+**Created for EVA v9.6.2 Implementation**

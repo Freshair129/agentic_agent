@@ -64,6 +64,12 @@ class PhysioCore:
         self.bus = bus
         self.config_path = config_path
 
+        # [NEW] Resonance Bus Subscription (Signal-First)
+        from operation_system.identity_manager import IdentityManager
+        if self.bus:
+            safe_print(f"[PhysioCore] Subscribing to channel: {IdentityManager.BUS_PHYSICAL}")
+            self.bus.subscribe(IdentityManager.BUS_PHYSICAL, self._handle_bus_signal)
+
         # 1. Load Unified Config
         safe_print(f"[PhysioCore] Loading Unified Config: {config_path}")
         self.config = yaml.safe_load(open(config_path, encoding='utf-8'))
@@ -302,3 +308,26 @@ class PhysioCore:
     def get_state(self) -> Dict[str, Any]:
         """Backward compatibility for orchestrator."""
         return self.get_snapshot()
+
+    # --------------------------------------------------
+    # Signal Handlers (Resonance Bus)
+    # --------------------------------------------------
+    def _handle_bus_signal(self, payload: Dict[str, Any]):
+        """
+        React to signals on the Resonance Bus.
+        Triggers physiological step if a stimulus is perceived.
+        """
+        metadata = payload.get("__metadata__", {})
+        channel = metadata.get("channel")
+        event_type = payload.get("event_type")
+
+        if event_type == "STIMULUS_PERCEIVED":
+            stimulus = payload.get("stimulus")
+            if stimulus:
+                safe_print(f"  - [PhysioCore] Signal Received: STIMULUS_PERCEIVED. Triggering step...")
+                # Execute physiological step reactively
+                self.step(
+                    eva_stimuli=[stimulus],
+                    zeitgebers={"active": 0.5},
+                    dt=60.0
+                )

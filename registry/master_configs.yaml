@@ -1,0 +1,36 @@
+# ============================================================
+# EVA MASTER CONFIGURATION (Common Law)
+# Organism Version: 9.6.2
+# ============================================================
+
+organism_version: 9.6.2
+epoch: "Resonance"
+updated: "2026-01-19"
+
+# --- [GLOBAL IDENTITY] ---
+identity:
+  developer_id: "THA-06"
+  instance_name: "EVA-Prime"
+  persona_default: "PE_01" # EVA
+
+# --- [UNIFIED PATHS: The Authoritative Map] ---
+unified_paths:
+  msp_archive: "memory_n_soul_passport/archive/"
+  gks_knowledge: "genesis_knowledge_system/knowledge/"
+  docs_auth: "docs/"
+  system_state: "eva/system_state/"
+  consciousness: "eva/consciousness/"
+
+# --- [ENVIRONMENT DEFAULTS] ---
+environment:
+  run_mode: "dev"
+  logging_level: "INFO"
+  default_llm: "gemini"
+  default_slm: "llama-3.2-1b"
+
+# --- [VERSIONING LAWS: Anti-Hallucination Anchor] ---
+# These rules enforce epoch-specific behavior
+version_laws:
+  enforce_strict_version: true
+  allowed_prefixes: ["v9.6", "v9.5"]
+  rejection_policy: "terminate" # Terminate logic if legacy version detected

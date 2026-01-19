@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Master Config System (SSOT)**: Created `registry/master_configs.yaml` to serve as the global "Common Law" for the organism.
+  - **Offloaded Metadata**: Moved `organism_version` (v9.6.2) and `unified_paths` out of the registry to prevent version drift and simplify governance.
+  - **Governance**: Integrated `IdentityManager` as the primary consumer and distributor of these constants.
+- **CNS Execution Slot Formalization**: Established `orchestrator/Execution/` as a dedicated structural slot for master flow logic.
+  - **Execution Node**: Implemented `MasterFlowEngine` to manage the multi-phase cognitive cycle (Perception, Gap, Reasoning, Persistence).
+  - **Refactoring**: Decoupled `orchestrator.py` from execution mechanics, delegating all flow control to the new engine.
+
+### Added (WebUI & MSP)
+
 - **WebUI Portfolio Dashboard**: Launched a premium React-based dashboard at `agent/webui/`.
   - **Visualization**: Implemented real-time Radar Charts for 9D Matrix and animated Hormone/Vitals panels.
   - **Interaction**: Integrated a sleek Chat Interface with status indicators (Thinking/Ready).

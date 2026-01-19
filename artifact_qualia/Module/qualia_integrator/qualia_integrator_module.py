@@ -1,6 +1,6 @@
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
-from .Node.texture_logic.texture_node import TextureNode
+from .Node.texture_node import TextureNode
 
 @dataclass
 class QualiaSnapshot:

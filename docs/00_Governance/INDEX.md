@@ -46,7 +46,8 @@
   - [**Event Policy Specification**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/EVA_Event_Policy.md): ข้อกำหนดการจัดการเหตุการณ์ (State-Dominant)
   - [**Memory Governance Policy**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/EVA_Memory_Governance.md): กฎการโปรโมทและแก้ไขความเชื่อ
   - [**System Permissions**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/EVA_Permissions.md): การแบ่งระดับสิทธิ์และการจัดระดับชั้นระบบ
-  - [**Doc-to-Code Protocol**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/DOC_TO_CODE.md): มาตรฐานการพัฒนา
+  - [**Doc-to-Code Protocol**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/DOC_TO_CODE.md): มาตรฐานการพัฒนา (YAML + Hierarchy)
+  - [**Feature Integration Protocol**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/07_Protocols/INTEGRATE_FEATURE.md): ขั้นตอนการเพิ่มฟีเจอร์ใหม่ (System-Module-Node)
 - [**Versioning**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/00_Governance/VERSIONING_POLICY.md), [**Changelog**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/00_Governance/CHANGELOG.md), [**Rules Audit**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/00_Governance/RULES_ALIGNMENT_AUDIT.md)
 - [**99. Archive**](file:///e:/The%20Human%20Algorithm/T2/agent/docs/99_Archive/): คลังเอกสารเก่า (Legacy Documents)
 

@@ -1,4 +1,4 @@
-# Memory Governance Policy (v9.4.3)
+# Memory Governance Policy (v9.6.2)
 >
 > **Status**: Canonical / Normative Policy
 > **Scope**: Memory Promotion, Decay, and Conflict Resolution

@@ -1,5 +1,5 @@
 """
-EVA Matrix System (Independent Version: 2.4.3)
+EVA Matrix System (Independent Version: 2.5.0)
 9D Psychological State Engine with Resonance Bus support.
 """
 

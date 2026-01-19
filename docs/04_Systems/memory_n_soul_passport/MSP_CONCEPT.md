@@ -33,7 +33,7 @@ MSP (Memory & Soul Passport) is EVA's **unified memory operating system**. It se
 
 - **MSP**: The software module that implements memory operations
 - **RMS**: The architectural specification of how memories are stored
-- **Consciousness Chain**: The physical storage (`eva/consciousness/` directory)
+- **Consciousness Chain**: The physical storage (`agent/consciousness/` directory)
 
 Think of it as:
 
@@ -50,8 +50,8 @@ The Consciousness Chain is a hierarchical storage system at `eva/consciousness/`
 ### Layer Structure
 
 ```
-eva/consciousness/      # Active System Memory (See filesystem_structure in MSP_configs.yaml)
-    ├── context_storage/
+agent/consciousness/      # Active System Memory (See filesystem_structure in MSP_configs.yaml)
+    ├── context_container/
     ├── core_memory/
     ├── episodic_memory/
     ├── ... (and other layers per SSOT)
@@ -461,7 +461,7 @@ my_response = compute_response(adrenaline)
 ### Memory Not Persisting
 
 1. Validate against schema first
-2. Check if write permission to `eva/consciousness/` exists
+2. Check if write permission to `agent/consciousness/` exists
 3. Verify MSP Client initialization
 
 ---

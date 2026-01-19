@@ -3,7 +3,7 @@
 # Purpose: Documentation of the mental model and logical flow for the Psych-State Engine
 
 > [!NOTE]
-> **Status**: VERIFIED STABLE (v9.4.3 Audit Complete)
+> **Status**: VERIFIED STABLE (v9.6.2 Audit Complete)
 > **Coupling**: Fully verified with `PhysioCore` via `verify_matrix_coupling.py`.
 
 ## Mental Model

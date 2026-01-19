@@ -18,11 +18,13 @@ Before writing logic, you must define the "Soul" of the feature.
 
 ## 2. Structural Setup
 
-Follow the [System -> Module -> Node] hierarchy.
+Follow the **MANDATORY** [System -> Module -> Node] hierarchy.
 
-1. **Create Directory**: `agent/capabilities/services/[feature_name]/` (or appropriate parent).
+1. **Create Directories**:
+    - `[system_name]/Module/` (Functional containers)
+    - `[system_name]/Module/[module_name]/Node/` (Atomic logic)
 2. **Config First**: Create `configs/[feature]_config.yaml`. **NO HARDCODED MAGIC NUMBERS**.
-3. **Main File**: Create `[feature]_engine.py` (or similar).
+3. **Entry Point**: Create `[system_name].py` in the system root (or `resonance_memory_system.py` pattern) to orchestrate the modules.
 
 ## 3. System Registration (CRITICAL)
 

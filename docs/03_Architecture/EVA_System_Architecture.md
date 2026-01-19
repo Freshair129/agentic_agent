@@ -170,13 +170,11 @@ graph TD
     %% ==========================================
     UserIn(["👤 User Input"]) --> EngramCheck
     
-    subgraph Reflex ["Layer 1: REFLEX (Effectors)"]
-        EngramCheck{"Engram System<br/>(Cache Hit?)"}
-        FastOut(["⚡ Fast Response<br/>(O(1) Return)"])
+    subgraph Reflex ["Layer 1: REFLEX (Suggestion)"]
+        EngramCheck{"Engram System<br/>(Pattern Match?)"}
     end
     
-    EngramCheck -- "YES" --> FastOut
-    EngramCheck -- "NO" --> SLM
+    EngramCheck -- "Yes/No" --> SLM
 
     %% ==========================================
     %% 2. PERCEPTION & QUICK RECALL

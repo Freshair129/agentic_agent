@@ -1,5 +1,5 @@
 from typing import Dict, Any, List
-from .Node.transition_logic.transition_node import TransitionNode
+from .Node.transition_node import TransitionNode
 
 class MatrixPsychModule:
     """

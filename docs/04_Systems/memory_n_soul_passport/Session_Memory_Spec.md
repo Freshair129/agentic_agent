@@ -1,10 +1,10 @@
-# Session Memory Specification (v9.4.3)
+# Session Memory Specification (v9.6.2)
 >
 > **Status**: Canonical / Final
-> **Version**: 9.4.3
+> **Version**: 9.6.2
 > **Philosophy**: "Data needs a Snapshot; Search needs a Map."
 
-เอกสารฉบับนี้กำหนดมาตรฐานการจัดเก็บความจำราย Session สำหรับ EVA v9.4.3 โดยเปลี่ยนจากเพียงการทำสรุปเนื้อหา มาเป็นการทำ **"Snapshot & Master Index"** เพื่อความสมบูรณ์ของข้อมูลและประสิทธิภาพในการสืบค้น (Retrieval Optimization)
+เอกสารฉบับนี้กำหนดมาตรฐานการจัดเก็บความจำราย Session สำหรับ EVA v9.6.2 โดยเปลี่ยนจากเพียงการทำสรุปเนื้อหา มาเป็นการทำ **"Snapshot & Master Index"** เพื่อความสมบูรณ์ของข้อมูลและประสิทธิภาพในการสืบค้น (Retrieval Optimization)
 
 ---
 
@@ -95,4 +95,6 @@ session_memory/{session_id}/
 ---
 
 <!-- markdownlint-disable-next-line MD036 -->
-**Directed by "The Human Algorithm" v9.4.3 Principles**
+---
+
+**Directed by "The Human Algorithm" v9.6.2 Principles**

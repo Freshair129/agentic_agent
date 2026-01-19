@@ -52,6 +52,7 @@ class AgenticRAG:
         self,
         msp_client=None,
         vector_bridge=None,
+        bus=None,
         config_path: Optional[str] = None
     ):
         """
@@ -64,6 +65,14 @@ class AgenticRAG:
         """
         self.msp_client = msp_client
         self.vector_bridge = vector_bridge
+        self.bus = bus
+
+        # [NEW] Resonance Bus Subscription (Signal-First)
+        from operation_system.identity_manager import IdentityManager
+        if self.bus:
+            from capabilities.tools.logger import safe_print
+            safe_print(f"[AgenticRAG] Subscribing to channel: {IdentityManager.BUS_KNOWLEDGE}")
+            self.bus.subscribe(IdentityManager.BUS_KNOWLEDGE, self._handle_bus_signal)
         
         # 1. Load Configuration (SSOT)
         self.base_path = Path(__file__).parent.parent.parent
@@ -84,7 +93,8 @@ class AgenticRAG:
                 "total_queries": 0,
                 "avg_latency_ms": 0.0,
                 "hit_rate": 0.0
-            }
+            },
+            "last_retrieval": [] # [NEW] Buffer for signal-driven results
         }
         self._load_state()
 
@@ -290,6 +300,34 @@ class AgenticRAG:
                 safe_print(f"  - [Cross-Encoder] ⚠️ Re-ranking failed: {e}")
 
         return unified_matches
+
+    # --------------------------------------------------
+    # Signal Handlers (Resonance Bus)
+    # --------------------------------------------------
+    def _handle_bus_signal(self, payload: Dict[str, Any]):
+        """
+        React to signals on the Resonance Bus.
+        """
+        event_type = payload.get("event_type")
+
+        if event_type == "STIMULUS_PERCEIVED":
+            stimulus = payload.get("stimulus")
+            if stimulus:
+                from capabilities.tools.logger import safe_print
+                safe_print(f"  - [AgenticRAG] Signal Received: STIMULUS_PERCEIVED. Triggering fast recall...")
+                # Execute fast recall reactively
+                tags = stimulus.get("tags", [])
+                results = self.retrieve_fast({"tags": tags, "context_id": "auto"})
+                self.state["last_retrieval"] = results
+                
+                # Publish that records are ready
+                if self.bus:
+                    from operation_system.identity_manager import IdentityManager
+                    self.bus.publish(IdentityManager.BUS_KNOWLEDGE, {
+                        "event_type": "RECORDS_RETRIEVED",
+                        "stream_type": "fast",
+                        "count": len(results)
+                    })
 
     # ============================================================
     # STREAM 1: NARRATIVE - Sequential Episode Chains

@@ -1,5 +1,5 @@
 """
-Artifact Qualia System Engine (Independent Version: 2.4.3)
+Artifact Qualia System Engine (Independent Version: 2.5.0)
 Phenomenological Experience Integrator with State Bus support.
 """
 
