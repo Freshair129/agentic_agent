@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "EVA PMT Output Payload Schema",
-    "description": "Strict specification for behavioral signals published to bus:knowledge in EVA 8.2.0 Architecture.",
+    "title": "EVA PRN Output Payload Schema",
+    "description": "Strict specification for behavioral signals published to bus:knowledge in EVA 9.6.2 Architecture.",
     "type": "object",
     "required": [
         "behavior_policy",
@@ -11,7 +11,7 @@
     "properties": {
         "timestamp": {
             "type": "number",
-            "description": "Unix timestamp or modification time of the PMT directive."
+            "description": "Unix timestamp or modification time of the PRN directive."
         },
         "behavior_policy": {
             "type": "array",

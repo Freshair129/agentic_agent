@@ -75,8 +75,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Enhanced root_slots** with `logical_type` classification (organ, infra, memory, knowledge, governance).
 - **Directory Structure Optimization** (Multi-Model Consensus):
   - **Phase 1 (Root Cleanup)**: Moved 7 loose files from root to appropriate locations:
-    - Documentation → `docs/10_References/` and `docs/99_Archive/`
-    - Task definitions → `.agent/tasks/`
+  - **[PHASE 45] SE Refactor**: "PMT" (Prompt Moral Triage) renamed to **"PRN" (Prompt Rule Node)** across all filenames, code, and contracts.
+  - **[PHASE 45] Logic Fix**: Fixed `comp_map` bug in Orchestrator resonance report.
+  - **[PHASE 44] PRN Cleanup**: Centralized contracts to `agent/contracts/` and moved legacy code to `docs/99_Archive/`.
+  - **[PHASE 43] Asset Classification**: `prompt_rule/configs/` renamed to `assets/`.
   - **Phase 2 (Registry Enhancement)**: Added semantic `type` field to all root_slots for logical organization without physical restructuring.
   - **Phase 3 (Enforcement)**: Created `.agent/governance/root_policy.yaml` whitelist to prevent future root pollution.
   - **Result**: Root directory reduced to 5 essential files. Flat anatomy preserved per Embodied Organism philosophy.

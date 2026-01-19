@@ -136,12 +136,12 @@ cim:
     intuition: 0.05
     operational: 0.05
   discovery_paths:
-    persona: "orchestrator/cim/prompt_rule/configs/identity/persona.yaml"
-    soul: "orchestrator/cim/prompt_rule/configs/identity/soul.md"
-    thought_logic: "orchestrator/cim/prompt_rule/configs/cognitive/thought_logic.yaml"
-    relational: "orchestrator/cim/prompt_rule/configs/social/relational_protocol.yaml"
-    autonomic: "orchestrator/cim/prompt_rule/configs/biological/autonomic_reflex.yaml"
-    pmt_rules: "orchestrator/cim/prompt_rule/configs/"
+    persona: "orchestrator/cim/prompt_rule/assets/identity/persona.yaml"
+    soul: "orchestrator/cim/prompt_rule/assets/identity/soul.md"
+    thought_logic: "orchestrator/cim/prompt_rule/assets/cognitive/thought_logic.yaml"
+    relational: "orchestrator/cim/prompt_rule/assets/social/relational_protocol.yaml"
+    autonomic: "orchestrator/cim/prompt_rule/assets/biological/autonomic_reflex.yaml"
+    prn_rules: "orchestrator/cim/prompt_rule/assets/"
   context_prioritization:
     L0_critical:
       description: "Immutable System Instructions & Metadata"

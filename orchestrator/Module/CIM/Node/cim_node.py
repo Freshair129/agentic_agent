@@ -435,7 +435,7 @@ class ContextInjectionModule:
         self.prn_identity = self._load_prn_identity()
         self.persona_data = self.prn_identity.get("persona", {})
         self.soul_data = self.prn_identity.get("soul", {})
-        self.pmt_rules = self._load_pmt_rules()
+        self.prn_rules = self._load_prn_rules()
         self.stimulus_catalog = self._load_stimulus_catalog()
 
     def _load_stimulus_catalog(self) -> Dict[str, Any]:
@@ -479,7 +479,7 @@ class ContextInjectionModule:
 
             "phase_1": {
 
-                "identity_anchor": 500, "physio_baseline": 100, "pmt_rules": 200,
+                "identity_anchor": 500, "physio_baseline": 100, "prn_rules": 200,
 
                 "memory_buffer": 250, "conversation_history": 1500, "total_max": 3000
 
@@ -514,7 +514,9 @@ class ContextInjectionModule:
             "shared_metadata": {}
         }
         
-        base_prn = self.base_path / "orchestrator" / "cim" / "prompt_rule" / "configs"
+        base_prn = self.base_path / "orchestrator" / "Execution" / "CognitiveFlow" / "prompt_rule" / "assets"
+        # Wait, the path is orchestrator/Module/CIM/Node/prompt_rule/assets
+        base_prn = self.base_path / "orchestrator" / "Module" / "CIM" / "Node" / "prompt_rule" / "assets"
         files = {
             "persona": base_prn / "identity" / "persona.yaml",
             "soul": base_prn / "identity" / "soul.md",

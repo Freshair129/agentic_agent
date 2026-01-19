@@ -1,10 +1,10 @@
-# PMT (Prompt Rule Layer) Interface
-schema: EVA-Interface-v8.2 (Standard)
-version: 8.2.0-S1
-updated: 2026-01-05
-bus_id: GOVERNANCE_PMT_01
+# PRN (Prompt Rule Node) Interface
+schema: EVA-Interface-v9.6 (Standard)
+version: 9.6.2-S1
+updated: 2026-01-19
+bus_id: GOVERNANCE_PRN_01
 
-component: PMT
+component: PRN
 role: "Behavioral Constraint & Identity Management"
 
 # ==========================================================

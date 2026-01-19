@@ -5,7 +5,7 @@ Architecture:
         ↓
     Phase 1: Perception (CIM + LLM extract stimulus)
         ↓
-    The Gap: PhysioController + EVA Matrix + Artifact Qualia + PMT (Connected via Resonance Bus)
+    The Gap: PhysioController + EVA Matrix + Artifact Qualia + PRN (Connected via Resonance Bus)
         ↓
     Phase 2: Reasoning (CIM + LLM generate RESPONSE with 40/60 weighting)
         ↓
@@ -305,7 +305,7 @@ class EVAOrchestrator:
                 IdentityManager.BUS_PHENOMENOLOGICAL: IdentityManager.SYSTEM_QUALIA,
                 IdentityManager.BUS_KNOWLEDGE: IdentityManager.SYSTEM_PRN
             }
-            comp = comp_map.get(clean_channel, "Unknown")
+            comp = comp_map.get(channel, "Unknown")
             
             summary = ""
             if clean_channel == "physical":

@@ -1,19 +1,19 @@
 # ============================================================
 # EVA MODULE SPECIFICATION (SSOT)
-# Module: PMT (Prompt Rule Layer)
-# Version: 8.2.0-S1
-# Updated: 2026-01-04
+# Module: PRN (Prompt Rule Node)
+# Version: 9.6.2-S1
+# Updated: 2026-01-19
 # Description: Unified configuration for identity management and behavioral governance.
 # ============================================================
 
-schema: EVA-PMT-Configs-v8.2-Standard
-version: 8.2.0-S1
+schema: EVA-PRN-Configs-v9.6-Standard
+version: 9.6.2-S1
 
 # ============================================================
 # 1. GLOBAL STRATEGY & IDENTITY
 # ============================================================
 global:
-  module_name: "Prompt Rule Layer"
+  module_name: "Prompt Rule Node"
   role: "Behavioral Constraint & Identity Management"
   analogy: "Personalized Moral Triage (จิตสำนึกและตัวตน)"
   

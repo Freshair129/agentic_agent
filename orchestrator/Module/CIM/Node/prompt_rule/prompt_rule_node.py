@@ -26,7 +26,9 @@ class PromptRuleNode:
         
         # Support unified configuration
         unified_path = Path(__file__).parent.parent.parent / "configs" / "orchestrator_configs.yaml"
-        legacy_path = Path(__file__).parent / "configs" / "PMT_configs.yaml"
+        legacy_path = Path(__file__).parent / "assets" / "PRN_configs.yaml"
+        
+        self.yaml_path = yaml_path or str(unified_path if unified_path.exists() else legacy_path)
         
         self.yaml_path = yaml_path or str(unified_path if unified_path.exists() else legacy_path)
         self.config = self._load_config()
@@ -52,7 +54,7 @@ class PromptRuleNode:
         }
         
         base_path = Path(__file__).parent.parent.parent.parent
-        identity_dir = Path(__file__).parent / "configs" / "identity"
+        identity_dir = Path(__file__).parent / "assets" / "identity"
         
         files = {
             "persona": identity_dir / "persona.yaml",
@@ -94,7 +96,7 @@ class PromptRuleNode:
                 
                 return full_config
         except Exception as e:
-            print(f"[PMT] Error loading YAML: {e}")
+            print(f"[PRN] Error loading YAML: {e}")
             return {}
 
     def _on_physical_signal(self, payload: Dict[str, Any]):
