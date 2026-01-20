@@ -47,15 +47,16 @@ class RMSEngineV6:
         self.trauma_dim_factor = protection.get("color_dim_factor", 0.55)
         self.trauma_intensity_reduction = protection.get("intensity_reduction", 0.50)
 
-        # Internal smoothing memory
-        self._last_color_axes = {
-            "stress": 0.2,
-            "warmth": 0.5,
-            "clarity": 0.5,
-            "drive": 0.3,
-            "calm": 0.4,
-        }
-        self._last_intensity = 0.3
+        # Internal smoothing memory (Loaded from Config)
+        init_state = logic.get("initial_state", {})
+        self._last_color_axes = init_state.get("color_axes", {
+            "stress": 0.2, "warmth": 0.5, "clarity": 0.5, "drive": 0.3, "calm": 0.4
+        })
+        self._last_intensity = init_state.get("intensity", 0.3)
+        
+        # Load Modifiers
+        self.impact_boost_map = logic.get("impact_boost_map", {"low": 0.0, "medium": 0.1, "high": 0.25})
+        self.trend_modifiers = logic.get("trend_modifiers", {"rising": 1.1, "stable": 1.0, "fading": 0.85})
 
     def process(
         self,
@@ -112,8 +113,8 @@ class RMSEngineV6:
         axes = eva.get("axes_9d", {})
         base = clamp(axes.get("arousal", 0.5) * 0.6 + axes.get("stress", 0.3) * 0.4)
         
-        impact_boost = {"low": 0.0, "medium": 0.1, "high": 0.25}.get(rim.get("impact_level", "low"), 0.0)
-        trend_mod = {"rising": 1.1, "stable": 1.0, "fading": 0.85}.get(rim.get("impact_trend", "stable"), 1.0)
+        impact_boost = self.impact_boost_map.get(rim.get("impact_level", "low"), 0.0)
+        trend_mod = self.trend_modifiers.get(rim.get("impact_trend", "stable"), 1.0)
 
         raw = clamp((base + impact_boost) * trend_mod)
         return raw

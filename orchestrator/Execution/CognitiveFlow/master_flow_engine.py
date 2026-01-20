@@ -92,13 +92,9 @@ class MasterFlowEngine:
         # SLM Intent & Fast Recall
         try:
             slm_result = slm.extract_intent(user_input)
-            res_output = self.orch.resonance.process(user_input)
-            slm_result["resonance_l2"] = {
-                 "archetype": res_output.archetype,
-                 "mrf_interpretation": res_output.mrf_interpretation,
-                 "layer_depth": res_output.layer_depth
-            }
-            slm_result["r_impact_score"] = res_output.ri_score
+            # [SIMPLIFIED] Direct SLM -> RIM (No L2/L3)
+            # Default to basic intensity if available
+            slm_result["r_impact_score"] = slm_result.get("intensity", 0.5)
             fast_mems = self.orch.vector_db.query_memory(user_input, n_results=3)
         except Exception as e:
             safe_print(f"  ⚠️ Gateway Error: {e}")
@@ -225,15 +221,9 @@ class MasterFlowEngine:
         }
         
         # Strategic Guidance (NexusMind)
-        if self.orch.nexus_mode:
-            try:
-                # Assuming gks_interface is accessible or passed. 
-                # For this refactor, let's assume it's part of self.orch or a global
-                from genesis_knowledge_system.nexus_mind.nexus_mind import NexusMind
-                nexus = NexusMind() # Simplified for now
-                strategy = nexus.get_strategic_guidance({"stress": matrix_snap.get('stress',0)/1000.0})
-                bio_state['strategic_guidance'] = strategy
-            except: pass
+        # [SIMPLIFIED] No NexusMind Strategy
+        # Nexus logic removed per user revert
+        pass
 
         self.orch.cim.save_markdown_context("step2_processing", yaml.dump(bio_state))
         return bio_state
@@ -260,11 +250,13 @@ class MasterFlowEngine:
         safe_print("\n💾 PHASE 3: Persistence")
         
         # Final Resonance
-        res_output_final = self.orch.resonance.process(final_text, context={
-            "physio_state": bio_state.get('biological_state'),
-            "matrix_state": bio_state.get('psychological_state')
-        })
-        final_ri = res_output_final.ri_score
+        # Final Resonance (Tool Evaluation)
+        # Using simplified RIM logic (placeholder delta for now)
+        try:
+             res_result = self.orch.resonance.evaluate({}, {}, 0.0, 1.0) # Dummy inputs for stability
+             final_ri = res_result["rim_value"]
+        except:
+             final_ri = 0.5
         
         # Generate Turn IDs
         user_turn_id = IdentityManager.generate_turn_id(self.orch.session_id, (self.orch.turn_count * 2) - 1)

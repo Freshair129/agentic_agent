@@ -97,10 +97,7 @@ root_slots:
     authority: archival
     description: Episodic/Semantic/Sensory storage
   
-  - name: genesis_knowledge_system
-    type: knowledge
-    authority: reasoning
-    description: Strategic knowledge base
+
   
   # === EXECUTION LAYER ===
   - name: api
@@ -415,7 +412,6 @@ systems:
       - system: PhysioCore
       - system: EVA_Matrix
       - system: MSP
-      - system: GKS
       - system: RMS
       
     protocols:
@@ -460,42 +456,7 @@ systems:
   # ----------------------------------------------------------
   # 5. INFRASTRUCTURE & KNOWLEDGE
   # ----------------------------------------------------------
-  - id: GKS
-    name: Genesis_Knowledge_System
-    version: 2.0.0  # Maps from EVA 9.0.0 (introduced in v9)\n    domain: epistemology
-    role: knowledge_authority
-    auth_doc: genesis_knowledge_system/Master_Block.json # Knowledge Base is self-documenting in Blocks
-    criticality: L2 # Ignorant (Cant access wisdom)
-    runtime:
-      sequence: 6
-    
-    structure_standard: v9.4.3
-    
-    structure_standard: v9.4.3
-    root_presence: true
-    manifest:
-      follows_standard: true
-    manifest:
-      follows_standard: true
-      config_location: centralized  # Uses operation_system/configs
-      entry_point: genesis_knowledge_system.gks_interface.GKSInterface
-    permissions:
-      bus_publish: [BUS_KNOWLEDGE]
-      state_ownership: [] # Static Knowledge
-    
-    dependencies: [] # Static Knowledge Base
-    
-    # Knowledge Storage (similar to MSP's chains)
-    chains:
-      folders: [genesis_knowledge_system]  # Genesis/Master/Safety Blocks storage
-      files:
-        - genesis_knowledge_system/Master_Block.json
-        - genesis_knowledge_system/Framework_Genesis_Block.json
-        - genesis_knowledge_system/Algorithm_How_Genesis_Block.json
-        - genesis_knowledge_system/Concept_Why_Genesis_Block.json
-        - genesis_knowledge_system/Parameter_What_Genesis_Block.json
-        - genesis_knowledge_system/Protocol_Process_Genesis_Block.json
-        - genesis_knowledge_system/Safety_Block.json
+
 
   - id: RMS
     name: Resonance_Memory_System
@@ -598,16 +559,7 @@ systems:
       files: [operation_system/identity_manager.py]
     dependencies: [] # Standalone Utility
 
-  - id: NexusMind
-    name: Nexus_Mind_Engine
-    version: 1.0.0
-    domain: reasoning
-    role: central_module
-    root_presence: false
-    manifest:
-      folders: [operation_system/nexus_mind]
-      files: [operation_system/nexus_mind/nexus_mind_engine.py]
-      entry_point: operation_system.nexus_mind.nexus_mind_engine.NexusMindEngine
+
 
   - id: User_Registry
     name: User_Registry

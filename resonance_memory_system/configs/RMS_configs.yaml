@@ -51,6 +51,27 @@ logic:
     clarity: "#00BFFF"
     neutral: "#808080"
 
+  # Initial Internal State
+  initial_state:
+    color_axes:
+      stress: 0.2
+      warmth: 0.5
+      clarity: 0.5
+      drive: 0.3
+      calm: 0.4
+    intensity: 0.3
+
+  # Impact & Trend Modifiers
+  impact_boost_map:
+    low: 0.0
+    medium: 0.1
+    high: 0.25
+  
+  trend_modifiers:
+    rising: 1.1
+    stable: 1.0
+    fading: 0.85
+
 # ============================================================
 # 2. RUNTIME HOOK (System Integration)
 # ============================================================

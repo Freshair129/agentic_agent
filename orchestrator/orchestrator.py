@@ -50,8 +50,7 @@ from operation_system.llm_bridge.ollama_bridge import OllamaBridge
 from capabilities.services.slm_bridge.slm_bridge import slm
 from capabilities.services.vector_bridge.chroma_bridge import ChromaVectorBridge
 from operation_system.rim.rim_engine import rim_calc
-from operation_system.resonance_engine.resonance_engine import ResonanceEngine
-from genesis_knowledge_system.gks_interface import gks_interface  # [NEW] V9.3.0G
+from capabilities.tools.resonance_impact.resonance_impact_engine import RIMEngine # [NEW] Tool-based RIM
 from resonance_memory_system.rms import RMSEngineV6
 # [NEW] Engram System (Conditional Memory)
 from capabilities.services.engram_system.engram_engine import EngramEngine
@@ -97,10 +96,7 @@ class EVAOrchestrator:
         ollama_model = ollama_model if ollama_model is not None else orch_params.get("ollama_model", "llama3.2:3b")
         self.recording_active = orch_params.get("recording_active", True) # Default: ON for Resonance Edition
         
-        # [NEW] Cognitive Strategy
-        self.gks_enabled = orch_params.get("gks_enabled", True)
-        self.nexus_mode = orch_params.get("nexus_mode", False)
-        safe_print(f"  - Cognition: GKS={'ON' if self.gks_enabled else 'OFF'}, NexusMode={'ON' if self.nexus_mode else 'OFF'}")
+        safe_print(f"  - Cognition: Basic Mode (GKS/Nexus Disabled)")
 
         # Runtime Settings
         runtime_cfg = self.config_data.get("orchestrator", {}).get("runtime", {})
@@ -207,16 +203,16 @@ class EVAOrchestrator:
         self.session_manager = SessionManager(
             msp_engine=self.msp,
             bus_system=self.bus,
-            gks_interface=gks_interface
+            gks_interface=None
         )
         
         # [NEW] Trajectory Manager (Execution Trace Logger)
         safe_print("  - Initializing Trajectory Manager (Trace Logger)...")
         self.trajectory = TrajectoryManager()
         
-        # [NEW] Resonance Engine (4-Layer Resonance)
-        safe_print("  - Initializing Resonance Engine (4-Layer Pipeline)...")
-        self.resonance = ResonanceEngine()
+        # [NEW] Tool-Based RIM Engine (Direct Integration)
+        safe_print("  - Initializing RIM Engine (Tool-Based)...")
+        self.resonance = RIMEngine(config_path="capabilities/tools/resonance_impact/configs/rim_config.yaml")
         # [NEW] RMS Activation (V9.4.3)
         safe_print("  - Initializing RMS (Resonance Memory System v6.2.0)...")
         self.rms = RMSEngineV6(config=self.config_data.get("rms", {}))
@@ -497,4 +493,3 @@ if __name__ == "__main__":
     
     safe_print("\nSession ended. Goodbye.")
 
-from resonance_memory_system.rms import RMSEngineV6

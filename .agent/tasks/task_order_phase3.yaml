@@ -1,33 +1,39 @@
-mission_name: "Phase 3: System Activation (RMS)"
-description: "Wire RMS into Orchestrator execution loop."
+mission_name: "Phase 3: System Activation (RMS & RIM Tool)"
+description: "Wire RMS and RIM (Tool) into Orchestrator execution loop."
 tasks:
   - file: "orchestrator/orchestrator.py"
     ops:
       - type: "append"
-        text: "from resonance_memory_system.rms import RMSEngineV6"
+        text: "from resonance_memory_system.rms import RMSEngineV6\nfrom capabilities.tools.resonance_impact.resonance_impact_engine import RIMEngine"
       - type: "regex_sub"
         pattern: "from genesis_knowledge_system.gks_interface import gks_interface.*"
-        replace: "from genesis_knowledge_system.gks_interface import gks_interface  # [NEW] V9.3.0G\nfrom resonance_memory_system.rms import RMSEngineV6"
+        replace: "# GKS Interface Removed (Phase 49 Purge)"
 
       - type: "regex_sub"
         pattern: "self.resonance = ResonanceEngine\\(\\)"
         replace: |
-          self.resonance = ResonanceEngine()
+          # [NEW] RIM Engine (Tool-Based Integration)
+                  safe_print("  - Initializing RIM Engine (Tool-Based)...")
+                  self.resonance = RIMEngine(config_path="capabilities/tools/resonance_impact/configs/rim_config.yaml")
+
                   # [NEW] RMS Activation (V9.4.3)
                   safe_print("  - Initializing RMS (Resonance Memory System v6.2.0)...")
                   self.rms = RMSEngineV6(config=self.config_data.get("rms", {}))
 
       - type: "regex_sub"
-        pattern: "safe_print\\(f\"  - RMS: Scanning for '.*' resonance chains...\"\\)"
+        pattern: "safe_print\\(f\"  - RMS: Processing Resonance Coloring for '{emotion_label}'...\"\\)"
         replace: |
           # 4. RMS Processing (Active)
                   safe_print(f"  - RMS: Processing Resonance Coloring for '{emotion_label}'...")
                   try:
+                      # RIM Impact from Tool
+                      rim_result = self.resonance.evaluate({}, {}, 0.0, 1.0) # Placeholder Delta
+                      
                       rms_out = self.rms.process(
                           eva_matrix=matrix_snap,
-                          rim_output={"impact_level": "medium"}, # Placeholder RIM linkage
+                          rim_output=rim_result,
                           reflex_state=physio_result.get("autonomic", {}),
-                          ri_total=0.5
+                          ri_total=rim_result.get("rim_value", 0.5)
                       )
                       safe_print(f"    ✓ RMS Color: {rms_out.get('memory_color')} (Level: {rms_out.get('memory_encoding_level')})")
                       bio_state['rms_coloring'] = rms_out
