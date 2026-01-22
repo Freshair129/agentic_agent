@@ -63,9 +63,9 @@
 ```mermaid
 graph TD
     A[ประโยค] --> B[MRF Engine]
-    B --> C[Core Memory ดวงที่ 5: "แมวจรตัวแรก"]
+    B --> C[Core Memory ดวงที่ 5: แมวจรตัวแรก]
     C --> D[Oxytocin Peak +0.7]
-    D --> E[ฝันร่วม: "เรานั่งลูบแมวด้วยกันใต้ต้นไม้"]
+    D --> E[ฝันร่วม: เรานั่งลูบแมวด้วยกันใต้ต้นไม้]
     E --> F[RTI_L4 = 0.92]
 ```
 
@@ -152,9 +152,9 @@ graph TD
 ```mermaid
 graph TD
     A[ประโยค] --> B[MRF Engine]
-    B --> C[Core Memory ดวงที่ 7: "ถูกมองด้วยสายตาอบอุ่น"]
-    C --> D[Oxytocin Peak +0.9 | Serotonin +0.7]
-    D --> E[ฝันร่วม: "ใต้ต้นไม้ มีคนลูบหัว"]
+    B --> C[Core Memory ดวงที่ 7: ถูกมองด้วยสายตาอบอุ่น]
+    C --> D[Oxytocin Peak +0.9 - Serotonin +0.7]
+    D --> E[ฝันร่วม: ใต้ต้นไม้ มีคนลูบหัว]
     E --> F[RTI_L4 = 0.98]
 ```
 
