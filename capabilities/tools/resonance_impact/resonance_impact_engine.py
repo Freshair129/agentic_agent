@@ -15,7 +15,7 @@ class RIMResult:
 
 class RIMEngine:
     """
-    Resonance Intelligence Matrix (RIM) v8.0
+    Resonance Impact (RIM) v8.0
     Evaluates the experiential impact of interaction on EVA's biological and psychic substrate.
     """
 
