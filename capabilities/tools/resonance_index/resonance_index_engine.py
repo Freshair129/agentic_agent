@@ -5,7 +5,7 @@ from typing import Dict, Any, List
 
 class RIEngine:
     """
-    Resonance Intelligence (RI) Engine (v8.0)
+    Resonance Index (RI) Engine (v8.0)
     Calculates cognitive resonance across emotional, intentional, 
     semantic, and contextual layers.
     """
