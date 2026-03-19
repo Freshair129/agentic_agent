@@ -1,0 +1,644 @@
+# EVA (Embodied Virtual Agent) — SYSTEM REQUIREMENTS
+# Version: 9.6.2 (Cognitive Flow 2.0)
+# Last updated: 2026-03-19
+# ─────────────────────────────────────────────────────────
+
+system_name: "EVA (Embodied Virtual Agent)"
+version: "9.6.2"
+codename: "Cognitive Flow 2.0"
+description: |
+  Bio-inspired AI architecture implementing "Resonance Intelligence" framework.
+  Simulates biological cognitive processes through hormones, psychological states,
+  and memory systems to create emotionally embodied AI responses.
+
+# ─────────────────────────────────────────────────────────
+# TECH STACK
+# ─────────────────────────────────────────────────────────
+
+tech_stack:
+  language: "Python 3.13"
+  api_framework: "FastAPI + Uvicorn"
+  vector_db: "ChromaDB (SQLite-backed, PersistentClient)"
+  embedding_model: "intfloat/multilingual-e5-base (SentenceTransformers)"
+  slm: "Llama-3.2-1B (via SLM Bridge — System 1 / gut-feeling)"
+  llm_primary: "Google Gemini API (System 2 / reasoning)"
+  llm_alternative: "Ollama (local, e.g., llama3.2:3b)"
+  schema_validation: "jsonschema (20 JSON schemas)"
+  webui: "Vue.js + Vite 7 + TailwindCSS v4"
+  config_format: "YAML (SSOT per module)"
+  master_registry: "registry/eva_master_registry.yaml"
+
+# ─────────────────────────────────────────────────────────
+# CORE ARCHITECTURE: Single-Inference Sequentiality
+# ─────────────────────────────────────────────────────────
+
+cognitive_flow:
+  name: "Cognitive Flow 2.0 — Single-Inference Sequentiality"
+  principle: |
+    EVA operates in ONE LLM session per turn. The LLM never loses context.
+    Instead of multiple round-trips, the LLM "pauses" mid-inference via
+    Tool Calling, the system updates the agent's internal state (body/emotion),
+    then the LLM "resumes" in the same session with the updated state.
+
+  why: |
+    - Context Continuity: LLM holds its full reasoning chain across the pause
+    - Atomic Interaction: perception → body reaction → emotion → response happens as one unit
+    - Efficiency: No re-prompting or context re-injection between phases
+    - Embodiment: The AI must "feel" before it "speaks" — Tool Call forces this pause
+
+  mechanism: "Gemini Sequential Function Calling (Pause-Resume Pattern)"
+
+  flow:
+    - step: "1. Start Inference (Perception)"
+      actor: "LLM (Gemini)"
+      action: "Receives full context (Input + Body + Engram + Intent + Memory). Analyzes and extracts Stimulus."
+
+    - step: "2. Tool Call — The Gap (Pause)"
+      actor: "LLM → System"
+      action: |
+        LLM calls sync_biocognitive_state(stimulus, confidence).
+        Inference PAUSES. LLM state is frozen but preserved.
+      tool: "SYNC_BIOCOGNITIVE_STATE_TOOL"
+
+    - step: "3. Gap Execution (Outside LLM)"
+      actor: "Python System"
+      action: |
+        PhysioCore: Hormone cascade (23 chemicals, 30Hz)
+        EVA Matrix: 9D psychological state update
+        RMS: Memory encoding (color, intensity, trauma check)
+        AgenticRAG: 7-stream deep memory retrieval
+        Result: "Deep State" = body + emotion + memory context
+
+    - step: "4. Inject Context (Resume)"
+      actor: "System → LLM"
+      action: |
+        Deep State returned to LLM as Tool Output.
+        LLM RESUMES in the SAME session with full awareness
+        of its previous reasoning + new body/emotion state.
+
+    - step: "5. Reasoning + Response"
+      actor: "LLM (Gemini)"
+      action: |
+        Generates embodied response informed by bio-cognitive state.
+        Calls propose_episodic_memory() to suggest what to remember.
+      tool: "PROPOSE_EPISODIC_MEMORY_TOOL"
+
+    - step: "6. Persistence (Outside LLM)"
+      actor: "Python System (MSP)"
+      action: |
+        Validates proposed memory against schema.
+        Writes episode to consciousness/episodic_memory/.
+        Archives to memory/ (subconscious).
+        Buffers autonomic prediction for next turn.
+
+  critical_distinction: |
+    Normal Agent:  LLM → Tool Call (search/read/write) → gets data → responds
+                   Tool = "go fetch something for me"
+
+    EVA:           LLM → Tool Call (sync_biocognitive_state) → body changes → emotion changes → responds
+                   Tool = "update my existence before I speak"
+
+    EVA does NOT use Tool Calling to retrieve external information.
+    EVA uses Tool Calling to UPDATE ITS OWN INTERNAL STATE mid-inference.
+    This is the fundamental architectural innovation.
+
+  constitutional_rule: |
+    Violating Single-Inference Sequentiality (e.g., splitting into separate LLM calls)
+    is a CRITICAL ARCHITECTURAL FAULT per EVA Constitution Pillar 2.
+    See: .agent/rules/constitution.md
+
+  documentation:
+    - "docs/06_Orchestration/cognitive_flow/Cognitive_Flow_2_0.md"
+    - "docs/03_Architecture/EVA_Gap_Flow.md"
+    - ".agent/rules/gapflow.md"
+    - ".agent/rules/constitution.md (Pillar 2)"
+
+# ─────────────────────────────────────────────────────────
+# REFLEX SYSTEM: 4-Layer CoT-Derived Affective Reflex
+# ─────────────────────────────────────────────────────────
+
+reflex_system:
+  name: "4-Layer Affective Reflex Architecture"
+  principle: |
+    EVA responds with immediate body reactions and short utterances BEFORE
+    the full LLM response is ready. This simulates human reflexes:
+    body reacts first, then emotion shows, then words come.
+    NO second LLM is used — reflexes are sub-LLM mechanisms.
+
+  novelty: |
+    No existing AI system combines these 4 elements:
+    1. Reading LLM's own reasoning/stimulus to extract emotion (not user input)
+    2. Using SLM (small model) as the extractor (not same LLM)
+    3. Producing emotional utterances (not cognitive summaries or safety flags)
+    4. Displaying pre-response reactions during the inference Gap
+
+    Closest prior art: CoT Monitoring (safety), Speculative Decoding (speed)
+    — but none extract EMOTION from CoT for real-time display.
+
+  layers:
+
+    - layer: 1
+      name: "Enum Reflex"
+      speed: "< 1ms"
+      mechanism: "Deterministic pattern match → hormone spike"
+      trigger: "Keywords, Engram cache, SLM gut_vector threshold"
+      source: "User input text + SLM gut analysis"
+      output:
+        hormones: "PhysioCore.apply_reflex(ReflexType) → direct hormone injection"
+        websocket: "{type: 'reflex', expression: 'flinch|blush|gasp', intensity: float}"
+      when: "Immediately on input, before LLM starts"
+      requires_llm: false
+      example:
+        input: "เลิกกัน"
+        reflex_type: "REJECTION"
+        hormones: {cortisol: +0.6, adrenaline: +0.5, oxytocin: -0.3}
+        expression: "flinch"
+
+      reflex_types:
+        # Threat / Pain
+        - ACUTE_THREAT    # คุกคาม, ด่า
+        - REJECTION       # ปฏิเสธ, ทิ้ง
+        - BETRAYAL        # หักหลัง, โกหก
+        # Pleasure / Bond
+        - AFFECTION       # รัก, คิดถึง
+        - PRAISE          # ชม, ขอบคุณ
+        - HUMOR           # ตลก, หยอกล้อ
+        # Alarm
+        - SURPRISE        # ตกใจ
+        - URGENCY         # เร่งด่วน
+        - CONFUSION       # งง, ขัดแย้ง
+        # Calm
+        - COMFORT         # ปลอบ, ให้กำลังใจ
+        - ROUTINE         # ปกติ
+
+      detection_pipeline:
+        - "Engram O(1) pattern match (existing)"
+        - "Keyword intensity scoring (rule-based)"
+        - "SLM gut_vector threshold (stress > 0.8 → ACUTE_THREAT)"
+
+    - layer: 2
+      name: "SLM Gut Utterance"
+      speed: "< 50ms"
+      mechanism: "SLM gut_vector → nearest neighbor → short Thai utterance"
+      trigger: "SLM intensity > 0.6"
+      source: "SLM gut_vector {valence, arousal, stress, warmth}"
+      output:
+        websocket: "{type: 'reflex', utterance: 'อืม...|ห๊ะ!?|เดี๋ยว...', intensity: float}"
+      when: "After SLM analysis (~50ms), before LLM finishes Phase 1"
+      requires_llm: false
+      example:
+        gut_vector: {valence: -0.7, arousal: 0.8, stress: 0.9, warmth: 0.1}
+        utterance: "ห๊ะ...!?"
+
+      utterance_mapping: |
+        Utterances are selected by cosine similarity between gut_vector
+        and pre-embedded utterance vectors. Examples:
+          high valence + high arousal  → "ว้าว!" "เย้!" "จริงเหรอ!"
+          high valence + low arousal   → "ฟู~" "อืม..." "ดีใจจัง"
+          low valence + high arousal   → "ห๊ะ!?" "เดี๋ยว!" "อะไรนะ!?"
+          low valence + low arousal    → "..." "หืม..." "เหรอ..."
+          high warmth                  → append "~" or "นะ"
+          high stress                  → append "!" or "..."
+
+    - layer: 3
+      name: "Stimulus Extraction"
+      speed: "< 50ms (during Gap)"
+      mechanism: "SLM reads LLM stimulus_chunks/stimulus_vector → extracts emotional keyword"
+      trigger: "LLM calls sync_biocognitive_state() with stimulus data"
+      source: "Tool call arguments: stimulus_chunks, stimulus_vector, salience_anchor, bio_impacts"
+      output:
+        websocket: "{type: 'reflex_update', utterance: string} — replaces Layer 2 if better"
+      when: "During Gap, after LLM PAUSE (~500ms)"
+      requires_llm: false
+      example:
+        stimulus_chunks:
+          - {text: "ต้องการยุติ", vector: {stress: 0.8, warmth: 0.1}}
+          - {text: "สูญเสีย", vector: {stress: 0.7, warmth: 0.2}}
+        salience_anchor: "เลิกกัน"
+        extracted_utterance: "สูญเสีย..."
+
+      per_chunk_reflex: |
+        When stimulus_chunks is a list, each chunk triggers a separate reflex:
+          Chunk 1: "ขอบคุณ น่ารัก" → oxytocin +0.6 → WebSocket: "☺️"
+          Chunk 2: "แค่คนเดียวก็คงดี" → cortisol +0.4 → WebSocket: "...เดี๋ยวนะ"
+        User sees emotional SHIFT in real-time between chunks.
+
+    - layer: 4
+      name: "CoT Extraction (Bonus)"
+      speed: "< 50ms (during Gap)"
+      mechanism: "SLM reads LLM Chain-of-Thought stream → extracts emotional fragment"
+      trigger: "CoT/thinking mode enabled AND streaming available"
+      source: "LLM thinking tokens (streamed)"
+      output:
+        websocket: "{type: 'reflex_update', utterance: string} — most accurate"
+      when: "During Gap, if CoT enabled"
+      requires_llm: false
+      note: "CoT is OPTIONAL bonus — system works without it via Layers 1-3"
+      example:
+        cot_fragment: "ผู้ใช้ต้องการยุติ... เจ็บปวดมาก..."
+        extracted_utterance: "เจ็บปวด..."
+
+  fallback_priority: |
+    Layer 4 (CoT)      → most accurate, but optional (needs CoT enabled)
+    Layer 3 (Stimulus)  → very accurate (from LLM reasoning), always available during Gap
+    Layer 2 (Gut)       → good (from SLM), available before LLM finishes
+    Layer 1 (Enum)      → deterministic (hormones only, no utterance), always available
+    No trigger          → no reflex, System 2 only
+
+  progressive_refinement: |
+    Utterances upgrade as better data arrives:
+      50ms:   "อืม..."         ← Layer 2 (gut guess)
+      550ms:  "สูญเสีย..."     ← Layer 3 (stimulus, replaces gut)
+      600ms:  "เจ็บปวด..."     ← Layer 4 (CoT, replaces stimulus — if available)
+      2500ms: "ฉันเข้าใจ..."   ← System 2 full response
+
+    Like a human: flinch → face changes → speaks
+
+  quality_by_scenario:
+    cot_on_stimulus_on:  "★★★★★ (all 4 layers)"
+    cot_off_stimulus_on: "★★★★☆ (layers 1-3)"
+    cot_off_stimulus_weak: "★★★☆☆ (layers 1-2)"
+    everything_fails:    "★★☆☆☆ (layer 1 enum only)"
+    no_trigger:          "— (no reflex needed)"
+
+# ─────────────────────────────────────────────────────────
+# STIMULUS CHUNKING PROTOCOL v2.0
+# ─────────────────────────────────────────────────────────
+
+stimulus_chunking:
+  name: "Stimulus Chunking Protocol v2.0"
+  principle: |
+    Complex emotional input is broken into sequential "chunks" by the LLM.
+    Each chunk is processed separately by PhysioCore, preserving the
+    emotional journey instead of averaging emotions together.
+
+  why: |
+    Input: "ขอบคุณนะที่มาส่ง น่ารักมาก... ถ้าทำแบบนี้แค่คนเดียวก็คงดี"
+
+    Without chunking: warmth=0.5, stress=0.5 (averaged → flat, meaningless)
+    With chunking:    chunk1: warmth=0.8 → chunk2: stress=0.7 (emotional SHIFT preserved)
+
+  tool_schema_extension: |
+    sync_biocognitive_state() now accepts EITHER:
+
+    A. Single stimulus (existing, backward compatible):
+       stimulus_vector: {stress, warmth, arousal, valence}
+       bio_impacts: {ESC_H01: 0.5}
+
+    B. Multiple chunks (new):
+       stimulus_chunks: [
+         {
+           text: "ขอบคุณนะ น่ารักมาก",
+           vector: {stress: 0.1, warmth: 0.8, arousal: 0.4, valence: 0.9},
+           bio_impacts: {ESC_H04_OXYTOCIN: 0.6}
+         },
+         {
+           text: "ถ้าทำแบบนี้แค่คนเดียวก็คงดี",
+           vector: {stress: 0.7, warmth: 0.3, arousal: 0.6, valence: 0.3},
+           bio_impacts: {ESC_H02_CORTISOL: 0.4, ESC_H01_ADRENALINE: 0.2}
+         }
+       ]
+
+    If stimulus_chunks present → PhysioCore processes sequentially
+    If stimulus_vector present → PhysioCore processes as single event
+
+  physio_processing: |
+    PhysioCore.step() already supports list input (physio_core.py line 177):
+      if isinstance(eva_stimuli, list):
+          for chunk in eva_stimuli:
+              final_state = self._run_tick(chunk, zeitgebers, dt, now)
+
+    Each chunk is a distinct biological event in sequence.
+    Hormones ACCUMULATE across chunks — chunk2 builds on chunk1 state.
+
+  reflex_per_chunk: |
+    During Gap processing, each chunk triggers its own reflex output:
+
+    Timeline (case study: "ส่งแฟนที่สนามบิน"):
+
+    0ms      Input: "ขอบคุณนะ... ถ้าทำแบบนี้แค่คนเดียวก็คงดี"
+    50ms     Layer 1: Enum detects mixed signal → mild hormone prep
+    50ms     Layer 2: Gut → "อืม..." (WebSocket)
+    500ms    LLM Phase 1 → calls sync_biocognitive_state(stimulus_chunks: [...])
+             ═══ PAUSE ═══
+
+    550ms    Gap: PhysioCore.step(chunk1: "ขอบคุณ น่ารัก")
+             → oxytocin +0.6, warmth ↑
+             → Layer 3: SLM reads chunk1.text → "☺️"
+             → WebSocket: {type: reflex_update, utterance: "☺️"}
+             ★ User sees: warmth reaction
+
+    600ms    Gap: PhysioCore.step(chunk2: "แค่คนเดียวก็คงดี")
+             → cortisol +0.4, stress ↑ (ON TOP of chunk1 oxytocin)
+             → Hormone CONFLICT: warmth still high but stress rising
+             → Layer 3: SLM reads chunk2.text + conflict state → "...เดี๋ยวนะ"
+             → WebSocket: {type: reflex_update, utterance: "...เดี๋ยวนะ"}
+             ★ User sees: emotional SHIFT (warm → anxious)
+
+    800ms    Matrix: 9D update → warmth=0.6 BUT stress=0.5 (conflicted)
+    1000ms   RAG: retrieves memories of similar emotional conflicts
+    1300ms   Gap ends → LLM Resume
+             LLM sees conflicted bio-state → generates nuanced response
+    2500ms   Full response: "ฟังแล้วรู้สึกทั้งดีใจและกังวลเลย..."
+
+  cultural_intelligence: |
+    Thai linguistic nuances that chunking helps with:
+    - "ก็คงดี" → passive-aggressive / insecurity (not literal "good")
+    - "ไม่เป็นไร" → often means the opposite (suppressed emotion)
+    - "แล้วแต่" → can be anger or indifference depending on context
+    LLM (System 2) can detect these nuances and create appropriate chunks,
+    while SLM (System 1) handles the surface-level gut reaction.
+
+# ─────────────────────────────────────────────────────────
+# CORE SYSTEMS
+# ─────────────────────────────────────────────────────────
+
+core_systems:
+
+  - system: "Orchestrator"
+    id: "SYSTEM_ORCH"
+    location: "orchestrator/"
+    version: "1.3.0"
+    role: "Central Nervous System — coordinates all systems, runs Cognitive Flow"
+    key_components:
+      - "Execution/CognitiveFlow/master_flow_engine.py — MasterFlowEngine (run_turn pipeline)"
+      - "Module/CIM/ — Context Injection Module (file injector)"
+      - "Module/CIM/Node/prompt_rule/ — Identity/persona governance (PRN)"
+      - "Node/session_node.py — Session lifecycle management"
+
+  - system: "PhysioCore"
+    id: "SYSTEM_PHYSIO"
+    location: "physio_core/"
+    version: "2.4.3"
+    role: "Biological simulation — 23 chemicals (16 hormones + 7 neurotransmitters)"
+    key_components:
+      - "logic/endocrine/ — Hormone secretion + metabolism"
+      - "logic/blood/ — 30Hz blood distribution"
+      - "logic/receptor/ — Ligand-receptor transduction"
+      - "logic/vitals/ — HR, RPM, Vagus Tone"
+      - "logic/reflex/ — ANS fight/flight"
+    config: "configs/PhysioCore_configs.yaml + hormone_spec_ml.yaml"
+
+  - system: "EVA Matrix"
+    id: "SYSTEM_MATRIX"
+    location: "eva_matrix/"
+    version: "2.0.0"
+    role: "9D psychological state from physiology"
+    axes: ["stress", "warmth", "drive", "clarity", "joy", "alertness", "connection", "groundedness", "openness"]
+    config: "configs/EVA_Matrix_configs.yaml"
+
+  - system: "Artifact Qualia"
+    id: "SYSTEM_QUALIA"
+    location: "artifact_qualia/"
+    role: "Phenomenological layer — texture, color, soundscape"
+
+  - system: "Resonance Memory System (RMS)"
+    id: "SYSTEM_RMS"
+    location: "resonance_memory_system/"
+    role: "Encode psychological state → memory-storable values (color, intensity, trauma protection)"
+    encoding_levels: ["L0_trace", "L1_light", "L2_standard", "L3_deep", "L4_trauma"]
+    trauma_threshold: 0.85
+
+  - system: "Memory & Soul Passport (MSP)"
+    id: "SYSTEM_MSP"
+    location: "memory_n_soul_passport/"
+    version: "2.1.0"
+    lines: 2633
+    role: "Central memory system — episodic, semantic, sensory memory with schema validation"
+    modules:
+      - "Module/EpisodicMemory/ — JournalNode (episodes/, episodes_user/, episodes_ai/)"
+      - "Module/SemanticMemory/ — GroundingNode (belief revision: hypothesis → confirmed)"
+      - "Module/SensoryMemory/ — QualiaStorageNode"
+    schemas: 20
+    config: "configs/MSP_configs.yaml"
+
+  - system: "Resonance Bus"
+    id: "SYSTEM_BUS"
+    location: "operation_system/resonance_bus.py"
+    role: "Pub/sub event bus — all inter-system communication"
+    channels:
+      - "bus:physical (PhysioCore → Matrix)"
+      - "bus:psychological (Matrix → Qualia)"
+      - "bus:phenomenological (Qualia → MSP)"
+      - "bus:knowledge (RAG ↔ MSP)"
+      - "bus:cognitive (GKS/NexusMind — NOT YET ACTIVE)"
+      - "bus:temporal (Temporal Engine — NOT YET ACTIVE)"
+
+  - system: "Identity Manager"
+    id: "SYSTEM_IDM"
+    location: "operation_system/identity_manager.py"
+    version: "2.4.0"
+    role: "Centralized ID factory — ALL system IDs, bus channels, personas"
+
+  - system: "LLM Bridge"
+    location: "operation_system/llm_bridge/"
+    role: "LLM API abstraction (Gemini + Ollama)"
+    tools:
+      - "SYNC_BIOCOGNITIVE_STATE_TOOL — Phase 1 → Gap"
+      - "PROPOSE_EPISODIC_MEMORY_TOOL — Phase 2 → MSP"
+
+  - system: "Genesis Knowledge System (GKS)"
+    id: "SYSTEM_GKS"
+    status: "NOT YET IMPLEMENTED"
+    note: "Defined in registry and IdentityManager but genesis_knowledge_system/ directory does not exist"
+
+# ─────────────────────────────────────────────────────────
+# CAPABILITIES (Services + Tools)
+# ─────────────────────────────────────────────────────────
+
+capabilities:
+
+  services:
+    - name: "Agentic RAG"
+      location: "capabilities/services/agentic_rag/"
+      lines: 870
+      role: "7-stream memory retrieval with 2-stage optimization"
+      streams:
+        quick_recall:
+          - "Narrative (20%) — episode chains"
+          - "Intuition (5%) — semantic graph patterns"
+          - "Reflection (5%) — meta-cognitive insights"
+        deep_recall:
+          - "Emotion (35%) — physio state cosine similarity (KEY)"
+          - "Salience (15%) — high-RI memories"
+          - "Sensory (10%) — qualia texture matching"
+          - "Temporal (10%) — exponential decay (halflife 30 days)"
+
+    - name: "Engram System"
+      location: "capabilities/services/engram_system/"
+      role: "O(1) reflex cache — pattern match before LLM"
+
+    - name: "SLM Bridge"
+      location: "capabilities/services/slm_bridge/"
+      role: "Llama-3.2-1B — System 1 gut-feeling extraction"
+
+    - name: "Vector Bridge"
+      location: "capabilities/services/vector_bridge/"
+      role: "ChromaDB integration with multilingual-e5-base embeddings"
+
+    - name: "Graph Bridge"
+      location: "capabilities/services/graph_bridge/"
+      role: "GraphRAG engine for Intuition + Narrative streams"
+
+  tools:
+    - name: "Resonance Index (RI)"
+      location: "capabilities/tools/resonance_index/"
+      role: "4-layer resonance scoring: ER + IF + SR + CR = RI_total"
+
+    - name: "Resonance Impact (RIM)"
+      location: "capabilities/tools/resonance_impact/"
+      role: "Experiential impact measurement with temporal decay"
+
+    - name: "MSP Monitor"
+      location: "capabilities/tools/msp_monitor.py"
+      role: "State completeness checking"
+
+    - name: "Subagents"
+      location: "capabilities/tools/subagents/"
+      role: "RIS (registry integrity), Archivist, Technician"
+
+# ─────────────────────────────────────────────────────────
+# API ENDPOINTS
+# ─────────────────────────────────────────────────────────
+
+api:
+  framework: "FastAPI"
+  location: "api/"
+  port: 8000
+  endpoints:
+    - method: "POST"
+      path: "/api/chat"
+      purpose: "Chat with EVA → {response, emotional_state}"
+
+    - method: "GET"
+      path: "/api/health"
+      purpose: "{status, agent_version, active_sessions}"
+
+    - method: "GET"
+      path: "/api/mind/state"
+      purpose: "{eva_matrix, physio, qualia, resonance_index}"
+
+    - method: "WebSocket"
+      path: "/ws/chat/{client_id}"
+      purpose: "Full duplex: thinking status + state updates + resonance"
+
+# ─────────────────────────────────────────────────────────
+# STORAGE ARCHITECTURE
+# ─────────────────────────────────────────────────────────
+
+storage:
+  consciousness:
+    path: "consciousness/"
+    access: "LLM read/write"
+    purpose: "Awareness Domain — working memory"
+    subdirs:
+      - "context_container/ — Active turn workspace"
+      - "episodic_memory/ — episodes/, episodes_user/, episodes_ai/, episodic_log.jsonl"
+      - "state_memory/ — Bio/psych/qualia snapshots (JSON)"
+      - "sensory_memory/ — Qualia records"
+      - "indexes/ — Episode counters, salience maps"
+      - "data/ — Transient scratchpad"
+
+  memory:
+    path: "memory/"
+    access: "MSP-only write, LLM read via RAG only"
+    purpose: "Subconscious — permanent storage"
+    subdirs:
+      - "context_storage/ — Persistent context (full/, step1-3/)"
+      - "user_profile/"
+      - "user_registry.json"
+      - "vector_store/ — ChromaDB (chroma.sqlite3)"
+
+# ─────────────────────────────────────────────────────────
+# NON-FUNCTIONAL REQUIREMENTS
+# ─────────────────────────────────────────────────────────
+
+non_functional_requirements:
+
+  - category: "Performance"
+    requirements:
+      - name: "NFR1 — Gap Processing Latency"
+        description: "Bio-Digital Gap processing (PhysioCore + RAG) < 800ms"
+        status: "Target"
+
+      - name: "NFR2 — Quick Recall Latency"
+        description: "3-stream fast retrieval < 200ms (parallel with PhysioCore)"
+        status: "Target"
+
+      - name: "NFR3 — API Response"
+        description: "Full turn (Perception → Gap → Reasoning → Persistence) < 3s"
+        status: "Target"
+
+  - category: "Data Integrity"
+    requirements:
+      - name: "NFR4 — Schema Validation"
+        description: "All MSP writes validated against JSON Schema before persistence"
+        status: "Enforced"
+
+      - name: "NFR5 — Consciousness/Subconscious Separation"
+        description: "LLM cannot write to memory/ directly — must use propose_episodic_memory() tool"
+        status: "Enforced (Constitutional Principle)"
+
+      - name: "NFR6 — Single Writer Rule"
+        description: "Only MSP can write to permanent memory storage"
+        status: "Enforced"
+
+  - category: "Code Quality"
+    requirements:
+      - name: "Type Hints"
+        description: "100% type annotations on all Node and Component level code"
+
+      - name: "Structured Logging"
+        description: "[MODULE] [LEVEL] Message format via safe_print"
+
+      - name: "Config-Driven"
+        description: "All parameters in YAML — never hardcode (Ghost Key protocol)"
+
+      - name: "Contract Interfaces"
+        description: "All systems implement contracts from contracts/ directory"
+
+# ─────────────────────────────────────────────────────────
+# BOOT SEQUENCE
+# ─────────────────────────────────────────────────────────
+
+boot_sequence:
+  - step: 1
+    system: "IdentityManager"
+    mode: "serial"
+  - step: 2
+    system: "Resonance Bus"
+    mode: "serial"
+  - step: 3
+    system: "PhysioCore"
+    mode: "parallel"
+  - step: 4
+    system: "EVA Matrix"
+    mode: "serial"
+  - step: 5
+    system: "MSP"
+    mode: "parallel"
+  - step: 6
+    system: "GKS"
+    mode: "serial"
+    note: "NOT YET IMPLEMENTED"
+  - step: 7
+    system: "RMS"
+    mode: "serial"
+  - step: 8
+    system: "Artifact Qualia"
+    mode: "serial"
+  - step: 9
+    system: "Orchestrator"
+    mode: "loop_start"
+
+# ─────────────────────────────────────────────────────────
+# REFERENCE
+# ─────────────────────────────────────────────────────────
+
+reference:
+  id_standards: "id_standards.yaml"
+  master_registry: "registry/eva_master_registry.yaml"
+  changelog: "docs/00_Governance/CHANGELOG.md"
+  changelog_system: "CHANGELOG_SYSTEM.md"
+  contracts: "contracts/"
+  schemas: "memory_n_soul_passport/schema/"

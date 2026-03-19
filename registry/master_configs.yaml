@@ -3,9 +3,9 @@
 # Organism Version: 9.6.2
 # ============================================================
 
-organism_version: 9.6.2
-epoch: "Resonance"
-updated: "2026-01-19"
+organism_version: 9.7.0
+epoch: "Reflex"
+updated: "2026-03-20"
 
 # --- [GLOBAL IDENTITY] ---
 identity:
@@ -32,5 +32,5 @@ environment:
 # These rules enforce epoch-specific behavior
 version_laws:
   enforce_strict_version: true
-  allowed_prefixes: ["v9.6", "v9.5"]
+  allowed_prefixes: ["v9.7", "v9.6"]
   rejection_policy: "terminate" # Terminate logic if legacy version detected

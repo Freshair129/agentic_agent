@@ -343,6 +343,158 @@ for change in log['changes']:
 
 ---
 
-**Enforcement**: Version mismatches are detected during code review.  
-**Tool**: Consider adding `check_versions.py` to pre-commit hooks.  
-**Audit**: All version changes are logged in `registry/version_log.yaml` for compliance and rollback.
+---
+
+## International Standards Compliance
+
+EVA version control follows these internationally recognized standards:
+
+### 1. Semantic Versioning 2.0.0 (semver.org)
+
+```
+MAJOR.MINOR.PATCH
+
+MAJOR: Breaking changes, incompatible API changes
+MINOR: New features, backwards compatible
+PATCH: Bug fixes, backwards compatible
+
+Pre-release: 9.7.0-alpha.1, 9.7.0-beta.2, 9.7.0-rc.1
+Build metadata: 9.7.0+build.123
+```
+
+**EVA applies to:** Organism version + all system versions independently.
+
+### 2. Conventional Commits 1.0.0 (conventionalcommits.org)
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Types:**
+
+| Type | Description | Version Impact |
+|------|-------------|---------------|
+| `feat` | New feature | MINOR bump |
+| `fix` | Bug fix | PATCH bump |
+| `refactor` | Code restructuring (no behavior change) | No bump |
+| `docs` | Documentation only | No bump |
+| `style` | Formatting, missing semicolons | No bump |
+| `test` | Adding or correcting tests | No bump |
+| `chore` | Maintenance, tooling | No bump |
+| `perf` | Performance improvement | PATCH bump |
+| `ci` | CI/CD changes | No bump |
+| `build` | Build system changes | No bump |
+| `revert` | Revert previous commit | Depends on reverted commit |
+
+**Breaking changes:** Add `!` after type or add `BREAKING CHANGE:` in footer → MAJOR bump.
+
+**EVA-specific format:**
+
+```bash
+# Standard
+feat(PhysioCore): add ghrelin hormone support
+fix(MSP): correct episodic schema validation
+refactor(Orchestrator): modularize CIM into Node hierarchy
+docs(CLAUDE.md): sync with actual codebase
+
+# Breaking change
+feat(API)!: change /api/chat response envelope format
+
+BREAKING CHANGE: response.text renamed to response.content
+
+# Multi-system
+feat(EVA): v9.7.0 Epoch Reflex — 4-Layer Affective Reflex System
+```
+
+### 3. Keep a Changelog 1.1.0 (keepachangelog.com)
+
+```markdown
+## [version] - YYYY-MM-DD
+
+### Added       — new features
+### Changed     — changes to existing features
+### Deprecated  — features that will be removed
+### Removed     — removed features
+### Fixed       — bug fixes
+### Security    — vulnerability fixes
+```
+
+**EVA applies to:** `docs/00_Governance/CHANGELOG.md`
+**Extension:** EVA uses sliding window format (5 recent entries full, older as index).
+
+### 4. Git Tags (for releases)
+
+```bash
+# Tag format
+git tag -a v9.7.0 -m "Epoch Reflex: 4-Layer Affective Reflex System"
+
+# Push tags
+git push origin v9.7.0
+
+# List tags
+git tag -l "v9.*"
+```
+
+---
+
+## Pre-Commit Checklist (MANDATORY)
+
+Before every commit, verify:
+
+```
+□ 1. Code compiles/runs without errors
+□ 2. Version numbers match:
+     □ registry/eva_master_registry.yaml
+     □ registry/master_configs.yaml
+     □ Code file headers
+     Run: python scripts/check_versions.py
+□ 3. CHANGELOG updated (docs/00_Governance/CHANGELOG.md)
+□ 4. version_log.yaml entry added (if version changed)
+□ 5. Commit message follows Conventional Commits format
+□ 6. No root policy violations (only CLAUDE.md + .gitignore at root)
+     Run: ls *.md *.yaml *.json (should show only CLAUDE.md)
+□ 7. No hardcoded IDs (use IdentityManager constants)
+□ 8. Schema validation passes (if MSP data changed)
+```
+
+## Post-Commit Checklist
+
+After committing:
+
+```
+□ 1. changelog/CL-YYYYMMDD-NNN.md created (if significant change)
+□ 2. CLAUDE.md updated (if paths, features, or architecture changed)
+□ 3. Git tag created (if version bumped)
+□ 4. Notify partner agents (Gemini) of changes
+```
+
+## Rollback Protocol
+
+```bash
+# 1. Identify the bad commit
+git log --oneline -10
+
+# 2. Check version_log.yaml for rollback instructions
+cat registry/version_log.yaml | grep -A 15 "version_to: X.Y.Z"
+
+# 3. Execute rollback (prefer revert over reset)
+git revert <commit-hash>
+
+# 4. Update version_log.yaml (remove or mark as rolled back)
+
+# 5. Update CHANGELOG.md
+
+# 6. Commit rollback
+git commit -m "revert(System): rollback X.Y.Z → A.B.C — reason"
+```
+
+---
+
+**Enforcement**: Version mismatches are detected during code review and pre-commit checks.
+**Tool**: `scripts/check_versions.py` should be added to pre-commit hooks.
+**Audit**: All version changes logged in `registry/version_log.yaml` for compliance and rollback.
+**Standards**: Semantic Versioning 2.0.0, Conventional Commits 1.0.0, Keep a Changelog 1.1.0.

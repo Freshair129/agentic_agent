@@ -56,6 +56,44 @@ baseline_versions:
 # CHANGE LOG (Chronological - Newest First)
 # ============================================================
 changes:
+  - timestamp: 2026-03-20T03:30:00+07:00
+    system_id: EVA_Organism
+    version_from: 9.6.2
+    version_to: 9.7.0
+    change_type: MINOR
+    reason: |
+      Epoch "Reflex" — Major feature additions:
+      1. 4-Layer Affective Reflex System (Enum + SLM Gut + Stimulus Extraction + CoT Extraction)
+      2. Stimulus Chunking Protocol v2.0 (per-chunk reflex via WebSocket)
+      3. Single-Inference Sequentiality spec formalized in system_requirements.yaml
+      4. Full codebase audit: fixed 18 files (duplicates, root violations, outdated)
+      5. CLAUDE.md, GEMINI.md rewritten to match actual codebase
+      6. system_requirements.yaml, id_standards.yaml, CHANGELOG_SYSTEM.md created for EVA
+      7. Root cleanup: enforced root_policy.yaml (4 files moved, 2 deleted, 1 archived)
+      8. Version Control Protocol formalized (this entry)
+    changed_by: USER + Claude
+    files_affected:
+      - CLAUDE.md (rewritten — verified against codebase)
+      - docs/10_References/GEMINI.md (rewritten + moved from root)
+      - docs/00_Governance/CHANGELOG_SYSTEM.md (created + moved from root)
+      - .agent/standards/system_requirements.yaml (created + moved from root)
+      - .agent/standards/id_standards.yaml (created + moved from root)
+      - .agent/governance/root_policy.yaml (updated — cleaned exemptions)
+      - .agent/workflows/version-control.md (updated — added international standards)
+      - registry/master_configs.yaml (version bump 9.6.2 → 9.7.0)
+      - registry/version_log.yaml (this file)
+      - docs/00_Governance/CHANGELOG.md (new entry)
+    rollback_command: >
+      1. Revert registry/master_configs.yaml organism_version to 9.6.2
+      2. Revert registry/version_log.yaml (remove top entry)
+      3. Revert docs/00_Governance/CHANGELOG.md (remove top entry)
+      4. Move docs/10_References/GEMINI.md back to root
+      5. Move docs/00_Governance/CHANGELOG_SYSTEM.md back to root
+      6. Move .agent/standards/* back to root
+      7. Restore deleted files from git
+    git_commit: "[EVA] v9.7.0: Epoch Reflex — 4-Layer Affective Reflex + Stimulus Chunking + Codebase Audit"
+    approved: true
+
   - timestamp: 2026-01-19T07:28:32+07:00
     system_id: Orchestrator
     version_from: 1.2.0

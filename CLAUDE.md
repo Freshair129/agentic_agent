@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 EVA (Embodied Virtual Agent) is a bio-inspired AI architecture implementing the "Resonance Intelligence" framework. The system mimics biological cognitive processes through hormones, psychological states, and memory systems to create emotionally embodied AI responses.
 
-**Current Version:** 9.6.2 (Cognitive Flow 2.0)
-**Architecture:** Single-Inference Sequentiality with Bio-Digital Gap
+**Current Version:** 9.7.0 (Epoch: Reflex)
+**Architecture:** Single-Inference Sequentiality with Bio-Digital Gap + 4-Layer Affective Reflex
 **Language:** Python 3.13
 **Core Pattern:** Schema-First ("Doc-to-Code" Protocol)
 **Master Registry:** `registry/eva_master_registry.yaml` (SSOT for system topology)
@@ -31,6 +31,14 @@ cd api
 python eva_lite.py
 ```
 
+### Web UI
+
+```bash
+# Vue.js/Vite frontend (development)
+cd webui
+npm run dev
+```
+
 ### Testing
 
 ```bash
@@ -41,6 +49,16 @@ python -m pytest tests/
 python -m pytest physio_core/tests/
 python -m pytest eva_matrix/tests/
 python -m pytest memory_n_soul_passport/tests/
+```
+
+### Health Checks
+
+```bash
+python scripts/check_versions.py       # Registry ↔ code version alignment
+python scripts/check_doc_alignment.py  # Documentation consistency
+python scripts/audit_msp_coverage.py   # MSP schema field coverage
+python scripts/verify_physio_loop.py   # PhysioCore spike/decay validation
+python scripts/verify_matrix_coupling.py  # Matrix coupling check
 ```
 
 ## System Architecture
@@ -63,77 +81,138 @@ EVA operates in a **single LLM session** with sequential function calling. The f
 8. LLM performs **Confidence Check**: "Do I need deep recall?"
 
 **Step 4: The Gap (Bio-Digital Sync)**
-9. LLM calls `sync_bio_state()` with **Stimulus Chunks** (sequential emotion processing)
+9. LLM calls `sync_biocognitive_state()` with **Stimulus Chunks** (sequential emotion processing)
 10. PhysioCore digests chunks sequentially → hormone cascade → vitals update
 11. State returned to LLM
 
 **Step 5-7: Response & Persistence**
-12. If low confidence: LLM calls `request_deep_recall()` (Agentic RAG)
+12. If low confidence: LLM triggers Deep Recall (Agentic RAG 7-stream)
 13. LLM generates embodied response
 14. Self-reflection: LLM writes `self_note.md` for next turn
-15. MSP archives episodic memory
+15. LLM calls `propose_episodic_memory()` → MSP validates and archives
 
 **Critical Concept:** Unlike multi-turn architectures, the LLM never "forgets" - it pauses (function call), receives data, and resumes from the same mental state.
 
-See: `orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md`
+See: `docs/06_Orchestration/cognitive_flow/Cognitive_Flow_2_0.md`
 
-### Core Modules
+### Core Modules (Actual Directory Structure)
 
 ```
-orchestrator/          # CNS (Central Nervous System) - flow control
-├── cognitive_flow/   # Cognitive Flow 2.0 protocol (NEW in v9.6.0)
-├── cim/              # Context Injection Manager (File Injector, not text builder)
-├── prompt_rule/      # Governance & identity management (PRN)
-└── temporal/         # Session management
+orchestrator/                  # CNS (Central Nervous System) - flow control
+├── Execution/
+│   └── CognitiveFlow/        # MasterFlowEngine (run_turn pipeline)
+├── Module/
+│   └── CIM/                  # Context Injection Module (File Injector)
+│       └── Node/
+│           └── prompt_rule/  # Identity/persona governance (PRN)
+│               └── assets/identity/  # Persona definitions (soul.md, etc.)
+├── Node/                     # SessionNode (session lifecycle)
+├── configs/                  # Orchestrator_configs.yaml
+└── archive/                  # Deprecated dual-phase code
 
-physio_core/          # Biological simulation layer
+physio_core/                  # Biological simulation layer
 ├── logic/
-│   ├── endocrine/   # 12 hormone gland system
-│   ├── blood/       # Hormone distribution (30Hz update)
-│   ├── receptor/    # Ligand-receptor signal transduction
-│   ├── vitals/      # Heart rate, breathing, temperature
-│   └── reflex/      # Immediate fight/flight responses
+│   ├── endocrine/           # 23 chemicals (16 hormones + 7 neurotransmitters)
+│   ├── blood/               # Hormone distribution (30Hz update)
+│   ├── receptor/            # Ligand-receptor signal transduction
+│   ├── vitals/              # Heart rate, breathing, temperature
+│   └── reflex/              # Immediate fight/flight responses
+├── configs/
+│   ├── PhysioCore_configs.yaml    # Unified config (NOT separate per subsystem)
+│   └── hormone_spec_ml.yaml      # Full chemical database (23 entries)
+└── tests/
 
-eva_matrix/           # 9D psychological state (EVA Matrix)
-├── Module/          # Emotion dimensions, stress tracking
+eva_matrix/                   # 9D psychological state (EVA Matrix)
+├── Module/                  # AxesComputation, ResonanceComputation nodes
+├── configs/
+│   └── EVA_Matrix_configs.yaml    # Single config file
+└── schema/
 
-artifact_qualia/      # Phenomenological layer (texture, color, soundscape)
+artifact_qualia/              # Phenomenological layer (texture, color, soundscape)
 
-memory_n_soul_passport/  # Unified memory system (MSP)
-├── schema/          # Memory data contracts (Episodic, Semantic, Sensory)
-└── Module/          # Memory type handlers
+resonance_memory_system/      # RMS - Affective memory encoding
+├── Module/
+│   ├── encoding_module/     # ColorGeneration, Intensity, TraumaProtection nodes
+│   └── latching_module/     # Temporal smoothing
+├── configs/
+└── schema/
 
-genesis_knowledge_system/  # Innate knowledge (GKS) - read-only framework blocks
-├── grounding/       # Truth-seeking, conflict detection
-└── nexus_mind/      # Future: autonomous reasoning
+memory_n_soul_passport/       # Unified memory system (MSP) - 2,633 lines
+├── Module/
+│   ├── EpisodicMemory/      # JournalNode (file I/O)
+│   ├── SemanticMemory/      # GroundingNode (belief revision)
+│   └── SensoryMemory/       # QualiaStorageNode
+├── schema/                  # 20 JSON schemas
+├── contract/
+└── configs/
+    └── MSP_configs.yaml
+
+operation_system/             # Infrastructure
+├── identity_manager.py      # Centralized ID factory (ALL constants)
+├── resonance_bus.py         # Pub/sub event bus (global singleton)
+├── llm_bridge/              # LLM API (Gemini + Ollama)
+│   └── schema/              # Tool schemas (sync_biocognitive_state, propose_episodic_memory)
+├── nexus_mind/              # NexusMind reasoning engine
+├── trajectory/              # TrajectoryManager (execution tracing)
+├── rim/                     # Resonance Impact Measurement
+└── configs/
 
 capabilities/
 ├── services/
-│   ├── agentic_rag/ # 7-stream memory retrieval
-│   ├── engram_system/  # Fast memory lookup (inspired by DeepSeek)
-│   └── slm_bridge/  # Small LLM for gut-feeling perception
+│   ├── agentic_rag/         # 7-stream memory retrieval (870 lines)
+│   ├── engram_system/       # Fast memory lookup (DeepSeek-inspired)
+│   ├── slm_bridge/          # Small LLM (Llama-3.2-1B) for System 1
+│   ├── vector_bridge/       # ChromaDB integration (multilingual-e5-base)
+│   └── graph_bridge/        # GraphRAG engine
 └── tools/
-    ├── resonance_index/   # Resonance scoring
-    └── resonance_impact/  # Memory importance calculation
+    ├── resonance_index/     # RI scoring (4-layer: ER, IF, SR, CR)
+    ├── resonance_impact/    # RIM calculation
+    ├── subagents/           # RIS, Archivist, Technician
+    ├── ui/                  # Debug web UI (Flask)
+    ├── msp_monitor.py       # State completeness checker
+    └── logger.py            # Thread-safe structured logging
 
-consciousness/       # "Awareness Domain" - Direct Access RAM
-├── context_container/  # Active Turn Object (task.md, self_note.md, etc.)
-├── data/               # Runtime Workspace (Uploads, Outputs, Processing)
-├── episodic_memory/    # Conversation logs (episodes_user/, episodes_ai/)
-├── state_memory/       # Current bio/psych/qualia snapshots
-└── context_storage/    # Archived turns (Hot/Cold slots)
+contracts/                    # Interface definitions
+├── systems/                 # IMSPassport, IPhysioSystem, IMatrixSystem, IResonanceBus
+└── modules/                 # IMemoryStorage, IMemoryRetrieval, IKnowledgeAuthority, ICognitiveGateway
 
-memory/              # "Subconscious" - LLM cannot write here (MSP-governed)
-├── context_storage/ # Persistent context archive
-├── session_memory/  # Session snapshots
-├── core_memory/     # Distilled long-term facts
-├── sphere_memory/   # Domain-specific knowledge
-└── user_registry.json  # Multi-user grounding facts
+consciousness/               # "Awareness Domain" - Direct Access RAM
+├── context_container/       # Active Turn Object (task.md, self_note.md, etc.)
+├── data/                    # Runtime Workspace (Uploads, Outputs, Processing)
+├── episodic_memory/         # Conversation logs
+│   ├── episodes/            # Full episodes (JSON per episode)
+│   ├── episodes_user/       # User-filtered variants
+│   ├── episodes_ai/         # LLM-relevant variants
+│   └── episodic_log.jsonl   # Fast append-only index
+├── state_memory/            # Current bio/psych/qualia snapshots (JSON)
+├── sensory_memory/          # Qualia records
+├── indexes/                 # Salience maps, episode counters
+├── services/                # Shortcuts to capabilities/services
+└── tools/                   # Shortcuts to capabilities/tools
 
-operation_system/    # Infrastructure
-├── llm_bridge/      # LLM API abstraction (Ollama, Gemini, Claude)
-├── mrf_engine/      # Meta-Resonance Framework
-└── resonance_engine/  # Resonance Bus (pub/sub messaging)
+memory/                      # "Subconscious" - LLM cannot write here (MSP-governed)
+├── context_storage/         # Persistent context archive (hot/cold slots)
+│   ├── full_context/
+│   ├── step1_perception/
+│   ├── step2_processing/
+│   └── step3_reasoning/
+├── user_profile/            # User profiles
+├── user_registry.json       # Multi-user identity registry
+└── vector_store/            # ChromaDB persistent storage (chroma.sqlite3)
+
+api/                         # External interface
+├── chat_endpoint.py         # FastAPI + WebSocket (POST /api/chat, WS /ws/chat/{id})
+├── eva_lite.py              # Lightweight EVA (5 hormones, 2D matrix, keyword RAG)
+└── run_server.py            # Uvicorn launcher (port 8000)
+
+webui/                       # Vue.js/Vite frontend
+├── src/
+│   ├── components/
+│   └── services/
+└── public/
+
+tools/                       # Top-level system tools
+└── technician/              # Registry auditor
 ```
 
 ### Critical Design Patterns
@@ -150,42 +229,53 @@ operation_system/    # Infrastructure
 
 - All system IDs, bus channels, personas managed by `IdentityManager`
 - Never hardcode IDs like `"bus:physical"` → use `IdentityManager.BUS_PHYSICAL`
+- 12 SYSTEM_* constants, 6 BUS_* channels, PERSONA_MAP
 - See: `docs/adr/007_centralized_identity_management.md`
 
 **3. Memory Architecture (Consciousness vs Subconscious)**
 
 - **Consciousness** (`consciousness/`) = Direct Access RAM (LLM can read/write)
-  - Context Container, Episodic Buffer, State Memory
+  - Context Container, Episodic Buffer, State Memory, Sensory Memory
 - **Subconscious** (`memory/`) = MSP-governed permanent storage (LLM cannot write)
-  - Session Memory, Core Memory, Sphere Memory, User Registry
-- Constitutional Principle: LLM proposes memories via function calls, MSP writes them
+  - Context Storage, User Profile, User Registry, Vector Store
+- Constitutional Principle: LLM proposes memories via `propose_episodic_memory()`, MSP validates and writes
 - See: `docs/adr/008_Memory_Architecture_Centralized_MSP.md`, `docs/03_Architecture/EVA_System_Storage_ERD.md`
 
 **4. CIM as File Injector (v9.6.0)**
 
 - CIM no longer generates text prompts
-- Instead, it **copies files** into `Context Container` (hydration)
+- Instead, it **copies files** into `consciousness/context_container/` (hydration)
 - LLM reads files directly via function calls
+- Located at: `orchestrator/Module/CIM/`
 - See: `docs/03_Architecture/EVA_System_Storage_ERD.md`
+
+**5. Resonance Bus (Signal-First Architecture)**
+
+- All systems communicate via pub/sub, never direct method calls
+- 4 primary channels: `bus:physical`, `bus:psychological`, `bus:phenomenological`, `bus:knowledge`
+- 2 additional channels: `bus:cognitive` (GKS/NexusMind), `bus:temporal` (Temporal Engine)
+- MSP acts as "Subconscious Listener" latching state from all channels
+- Global singleton: `from operation_system.resonance_bus import bus`
 
 ## Key Concepts
 
 ### The Bio-Digital Gap
 
-Sequential biological processing during `sync_bio_state()`:
+Sequential biological processing during `sync_biocognitive_state()`:
 
 ```
 LLM generates Stimulus Chunks → PhysioCore sequential digestion →
 hormone release → blood distribution (30Hz) → receptor activation →
-psychological state (EVA Matrix) → phenomenological qualia → state snapshot
+psychological state (EVA Matrix 9D) → phenomenological qualia →
+RMS encoding (color, intensity, trauma) → state snapshot
 ```
 
-**Stimulus Chunking v2.0:** LLM breaks complex input into emotional "chunks" processed sequentially to preserve the emotional journey. Example:
+**Stimulus Chunking v2.0:** LLM breaks complex input into emotional "chunks" processed sequentially to preserve the emotional journey. Each chunk triggers a per-chunk reflex via WebSocket.
 
-- Chunk 1: "I love you" (Dopamine spike)
-- Chunk 2: "...but I'm leaving" (Cortisol shock)
+- Chunk 1: "I love you" → Dopamine spike → WebSocket: "☺️"
+- Chunk 2: "...but I'm leaving" → Cortisol shock → WebSocket: "...เดี๋ยวนะ"
 
-This prevents emotional averaging. See: `orchestrator/cognitive_flow/docs/STIMULUS_CHUNKING_PROTOCOL.md`
+This prevents emotional averaging and shows real-time emotional shifts.
 
 ### Resonance Intelligence (RTI)
 
@@ -197,35 +287,94 @@ Multi-level resonance scoring system:
 - **L4:** Resonant Dynamic Memory (qualia recall, hormone memory, dream links)
 - **L5:** Transcendental Intelligence (meta-cognition, paradox resolution)
 
-See: `RTI.md`, `Conditional Memory.md`
+See: `docs/10_References/RTI.md`
 
 ### Hormone System
 
-12 glands modeled: Dopamine, Serotonin, Oxytocin, Cortisol, Adrenaline, Noradrenaline, GABA, Acetylcholine, Endorphin, Testosterone, Estrogen, Melatonin
+23 chemicals modeled (16 hormones + 7 neurotransmitters):
+
+**Hormones (ESC_H prefix):** Adrenaline, Cortisol, Aldosterone, Oxytocin, Vasopressin, Testosterone, Estrogen, Progesterone, Insulin, Glucagon, Leptin, Ghrelin, Thyroxine, Melatonin, Growth Hormone, Prolactin
+
+**Neurotransmitters (ESC_N prefix):** Noradrenaline, Dopamine, Serotonin, Endorphin, GABA, Adenosine, Histamine
 
 Simulation includes:
 
-- Baseline levels, half-lives, decay rates
+- Baseline levels, half-lives, exponential decay rates
 - Circadian rhythms (melatonin)
 - HPA axis (cortisol stress response)
 - Blood distribution (30Hz update cycle)
 - Receptor sensitization/desensitization
+- Basal secretion (return to baseline)
 
-See: `docs/04_Systems/physio_core/hormone_spec_ml.md`
+Config: `physio_core/configs/PhysioCore_configs.yaml` + `physio_core/configs/hormone_spec_ml.yaml`
 
 ### Genesis Knowledge System (GKS)
 
-7 Master Blocks stored as JSON:
+**Status: NOT YET IMPLEMENTED** — GKS is defined in the master registry and IdentityManager (`SYSTEM_GKS = "GKS"`) but the `genesis_knowledge_system/` directory does not exist. Documentation exists at `docs/04_Systems/genesis_knowledge_system/`. The NexusMind component lives at `operation_system/nexus_mind/`.
 
-- `Master_Block.json` - System metadata
-- `Algorithm_How_Genesis_Block.json` - Processes
-- `Concept_Why_Genesis_Block.json` - Philosophical foundations
-- `Framework_Genesis_Block.json` - Structural templates
-- `Parameter_What_Genesis_Block.json` - Configuration specs
-- `Protocol_Process_Genesis_Block.json` - Workflows
-- `Safety_Block.json` - Ethical guardrails
+### 7-Stream Agentic RAG
 
-### Engram System (NEW in v9.6.0)
+7-dimensional memory retrieval with 2-stage optimization:
+
+**Quick Recall (30% weight, parallel with PhysioCore):**
+- Narrative Stream (20%): Episode chains, story continuity
+- Intuition Stream (5%): Semantic graph patterns
+- Reflection Stream (5%): Meta-cognitive insights
+
+**Deep Recall (70% weight, after bio state ready):**
+- Emotion Stream (35%): **KEY** — cosine similarity on physio vectors (hormone matching)
+- Salience Stream (15%): High-RI memories (impact > 0.70)
+- Sensory Stream (10%): Qualia texture matching
+- Temporal Stream (10%): Exponential decay (halflife 30 days)
+
+**Merge:** Deduplicate → SLM cross-encoder re-rank top 5 → final ranked list
+
+Location: `capabilities/services/agentic_rag/agentic_rag_engine.py` (870 lines)
+
+### 4-Layer Affective Reflex System
+
+EVA displays immediate body reactions and short utterances BEFORE the full LLM response. No second LLM is used — reflexes are sub-LLM mechanisms.
+
+**Layers (fastest to most accurate):**
+
+| Layer | Speed | Mechanism | Output |
+|-------|-------|-----------|--------|
+| 1. Enum Reflex | < 1ms | Pattern match → hormone spike | PhysioCore update + expression (flinch/blush/gasp) |
+| 2. SLM Gut Utterance | < 50ms | gut_vector → nearest neighbor | Short Thai utterance ("ห๊ะ!?", "อืม...") |
+| 3. Stimulus Extraction | < 50ms (Gap) | SLM reads LLM stimulus_chunks | Context-aware utterance (replaces Layer 2) |
+| 4. CoT Extraction | < 50ms (Gap) | SLM reads LLM thinking tokens | Most accurate utterance (optional bonus) |
+
+**Progressive Refinement:** Utterances upgrade as better data arrives:
+```
+50ms:   "อืม..."       ← gut guess
+550ms:  "สูญเสีย..."   ← from stimulus (replaces gut)
+2500ms: "ฉันเข้าใจ..." ← full LLM response
+```
+
+**Constitutional note:** No second LLM call — Pillar 2 preserved. Reflex uses Enum + SLM (already running) + LLM tool arguments.
+
+See: `.agent/standards/system_requirements.yaml` (reflex_system section)
+
+### Stimulus Chunking Protocol v2.0
+
+Complex emotional input is broken into sequential "chunks" by the LLM. Each chunk is processed separately by PhysioCore during the Gap, preserving emotional shifts.
+
+```
+Input: "ขอบคุณนะ น่ารักมาก... ถ้าทำแบบนี้แค่คนเดียวก็คงดี"
+
+Without chunking: warmth=0.5, stress=0.5 (averaged → flat)
+With chunking:    chunk1(warmth=0.8) → chunk2(stress=0.7) → SHIFT preserved
+```
+
+**Tool call supports both:**
+- `stimulus_vector` (single, backward compatible)
+- `stimulus_chunks` (list, new — each chunk triggers separate reflex + PhysioCore step)
+
+PhysioCore already supports list input (`physio_core.py` line 177). Each chunk fires a per-chunk reflex via WebSocket, so users see the emotional shift in real-time.
+
+See: `.agent/standards/system_requirements.yaml` (stimulus_chunking section)
+
+### Engram System (v9.6.0)
 
 Fast memory lookup cache inspired by DeepSeek's Conditional Memory:
 
@@ -233,7 +382,18 @@ Fast memory lookup cache inspired by DeepSeek's Conditional Memory:
 - **Location:** `capabilities/services/engram_system/`
 - **Workflow:** CIM checks Engram before expensive RAG queries
 - **Architecture:** Hash-based scalable lookup
-- See: `Conditional Memory.md` for theoretical background
+- See: `docs/99_Archive/Conditional Memory.md` for theoretical background
+
+### RMS Memory Encoding
+
+Resonance Memory System encodes psychological state for storage:
+
+1. **ColorGeneration:** 9D matrix → 5D color axes (stress, warmth, clarity, drive, calm) → hex color
+2. **IntensityCalculation:** base arousal + impact boost + trend modifier
+3. **TraumaProtection:** IF threat > 0.85 → dim colors (×0.55), reduce intensity (×0.50)
+4. **LatchingModule:** Temporal smoothing (color α=0.65, intensity α=0.70)
+
+**Encoding Levels:** L0_trace (<0.40) → L1_light (<0.65) → L2_standard (<0.85) → L3_deep (≥0.85) → L4_trauma (≥0.85 + threat)
 
 ### Boot Sequence (The Awakening)
 
@@ -241,55 +401,29 @@ System initialization order (defined in `registry/eva_master_registry.yaml`):
 
 1. **IdentityManager** - Security first (Who am I?)
 2. **Resonance Bus** - Transport layer (Connect everyone)
-3. **PhysioCore** - Body (Heartbeat must start)
+3. **PhysioCore** - Body (Heartbeat must start) [parallel]
 4. **EVA Matrix** - Mind (Psychology follows physiology)
-5. **MSP** - Memory (Soul wakes up)
-6. **GKS** - Knowledge (Wisdom loads)
+5. **MSP** - Memory (Soul wakes up) [parallel]
+6. **GKS** - Knowledge (Wisdom loads) [NOT IMPLEMENTED]
 7. **RMS** - Filter (Perception starts)
 8. **Artifact Qualia** - Senses (Phenomenology online)
 9. **Orchestrator** - CNS (Conductor raises baton)
-
-## System Boot & Initialization
-
-### Starting EVA
-
-```bash
-# Standard initialization (from orchestrator or main.py)
-python orchestrator/orchestrator.py
-
-# The boot sequence follows this order:
-# IdentityManager → Bus → PhysioCore → Matrix → MSP → GKS → RMS → Qualia → Orchestrator
-```
-
-### Verifying System Health
-
-```bash
-# Check version alignment
-python scripts/check_versions.py
-
-# Check documentation alignment
-python scripts/check_doc_alignment.py
-
-# Verify registry integrity
-# (Registry audit tools in development)
-```
 
 ## Common Tasks
 
 ### Adding a New Hormone Response
 
-1. Edit `physio_core/configs/endocrine_configs.yaml` (add gland or modify parameters)
-2. If new gland: Add receptor mappings in `receptor_configs.yaml`
-3. Run audit: `python tools/subagents/ris_subagent.py --audit-config`
-4. Implement code in `physio_core/logic/endocrine/glands.py`
+1. Edit `physio_core/configs/PhysioCore_configs.yaml` (add gland or modify parameters)
+2. Add chemical spec in `physio_core/configs/hormone_spec_ml.yaml`
+3. Run audit: `python capabilities/tools/subagents/ris_subagent.py --audit-config`
+4. Implement code in `physio_core/logic/endocrine/`
 5. Test: `python -m pytest physio_core/tests/`
 
 ### Modifying Psychological Dimensions
 
-1. Edit `eva_matrix/configs/matrix_configs.yaml`
+1. Edit `eva_matrix/configs/EVA_Matrix_configs.yaml`
 2. Update schema: `eva_matrix/schema/EVA_Matrix_Payload_Schema_v2.json`
-3. Implement in `eva_matrix/Module/psych_engine/matrix_psych_module.py`
-4. Validate against coherence rules: `eva_matrix/validation/matrix_coherence_rules.yaml`
+3. Implement in `eva_matrix/Module/`
 
 ### Adding New Memory Type
 
@@ -300,9 +434,8 @@ python scripts/check_doc_alignment.py
 
 ### Updating Identity/Persona
 
-1. Edit system identity: `orchestrator/cim/system_contexts/core_identity.md`
-2. Soul/personality: `orchestrator/cim/prompt_rule/configs/identity/soul.md`
-3. Architecture diagram: `orchestrator/cim/system_contexts/system_architecture_visual.md`
+1. Edit persona assets: `orchestrator/Module/CIM/Node/prompt_rule/assets/identity/`
+2. Config: `orchestrator/Module/CIM/Node/prompt_rule/` directory
 
 ### Working with Context Container
 
@@ -320,22 +453,26 @@ The Context Container is the "active working memory" for each turn:
 
 ## Configuration Locations
 
-- **Master Registry:** `registry/eva_master_registry.yaml` (SSOT for system topology, boot order, permissions)
-- **System-wide:** `orchestrator/configs/orchestrator_configs.yaml`
-- **Cognitive Flow:** `orchestrator/cognitive_flow/docs/` (protocols, not configs)
-- **Biology:** `physio_core/configs/` (endocrine, receptor, blood, vitals)
-- **Psychology:** `eva_matrix/configs/matrix_configs.yaml`
-- **Memory:** `memory_n_soul_passport/configs/MSP_configs.yaml`
-- **Identity:** `orchestrator/cim/prompt_rule/configs/identity/`
-- **Bus Channels:** Defined via `IdentityManager` class constants
+| Config | Path |
+|--------|------|
+| Master Registry (SSOT) | `registry/eva_master_registry.yaml` |
+| System-wide | `orchestrator/configs/Orchestrator_configs.yaml` |
+| Cognitive Flow | `docs/06_Orchestration/cognitive_flow/` |
+| Biology | `physio_core/configs/PhysioCore_configs.yaml` + `hormone_spec_ml.yaml` |
+| Psychology | `eva_matrix/configs/EVA_Matrix_configs.yaml` |
+| Memory | `memory_n_soul_passport/configs/MSP_configs.yaml` |
+| RMS | `resonance_memory_system/configs/` |
+| RAG | `capabilities/services/agentic_rag/configs/Agentic_RAG_configs.yaml` |
+| Identity/Persona | `orchestrator/Module/CIM/Node/prompt_rule/assets/identity/` |
+| Bus Channels | `IdentityManager` class constants (code, not config) |
 
 ## Data Contracts (Schemas)
 
 All modules communicate via standardized JSON schemas (v2):
 
 - `*_Payload_Schema_v2.json` - Module input/output contracts
-- Validation happens at module boundaries
-- Version suffix indicates breaking changes
+- Validation happens at module boundaries via `MSPSchemaValidator`
+- 20 JSON schemas in `memory_n_soul_passport/schema/`
 
 Schema locations:
 
@@ -348,22 +485,20 @@ Schema locations:
 
 ### Never Hardcode
 
-- System IDs → Use `IdentityManager`
+- System IDs → Use `IdentityManager.SYSTEM_*`
 - Bus channels → Use `IdentityManager.BUS_*`
-- File paths → Load from config
+- File paths → Load from config YAML
 - Magic numbers → Define in YAML
 
 ### File Ownership
 
-- `consciousness/` = "Awareness Domain" (LLM can read/write, runtime state)
-  - `context_container/` = Active turn working files
-  - `episodic_memory/`, `state_memory/` = Current session data
-- `memory/` = "Subconscious" (MSP-governed, LLM cannot write directly)
-  - All writes go through MSP function calls
-- `genesis_knowledge_system/` = Read-only innate knowledge
-- `docs/` = Documentation only
-- `archive/` = Deprecated code (do not modify)
-- `registry/` = System topology definitions
+| Domain | Path | LLM Access | Write Authority |
+|--------|------|-----------|-----------------|
+| Consciousness | `consciousness/` | Read + Write | LLM direct |
+| Subconscious | `memory/` | Read only (via RAG) | MSP only |
+| Docs | `docs/` | Read only | Manual |
+| Registry | `registry/` | Read only | Manual |
+| Contracts | `contracts/` | Read only | Manual |
 
 ### Commit Discipline
 
@@ -373,22 +508,49 @@ Schema locations:
 
 ## Documentation Structure (v9.6.2)
 
-**Primary Navigation:** `docs/00_Governance/INDEX_v9.6.2.md` - Official reading order
+```
+docs/
+├── 00_Governance/     # Changelog, governance docs
+├── 01_Philosophies/   # MEM_PHILOSOPHY_888, design principles
+├── 02_Requirements/   # System requirements
+├── 03_Architecture/   # System architecture, ERD, Gap Flow
+├── 04_Systems/        # Per-system documentation
+├── 05_Capabilities/   # Services & tools docs
+├── 06_Orchestration/  # CIM, Cognitive Flow 2.0 docs
+├── 07_Protocols/      # DOC_TO_CODE, standards
+├── 08_Knowledge_Graphs/ # GraphRAG docs
+├── 10_References/     # RTI.md, reference material
+├── 99_Archive/        # Legacy docs, Conditional Memory
+├── adr/               # Architecture Decision Records
+└── archive/           # Archived docs
+```
 
 **Critical Documents:**
 
-- `orchestrator/cognitive_flow/docs/Cognitive_Flow_2_0.md` - **Current standard** (v9.6.0+)
-- `docs/03_Architecture/EVA_System_Architecture.md` - System overview & Biological Life Cycle
+- `docs/06_Orchestration/cognitive_flow/Cognitive_Flow_2_0.md` - **Current standard**
+- `docs/03_Architecture/EVA_System_Architecture.md` - System overview
 - `docs/03_Architecture/EVA_System_Storage_ERD.md` - Memory domains & data ownership
-- `docs/01_Philosophies/MEM_PHILOSOPHY_888.md` - Memory extraction & 8-8-8 protocol
+- `docs/03_Architecture/EVA_Gap_Flow.md` - Bio-Digital Gap orchestration
+- `docs/01_Philosophies/MEM_PHILOSOPHY_888.md` - Memory 8-8-8 protocol
 
-**Architecture Decision Records (ADRs):**
+**Architecture Decision Records:**
 
-- `001_cim_prompt_rule_transition.md` - Why CIM replaced CIN
-- `004_one_inference_architecture.md` - Single-session LLM flow
-- `005_Unified_Resonance_Architecture.md` - Resonance system design
-- `007_centralized_identity_management.md` - IdentityManager pattern
-- `008_Memory_Architecture_Centralized_MSP.md` - MSP as memory SSOT
+- `docs/adr/001_cim_prompt_rule_transition.md` - Why CIM replaced CIN
+- `docs/adr/002_two_stage_rag_retrieval.md` - 2-stage RAG optimization
+- `docs/adr/004_one_inference_architecture.md` - Single-session LLM flow
+- `docs/adr/005_Unified_Resonance_Architecture.md` - Resonance system design
+- `docs/adr/006_hybrid_graph_rag.md` - GraphRAG integration
+- `docs/adr/007_centralized_identity_management.md` - IdentityManager pattern
+- `docs/adr/008_Memory_Architecture_Centralized_MSP.md` - MSP as memory SSOT
+
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/chat` | POST | Chat with EVA → `{response, emotional_state}` |
+| `/api/health` | GET | `{status, agent_version, active_sessions}` |
+| `/api/mind/state` | GET | `{eva_matrix, physio, qualia, resonance_index}` |
+| `/ws/chat/{client_id}` | WebSocket | Full duplex: thinking status + state updates |
 
 ## Debugging
 
@@ -396,62 +558,95 @@ Schema locations:
 
 **"Ghost Key" warnings:** Config key exists but not consumed in code → implement the feature
 
-**Schema validation errors:** Check `{module}/schema/` for required fields
+**Schema validation errors:** Check `memory_n_soul_passport/schema/` for required fields
 
-**Hormone imbalances:** Check baselines in `endocrine_configs.yaml`, verify decay rates
+**Hormone imbalances:** Check baselines in `physio_core/configs/PhysioCore_configs.yaml`, verify decay rates in `hormone_spec_ml.yaml`
 
-**Memory not persisting:** MSP write policy in `MSP_Write_Policy.yaml`. Remember: LLM cannot write to `memory/` directly - must use MSP function calls.
+**Memory not persisting:** Check MSP write policy. LLM cannot write to `memory/` directly - must use `propose_episodic_memory()` tool.
 
-**Context not loading:** Check if files exist in `consciousness/context_container/`. Verify CIM injection is working.
+**Context not loading:** Check if files exist in `consciousness/context_container/`. Verify CIM injection at `orchestrator/Module/CIM/`.
 
 **Boot order failures:** Check `registry/eva_master_registry.yaml` runtime_sequence. PhysioCore must start before Matrix.
 
-**Version mismatches:** Run `python scripts/check_versions.py` to detect inconsistencies
+**Version mismatches:** Run `python scripts/check_versions.py`
 
 ### Logging
 
 - Console logs use structured format: `[MODULE] [LEVEL] Message`
-- PhysioCore logs hormone levels: `[PhysioCore] [INFO] Dopamine: 0.75`
-- Bus events logged: `[ResonanceBus] [DEBUG] Published to bus:physical`
+- Custom logger: `from capabilities.tools.logger import safe_print`
+- Pattern: override `print = safe_print` per module
 
 ## Project Versioning
 
-**System-level:** `9.6.2` (EVA version)
-
-- Format: `MAJOR.MINOR.PATCH`
-- Current: 9.6.2 = Cognitive Flow 2.0 architecture
+**System-level:** `9.7.0` Epoch: Reflex
 
 **Module-level:** Decoupled versioning (per ADR-011)
 
-- PhysioCore: v2.4.3 (Verified Stable - structural exception)
-- EVA_Matrix: v2.0.0 (Verified Coupled)
-- GKS: v2.0.0
+- PhysioCore: v2.4.3
+- EVA_Matrix: v2.5.0
+- Orchestrator: v1.3.0
+- MSP: v2.1.0
+- RMS: v2.5.0
 - IdentityManager: v2.4.0
+- AgenticRAG: v1.1.0
 
-**Commit Convention:** `[Module] Description`
+### Version Control Standards (International)
 
-- Example: `[Docs] v9.6.2: Established Cognitive Flow 2.0`
+| Standard | Version | What It Governs |
+|----------|---------|-----------------|
+| **Semantic Versioning** | 2.0.0 (semver.org) | MAJOR.MINOR.PATCH numbering |
+| **Conventional Commits** | 1.0.0 (conventionalcommits.org) | Commit message format |
+| **Keep a Changelog** | 1.1.0 (keepachangelog.com) | CHANGELOG format |
 
-See: `docs/00_Governance/CHANGELOG.md` for version history
+**Commit format:** `<type>(<scope>): <description>`
+
+```bash
+feat(PhysioCore): add ghrelin hormone support       # → MINOR bump
+fix(MSP): correct episodic schema validation         # → PATCH bump
+feat(API)!: change response envelope format          # → MAJOR bump (breaking)
+docs(CLAUDE.md): sync with actual codebase           # → No bump
+```
+
+**Pre-commit:** `python scripts/check_versions.py` (verify registry ↔ code alignment)
+
+**Full protocol:** `.agent/workflows/version-control.md`
+
+See: `docs/00_Governance/CHANGELOG.md`, `registry/version_log.yaml`
 
 ## Special Files
 
-- `registry/eva_master_registry.yaml` - **Master Registry** (SSOT for topology, boot order)
-- `.agent/workflows/` - Automated workflow scripts (archivist, doc_to_code)
-- `.agent/rules/` - Agent behavior policies (eventpolicy, gapflow)
-- `consciousness/context_container/` - Active turn working files (task.md, self_note.md, etc.)
-- `consciousness/indexes/memory_index.json` - Fast memory lookup index
-- `memory/user_registry.json` - Multi-user grounding facts
-- `docs/00_Governance/INDEX_v9.6.2.md` - Official documentation index
-- `scripts/check_versions.py` - Version consistency checker
-- `scripts/check_doc_alignment.py` - Documentation alignment auditor
+| File | Purpose |
+|------|---------|
+| `registry/eva_master_registry.yaml` | Master Registry (SSOT for topology, boot order) |
+| `registry/master_configs.yaml` | Global config (organism version, developer ID) |
+| `.agent/rules/constitution.md` | 5 Pillars (immutable) |
+| `.agent/rules/gapflow.md` | Bio-Digital Gap rules |
+| `.agent/rules/memorygovernance.md` | 8-8-8 Memory governance |
+| `.agent/workflows/` | Automated workflows (archivist, doc_to_code, etc.) |
+| `.planning/` | Implementation checklists, gap analyses, Gemini handoff |
+| `docs/10_References/GEMINI.md` | Instructions for Gemini LLM partner |
+| `consciousness/context_container/` | Active turn working files |
+| `consciousness/indexes/` | Memory index, episode counters |
+| `memory/user_registry.json` | Multi-user identity facts |
+| `memory/vector_store/chroma.sqlite3` | ChromaDB persistent storage |
+
+## System Specifications
+
+| Document | Path | Purpose |
+|----------|------|---------|
+| System Requirements | `.agent/standards/system_requirements.yaml` | Full tech stack, core systems, API, storage, NFRs, boot sequence |
+| ID Standards | `.agent/standards/id_standards.yaml` | All ID formats, naming conventions, never-hardcode rules |
+| Changelog System | `docs/00_Governance/CHANGELOG_SYSTEM.md` | Sliding window changelog spec, severity levels, tags |
+| Master Registry | `registry/eva_master_registry.yaml` | SSOT for topology, boot order, permissions |
+| Master Configs | `registry/master_configs.yaml` | Global constants (organism_version, developer_id) |
 
 ## Notes on Multilingual Content
 
 The codebase contains Thai language content in:
 
-- `Conditional Memory.md` - DeepSeek Conditional Memory analysis
-- `RTI.md` - Resonance Intelligence framework explanation
+- `docs/99_Archive/Conditional Memory.md` - DeepSeek analysis
+- `docs/10_References/RTI.md` - Resonance Intelligence framework
+- `.agent/rules/eva.md` - Vision document
 - Some docstrings and comments
 
 This is intentional - EVA supports multilingual operation. Do not remove Thai content.

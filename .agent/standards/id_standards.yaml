@@ -1,0 +1,266 @@
+# EVA v9.6.2 — ID FORMATTING & NAMING CONVENTIONS
+# Source of Truth for all identifier formats and naming rules
+# Last updated: 2026-03-19
+# ─────────────────────────────────────────────────────────
+
+# ─────────────────────────────────────────────────────────
+# DOMAIN: System & Bus Identity (IdentityManager)
+# ─────────────────────────────────────────────────────────
+
+system_identifiers:
+  description: "All constants defined in operation_system/identity_manager.py"
+
+  systems:
+    - id: "SYSTEM_MSP"
+      value: "MSP"
+    - id: "SYSTEM_PHYSIO"
+      value: "PhysioCore"
+    - id: "SYSTEM_MATRIX"
+      value: "EVA_Matrix"
+    - id: "SYSTEM_QUALIA"
+      value: "Artifact_Qualia"
+    - id: "SYSTEM_RMS"
+      value: "RMS"
+    - id: "SYSTEM_CIM"
+      value: "CIM"
+    - id: "SYSTEM_PRN"
+      value: "PRN"
+    - id: "SYSTEM_RAG"
+      value: "AgenticRAG"
+    - id: "SYSTEM_ORCH"
+      value: "Orchestrator"
+    - id: "SYSTEM_GKS"
+      value: "GKS"
+      note: "NOT YET IMPLEMENTED"
+    - id: "SYSTEM_BUS"
+      value: "Resonance_Bus"
+    - id: "SYSTEM_IDM"
+      value: "Identity_Manager"
+
+  subsystems:
+    - id: "SUBSYSTEM_PULSE"
+      value: "PULSE"
+    - id: "SUBSYSTEM_NODE_SOT"
+      value: "NodeSOT"
+
+  bus_channels:
+    - id: "BUS_PHYSICAL"
+      value: "bus:physical"
+      direction: "PhysioCore → Matrix"
+    - id: "BUS_PSYCHOLOGICAL"
+      value: "bus:psychological"
+      direction: "Matrix → Qualia"
+    - id: "BUS_PHENOMENOLOGICAL"
+      value: "bus:phenomenological"
+      direction: "Qualia → MSP"
+    - id: "BUS_KNOWLEDGE"
+      value: "bus:knowledge"
+      direction: "RAG ↔ MSP"
+    - id: "BUS_COGNITIVE"
+      value: "bus:cognitive"
+      direction: "GKS/NexusMind"
+      status: "NOT YET ACTIVE"
+    - id: "BUS_TEMPORAL"
+      value: "bus:temporal"
+      direction: "Temporal Engine"
+      status: "NOT YET ACTIVE"
+
+  personas:
+    map:
+      EVA: "PE_01"
+      LYRA: "PE_02"
+
+# ─────────────────────────────────────────────────────────
+# DOMAIN: Turn & Session IDs
+# ─────────────────────────────────────────────────────────
+
+session_identifiers:
+
+  - name: "Turn ID"
+    format: "TURN_{session_id}_{index:03d}"
+    example: "TURN_SES_1_001"
+    generated_by: "IdentityManager"
+    description: "Unique identifier for each conversation turn"
+
+  - name: "Session ID"
+    format: "SES_{dev_id}_SP{sphere}C{core}_SS{session}"
+    example: "SES_THA-06_SP1C1_SS7"
+    generated_by: "SessionNode"
+    description: "Session boundary — encompasses multiple turns"
+
+  - name: "Context ID"
+    format: "ctx_{session_seq}_{episodic_id}.md"
+    example: "ctx_5_EVA_EP27.md"
+    generated_by: "CIM"
+    description: "Context file identifier for CIM injection"
+
+# ─────────────────────────────────────────────────────────
+# DOMAIN: Memory IDs
+# ─────────────────────────────────────────────────────────
+
+memory_identifiers:
+
+  - name: "Episode ID"
+    format: "{PERSONA}_EP{seq:02d}"
+    example: "EVA_EP01"
+    generated_by: "MSP"
+    description: "Unique episodic memory identifier"
+    counter_file: "consciousness/indexes/episode_counter.json"
+
+  - name: "Memory Identifier"
+    format: "{dev_id}_SP{sphere}C{core}_SES{session}"
+    example: "THA-06_SP1C1_SES7"
+    description: "Full memory address in 8-8-8 hierarchy"
+
+  - name: "Semantic Memory ID"
+    format: "SEM_{concept_hash}_{seq:03d}"
+    example: "SEM_auth_pattern_001"
+    generated_by: "SemanticMemoryModule"
+    description: "Semantic concept identifier"
+
+  - name: "Core Memory ID"
+    format: "CORE_{topic}_{seq:03d}"
+    example: "CORE_identity_001"
+    generated_by: "MSP (distillation)"
+    description: "Tier 2 distilled memory"
+
+  - name: "Sphere Memory ID"
+    format: "SPHERE_{scope}_{seq:03d}"
+    example: "SPHERE_social_001"
+    generated_by: "MSP (promotion)"
+    description: "Tier 3 long-term wisdom"
+
+# ─────────────────────────────────────────────────────────
+# DOMAIN: User IDs
+# ─────────────────────────────────────────────────────────
+
+user_identifiers:
+
+  - name: "User ID"
+    format: "U_{seq:03d}"
+    example: "U_001"
+    generated_by: "UserRegistryManager"
+    stored_in: "memory/user_registry.json"
+    description: "Registered user identifier"
+
+  - name: "Developer ID"
+    format: "{PREFIX}-{seq:02d}"
+    example: "THA-06"
+    stored_in: "registry/master_configs.yaml"
+    description: "Developer/creator identifier"
+
+  - name: "Persona ID"
+    format: "PE_{seq:02d}"
+    example: "PE_01"
+    stored_in: "IdentityManager.PERSONA_MAP"
+    description: "Agent persona identifier"
+
+# ─────────────────────────────────────────────────────────
+# DOMAIN: Changelog IDs
+# ─────────────────────────────────────────────────────────
+
+changelog_identifiers:
+
+  - name: "Changelog Entry ID"
+    format: "CL-{YYYYMMDD}-{NNN}"
+    example: "CL-20260319-001"
+    serial: "3-digit zero-padded, reset per day"
+    description: "Individual changelog entry identifier"
+
+# ─────────────────────────────────────────────────────────
+# DOMAIN: RMS Encoding
+# ─────────────────────────────────────────────────────────
+
+encoding_identifiers:
+
+  - name: "Memory Encoding Level"
+    values:
+      - "L0_trace (< 0.40) — ลืมง่าย"
+      - "L1_light (< 0.65) — จำได้บ้าง"
+      - "L2_standard (< 0.85) — จำได้ดี"
+      - "L3_deep (>= 0.85) — จำฝังลึก"
+      - "L4_trauma (>= 0.85 + threat > 0.85) — trauma memory"
+
+  - name: "Memory Color"
+    format: "#RRGGBB"
+    description: "Hex color derived from 5D resonance_texture (stress, warmth, clarity, drive, calm)"
+
+# ─────────────────────────────────────────────────────────
+# DOMAIN: Hormone IDs
+# ─────────────────────────────────────────────────────────
+
+hormone_identifiers:
+  description: "23 chemicals defined in physio_core/configs/hormone_spec_ml.yaml"
+
+  hormones:
+    - "ESC_H01_ADRENALINE"
+    - "ESC_H02_CORTISOL"
+    - "ESC_H03_ALDOSTERONE"
+    - "ESC_H04_OXYTOCIN"
+    - "ESC_H05_VASOPRESSIN"
+    - "ESC_H06_TESTOSTERONE"
+    - "ESC_H07_ESTROGEN"
+    - "ESC_H08_PROGESTERONE"
+    - "ESC_H09_INSULIN"
+    - "ESC_H10_GLUCAGON"
+    - "ESC_H11_LEPTIN"
+    - "ESC_H12_GHRELIN"
+    - "ESC_H13_THYROXINE"
+    - "ESC_H14_MELATONIN"
+    - "ESC_H15_GROWTH_HORMONE"
+    - "ESC_H16_PROLACTIN"
+
+  neurotransmitters:
+    - "ESC_N01_NORADRENALINE"
+    - "ESC_N02_DOPAMINE"
+    - "ESC_N03_SEROTONIN"
+    - "ESC_N04_ENDORPHIN"
+    - "ESC_N05_GABA"
+    - "ESC_N06_ADENOSINE"
+    - "ESC_N07_HISTAMINE"
+
+# ─────────────────────────────────────────────────────────
+# NAMING CONVENTIONS
+# ─────────────────────────────────────────────────────────
+
+naming_conventions:
+
+  files:
+    - pattern: "snake_case.py"
+      example: "physio_core.py, eva_matrix.py"
+    - pattern: "{Module}_configs.yaml"
+      example: "PhysioCore_configs.yaml, EVA_Matrix_configs.yaml"
+    - pattern: "{Module}_Payload_Schema_v2.json"
+      example: "MSP_Payload_Schema_v2.json"
+    - pattern: "test_{module}_init.py"
+      example: "test_msp_phase1.py"
+
+  code:
+    functions: "snake_case (e.g., get_state, write_episode)"
+    private_functions: "_prefix (e.g., _initialize_chat, _decay)"
+    variables: "snake_case (e.g., hormone_levels, body_state)"
+    constants: "UPPER_SNAKE_CASE (e.g., BUS_PHYSICAL, SYSTEM_MSP)"
+    classes: "PascalCase (e.g., PhysioCore, LLMBridge, EndocrineController)"
+    engine_suffix: "Common for system entry points (BloodEngine, ReceptorEngine)"
+
+  logging:
+    format: "[MODULE] [LEVEL] Message"
+    example: "[PhysioCore] [INFO] Dopamine: 0.75"
+    import: "from capabilities.tools.logger import safe_print"
+    usage: "print = safe_print  # override built-in per module"
+
+  versioning:
+    system: "MAJOR.MINOR.PATCH (e.g., 9.6.2)"
+    module: "Decoupled per ADR-011 (e.g., PhysioCore v2.4.3)"
+    commit: "[Module] Description (e.g., [Docs] v9.6.2: Established Cognitive Flow 2.0)"
+
+# ─────────────────────────────────────────────────────────
+# RULE: Never Hardcode
+# ─────────────────────────────────────────────────────────
+
+never_hardcode:
+  - "System IDs → Use IdentityManager.SYSTEM_*"
+  - "Bus channels → Use IdentityManager.BUS_*"
+  - "File paths → Load from YAML config"
+  - "Magic numbers → Define in YAML"
+  - "Persona names → Use IdentityManager.PERSONA_MAP"

@@ -6,6 +6,76 @@ All notable changes to the EVA Core project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+**LATEST:** v9.7.0 | Epoch: Reflex | 2026-03-20
+
+---
+
+## [v9.7.0-Reflex] - 2026-03-20
+
+### Added
+
+- **4-Layer Affective Reflex System**: Novel architecture for sub-LLM emotional reactions before full response.
+  - **Layer 1 (Enum Reflex, <1ms):** Deterministic pattern match → hormone spike + expression (flinch/blush/gasp)
+  - **Layer 2 (SLM Gut Utterance, <50ms):** gut_vector → nearest neighbor → short Thai utterance ("ห๊ะ!?", "อืม...")
+  - **Layer 3 (Stimulus Extraction, <50ms during Gap):** SLM reads LLM tool arguments → context-aware utterance
+  - **Layer 4 (CoT Extraction, optional):** SLM reads LLM thinking tokens → most accurate utterance
+  - **No second LLM call** — Constitutional Pillar 2 preserved
+  - **No existing AI system implements this combination** (verified via comprehensive market research)
+
+- **Stimulus Chunking Protocol v2.0**: Sequential emotional processing with per-chunk reflex output.
+  - Tool schema extension: `stimulus_chunks: [{text, vector, bio_impacts}, ...]`
+  - Each chunk triggers separate PhysioCore.step() + reflex via WebSocket
+  - Preserves emotional shifts (e.g., warmth→anxiety) instead of averaging
+  - Thai cultural nuance handling ("ก็คงดี" = passive-aggressive, not literal "good")
+
+- **Single-Inference Sequentiality Spec**: Formalized in `system_requirements.yaml` with full flow documentation.
+  - 6-step pipeline: Start → Pause (Tool Call) → Gap Execution → Inject Context → Resume → Persist
+  - Critical distinction documented: "EVA uses Tool Calling to UPDATE ITS OWN INTERNAL STATE, not to fetch external data"
+
+- **System Specifications Created**:
+  - `.agent/standards/system_requirements.yaml` — Full tech stack, 10 core systems, 7-stream RAG, API, storage, NFRs, boot sequence, cognitive flow, reflex system, stimulus chunking
+  - `.agent/standards/id_standards.yaml` — All ID formats (System, Bus, Turn, Session, Episode, Memory, User, Hormone, Changelog), naming conventions, never-hardcode rules
+  - `docs/00_Governance/CHANGELOG_SYSTEM.md` — Sliding window spec, severity levels, EVA-specific tags
+
+- **Version Control Protocol**: Formalized in `.agent/workflows/version-control.md` based on international standards.
+  - Semantic Versioning 2.0.0 (semver.org)
+  - Conventional Commits 1.0.0 (conventionalcommits.org)
+  - Keep a Changelog 1.1.0 (keepachangelog.com)
+  - Pre-commit checklist, post-commit checklist, rollback protocol
+
+### Changed
+
+- **CLAUDE.md**: Complete rewrite — verified every path, class, function against actual codebase.
+  - Fixed: 45% of directory paths were wrong (14/31)
+  - Fixed: 35% of file paths were wrong (12/34)
+  - Fixed: "12 hormones" → 23 chemicals (16 hormones + 7 neurotransmitters)
+  - Fixed: `sync_bio_state()` → `sync_biocognitive_state()` (actual tool name)
+  - Fixed: GKS marked as NOT YET IMPLEMENTED
+  - Fixed: memory/ subdirectory structure (removed phantom dirs)
+  - Added: 4-Layer Reflex System, Stimulus Chunking, Resonance Bus details, API endpoints, full config table
+
+- **GEMINI.md**: Complete rewrite — moved to `docs/10_References/GEMINI.md` (root policy compliance).
+  - Same corrections as CLAUDE.md + EVA-specific development conventions
+
+- **Root Policy Enforcement**: Cleaned up root directory per `.agent/governance/root_policy.yaml`.
+  - Moved 4 files out of root (GEMINI.md, CHANGELOG_SYSTEM.md, system_requirements.yaml, id_standards.yaml)
+  - Deleted outdated workspace file (contained external project references)
+  - Updated policy: removed temporary exemptions, commented out phantom directories
+
+- **Version bump**: 9.6.2 → **9.7.0** (MINOR: new features, backward compatible). Epoch: "Resonance" → **"Reflex"**
+
+### Removed
+
+- **`consciousness/state_memory/matrix_state.json`**: Outdated state file (replaced by `eva_matrix_state.json` with different schema)
+- **`.agent/rules/gapflow.md`**: v9.1 superseded by `docs/03_Architecture/EVA_Gap_Flow.md` (v9.6.2)
+- **`orchestrator/orchestrator_3phase_backup.py`**: Moved to `orchestrator/archive/` (unreferenced v8.2 backup)
+
+### Fixed
+
+- **Codebase Analysis**: Created `vsoffice/docs/08-eva-codebase-analysis.md` — exhaustive function-by-function documentation of all ~75 files, ~8,000+ lines.
+
+---
+
 ## [v9.6.3-ResonanceIntegrated] - 2026-01-19
 
 ### Added

@@ -3,12 +3,17 @@
 # Purpose: Enforce flat anatomy and prevent root pollution
 
 # === ALLOWED ROOT FILES ===
+# Updated: 2026-03-20 (cleanup completed)
 allowed_root_files:
   - CLAUDE.md                # Claude Code context (MUST be at root)
   - .gitignore               # Git ignore patterns
   - .env.api                 # Environment config
-  - "*.code-workspace"       # VS Code workspace files
-  - LLM Structure Debate.md  # Temporary discussion file (remove after completion)
+  # REMOVED: *.code-workspace (deleted — contained external project refs)
+  # REMOVED: LLM Structure Debate.md (moved to docs/10_References/)
+  # REMOVED: GEMINI.md (moved to docs/10_References/)
+  # REMOVED: CHANGELOG_SYSTEM.md (moved to docs/00_Governance/)
+  # REMOVED: system_requirements.yaml (moved to .agent/standards/)
+  # REMOVED: id_standards.yaml (moved to .agent/standards/)
 
 # === ALLOWED ROOT DIRECTORIES ===
 # These are auto-loaded from eva_master_registry.yaml:root_slots
@@ -25,13 +30,13 @@ allowed_root_dirs:
   - eva_matrix
   - memory_n_soul_passport
   - orchestrator
-  - genesis_knowledge_system
+  # - genesis_knowledge_system    # NOT YET IMPLEMENTED (directory does not exist)
   - resonance_memory_system
   - artifact_qualia
   - api
   - capabilities
   - consciousness
-  - data
+  # - data                        # Does not exist at root
   - memory
   - scripts
   - tests
@@ -45,9 +50,8 @@ enforcement:
   auto_cleanup: false         # Manual cleanup only
 
 # === EXEMPTIONS (Temporary) ===
-# Files that are temporarily allowed but should be cleaned up
-temporary_exemptions:
-  - "LLM Structure Debate.md"  # Discussion file, move to docs/ after completion
+# All previous exemptions have been cleaned up (2026-03-20)
+temporary_exemptions: []
 
 # === SUGGESTED DESTINATIONS ===
 # Where to move files that violate root policy
