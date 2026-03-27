@@ -19,6 +19,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, List, Union
 from capabilities.tools.logger import safe_print
+from operation_system.identity_manager import IdentityManager
 
 # --- Endocrine ---
 from .logic.endocrine.EndocrineController import EndocrineController
@@ -272,7 +273,8 @@ class PhysioCore:
             "blood": blood_levels,
             "vitals": vitals_state,
             "receptor_signals": receptor_signals,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
+            "metadata": {"version": "2.4.3", "source": "PhysioCore"}
         }
 
         # 1. Publish to Resonance Bus (9.4.3 Architecture)

@@ -2179,12 +2179,11 @@ class MSP(IMSPassport):
         
         # Validate before storing (Phase 13: Validation)
         if hasattr(self, 'validator') and self.strict_validation:
-            if slot == "physio_state":
-                # Only check main structure compliance (soft validate)
-                self.validator.validate_safe(data, "State_Storage_Schema")
-            elif slot == "matrix_state":
+            if slot == "matrix_state":
                 # Matrix schema is subset check
                 pass
+            # physio_state validation disabled: data IS the physio payload,
+            # not a wrapper — schema would always report false positives.
 
         # 1. Update In-memory cache
 

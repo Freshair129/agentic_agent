@@ -48,13 +48,13 @@ class MasterFlowEngine:
         context_id = self.orch.cim.current_context_id
         
         # --- Phase 1: Perception ---
-        stimulus, slm_result, current_speaker_profile, engram_hit = self._phase_1_perception(user_input)
+        stimulus, slm_result, current_speaker_profile, engram_hit, phase1_text = self._phase_1_perception(user_input)
         
         # --- Step 2: The Gap (Bio Processing) ---
         bio_state = self._step_2_the_gap(stimulus, user_input)
         
         # --- Phase 2: Reasoning & Continuation ---
-        final_text, memory_proposal = self._phase_2_reasoning(bio_state)
+        final_text, memory_proposal = self._phase_2_reasoning(bio_state, phase1_text)
         
         # --- Phase 3: Persistence & Learning ---
         result = self._phase_3_persistence(
@@ -122,8 +122,10 @@ class MasterFlowEngine:
 
         # Extract Stimulus
         stimulus = self._extract_stimulus(llm_response, slm_result, user_input)
-        
-        return stimulus, slm_result, current_speaker_profile, engram_hit
+        # Preserve Phase 1 text — this is EVA's authentic pre-tool response
+        phase1_text = llm_response.text.strip()
+
+        return stimulus, slm_result, current_speaker_profile, engram_hit, phase1_text
 
     def _extract_stimulus(self, llm_response, slm_result, user_input):
         if not llm_response.tool_calls:
@@ -180,9 +182,11 @@ class MasterFlowEngine:
             }
 
         # Original execute_the_gap logic: Signal Driven
+        # Strip protobuf objects (Gemini tool call args) before publishing to bus
+        clean_stimulus = LLMBridge.deep_clean(stimulus)
         signal_payload = {
             "event_type": "STIMULUS_PERCEIVED",
-            "stimulus": stimulus,
+            "stimulus": clean_stimulus,
             "query_text": user_input,
             "timestamp": datetime.now().isoformat()
         }
@@ -228,14 +232,28 @@ class MasterFlowEngine:
         self.orch.cim.save_markdown_context("step2_processing", yaml.dump(bio_state))
         return bio_state
 
-    def _phase_2_reasoning(self, bio_state):
+    def _phase_2_reasoning(self, bio_state, phase1_text: str = ""):
         safe_print("\n💭 PHASE 2: Reasoning")
+        # Send minimal result so Gemini continues as EVA, not as a data reporter
+        minimal_result = {
+            "status": "synchronized",
+            "emotion": bio_state.get("emotion_label", "neutral"),
+            "sensation": bio_state.get("embodied_sensation", "baseline")
+        }
         final_response = self.orch.llm.continue_with_result(
-            function_result=bio_state,
+            function_result=minimal_result,
             function_name="sync_biocognitive_state"
         )
         
-        final_text = final_response.text
+        phase2_text = final_response.text.strip()
+        # Phase 1 already contains EVA's authentic response (before tool call).
+        # Use Phase 2 text only if it is a real response, not empty/meta/tool explanation.
+        meta_markers = ["i have called", "the function", "sync_biocognitive_state",
+                        "the output shows", "[empty response]", "error extracting"]
+        is_empty = not phase2_text or phase2_text == "[Empty Response]"
+        is_meta  = any(m in phase2_text.lower() for m in meta_markers)
+        use_phase2 = not is_empty and not is_meta
+        final_text = phase2_text if use_phase2 else (phase1_text or phase2_text)
         memory_proposal = {}
         if final_response.tool_calls:
             for tool_call in final_response.tool_calls:
