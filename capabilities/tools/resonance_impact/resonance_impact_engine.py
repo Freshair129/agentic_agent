@@ -21,7 +21,7 @@ class RIMEngine:
 
     def __init__(self, config_path: str = None):
         if config_path is None:
-            config_path = os.path.join(os.path.dirname(__file__), "configs", "rim_config.yaml")
+            config_path = os.path.join(os.path.dirname(__file__), "configs", "Resonance_Impact_configs.yaml")
         
         with open(config_path, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)

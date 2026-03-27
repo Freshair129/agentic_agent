@@ -49,13 +49,12 @@ from operation_system.llm_bridge.ollama_bridge import OllamaBridge
 # [NEW] Bridges
 from capabilities.services.slm_bridge.slm_bridge import slm
 from capabilities.services.vector_bridge.chroma_bridge import ChromaVectorBridge
-from operation_system.rim.rim_engine import rim_calc
-from capabilities.tools.resonance_impact.resonance_impact_engine import RIMEngine # [NEW] Tool-based RIM
+from capabilities.tools.resonance_impact.resonance_impact_engine import RIMEngine # Tool-based RIM (rim_calc removed: operation_system.rim deprecated)
 from resonance_memory_system.rms import RMSEngineV6
 # [NEW] Engram System (Conditional Memory)
 from capabilities.services.engram_system.engram_engine import EngramEngine
 # [NEW] Session Manager
-from orchestrator.Node.session_node import SessionNode as SessionManager
+from orchestrator.Node.session_node import SessionManager
 # [NEW] Trajectory System
 from operation_system.trajectory.trajectory_manager import TrajectoryManager
 # [NEW] Execution Engine
@@ -212,7 +211,7 @@ class EVAOrchestrator:
         
         # [NEW] Tool-Based RIM Engine (Direct Integration)
         safe_print("  - Initializing RIM Engine (Tool-Based)...")
-        self.resonance = RIMEngine(config_path="capabilities/tools/resonance_impact/configs/rim_config.yaml")
+        self.resonance = RIMEngine()  # resolves config path via __file__
         # [NEW] RMS Activation (V9.4.3)
         safe_print("  - Initializing RMS (Resonance Memory System v6.2.0)...")
         self.rms = RMSEngineV6(config=self.config_data.get("rms", {}))

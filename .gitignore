@@ -1,23 +1,52 @@
-# ENV Secrets
-.env
-.env.*
-.env.api
-
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
-venv/
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
 .venv/
+venv/
 env/
 
-# Data & Logs
-logs/
-*.log
-data/engram_store.json
-memory/users/
-system_state/
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Windows shortcuts (do not commit)
+*.lnk
+
+# Node / webui
+webui/node_modules/
+webui/.next/
+webui/dist/
+
+# Data / runtime state (do not commit)
+memory/vector_store/
+consciousness/episodic_memory/episodes/
+consciousness/episodic_memory/episodes_ai/
+consciousness/episodic_memory/episodes_user/
+consciousness/indexes/
+consciousness/state_memory/
+system_state/
+
+# Env / secrets
+.env
+.env.*
+*.key

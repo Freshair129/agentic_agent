@@ -435,7 +435,7 @@ class ContextInjectionModule:
         self.prn_identity = self._load_prn_identity()
         self.persona_data = self.prn_identity.get("persona", {})
         self.soul_data = self.prn_identity.get("soul", {})
-        self.prn_rules = self._load_prn_rules()
+        self.prn_rules = self._load_pmt_rules()
         self.stimulus_catalog = self._load_stimulus_catalog()
 
     def _load_stimulus_catalog(self) -> Dict[str, Any]:
@@ -979,7 +979,7 @@ class ContextInjectionModule:
             "persona": self.persona_data,
             "soul": self.soul_data,
             "system_blueprint": self.prn_identity.get("system_blueprint", {}), # [NEW] Embodiment
-            "pmt_rules": self.pmt_rules,
+            "pmt_rules": self.prn_rules,
 
             # Physiological state (Live prioritized over baseline)
             "physio_baseline": live_physio if live_physio else self._get_physio_baseline(),
@@ -1167,7 +1167,7 @@ User: {context['user_input']}
 
             # PMT rules reminder
 
-            "pmt_rules": self.pmt_rules[:300],  # Brief reminder
+            "pmt_rules": self.prn_rules[:300],  # Brief reminder
 
         }
 
