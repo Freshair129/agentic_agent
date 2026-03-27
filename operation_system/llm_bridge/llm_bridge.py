@@ -87,11 +87,16 @@ class LLMBridge:
 
         try:
             print(f"[LLM] Sending request to Gemini (timeout: 60s)...")
+            # retry=None disables google-api-core's default retry-on-429 loop
+            # (which can run for 10+ minutes with exponential backoff).
+            # We handle 429 ourselves with a single fast-fail.
+            from google.api_core.retry import Retry
+            _no_retry = Retry(deadline=60.0, initial=1.0, maximum=10.0, multiplier=2.0)
             response = self.chat_session.send_message(
                 prompt, 
                 generation_config=generation_config,
-                safety_settings=self.safety_settings, # Pass explicitly
-                request_options={"timeout": 60}
+                safety_settings=self.safety_settings,
+                request_options={"timeout": 60, "retry": _no_retry}
             )
             print(f"[LLM] ✓ Received response from Gemini")
             
@@ -196,7 +201,12 @@ class LLMBridge:
             
             # Send the wrapped part. SDK handles Role assignment.
             try:
-                response = self.chat_session.send_message(function_response_dict)
+                from google.api_core.retry import Retry as _Retry
+                _retry60 = _Retry(deadline=60.0, initial=1.0, maximum=10.0, multiplier=2.0)
+                response = self.chat_session.send_message(
+                    function_response_dict,
+                    request_options={"timeout": 60, "retry": _retry60}
+                )
                 # Ensure we have a valid response
                 if not response.candidates:
                      raise ValueError("Gemini returned no candidates (blocked or empty)")
@@ -257,6 +267,28 @@ class LLMBridge:
             import traceback
             traceback.print_exc()
             return LLMResponse(text=f"Error: {str(e)}")
+
+    def send_correction(self, correction: str) -> "LLMResponse":
+        """
+        Send a correction/guidance message to steer the model back to proper behavior.
+        Used as Phase 2 recovery when both Phase 1 and Phase 2 produce meta/empty text.
+        """
+        if not self.chat_session:
+            return LLMResponse(text="")
+        try:
+            response = self.chat_session.send_message(
+                correction,
+                request_options={"timeout": 30}
+            )
+            final_text = ""
+            if response.candidates:
+                for p in response.candidates[0].content.parts:
+                    if hasattr(p, "text") and p.text:
+                        final_text += p.text
+            return LLMResponse(text=final_text.strip() or "")
+        except Exception as e:
+            print(f"[LLM] send_correction failed: {e}")
+            return LLMResponse(text="")
 
     def reset(self):
         """Reset session."""

@@ -248,12 +248,47 @@ class MasterFlowEngine:
         phase2_text = final_response.text.strip()
         # Phase 1 already contains EVA's authentic response (before tool call).
         # Use Phase 2 text only if it is a real response, not empty/meta/tool explanation.
-        meta_markers = ["i have called", "the function", "sync_biocognitive_state",
-                        "the output shows", "[empty response]", "error extracting"]
-        is_empty = not phase2_text or phase2_text == "[Empty Response]"
+        meta_markers = [
+            # tool/function meta patterns
+            "i have called", "the function", "sync_biocognitive_state",
+            "the output shows", "[empty response]", "error extracting",
+            "function result", "function call", "function response",
+            # SLM/analysis reporting patterns (Gemini describing data instead of responding as EVA)
+            "the user said", "the user input", "the user's message",
+            "the slm", "slm's interpretation", "slm interpretation",
+            "translates to", "is gibberish", "intent detection",
+            "user message is", "the input is", "this is gibberish",
+            # Generic analysis/report patterns
+            "based on the", "the system", "i have processed",
+        ]
+        is_empty = (not phase2_text
+                    or phase2_text.startswith("[Empty Response]")
+                    or phase2_text.startswith("[System Error")
+                    or phase2_text.startswith("[Error"))
         is_meta  = any(m in phase2_text.lower() for m in meta_markers)
         use_phase2 = not is_empty and not is_meta
-        final_text = phase2_text if use_phase2 else (phase1_text or phase2_text)
+
+        # Also check if phase1_text is usable (non-empty, non-meta)
+        is_phase1_meta = any(m in phase1_text.lower() for m in meta_markers) if phase1_text else False
+        is_phase1_usable = bool(phase1_text) and not is_phase1_meta
+
+        if use_phase2:
+            final_text = phase2_text
+        elif is_phase1_usable:
+            final_text = phase1_text
+        else:
+            # Both phases failed — send correction to guide EVA back to natural response
+            safe_print("[Phase2] Both phases produced meta/empty text — attempting recovery...")
+            try:
+                recovery = self.orch.llm.send_correction(
+                    "You are EVA. Respond naturally and conversationally to the user. "
+                    "Do not analyze, report, or describe data — just respond as yourself."
+                )
+                rec_text = recovery.text.strip() if recovery.text else ""
+                final_text = rec_text if (rec_text and not rec_text.startswith("[")) else (phase1_text or phase2_text or "...")
+            except Exception as rec_err:
+                safe_print(f"[Phase2] Recovery failed: {rec_err}")
+                final_text = phase1_text or phase2_text or "..."
         memory_proposal = {}
         if final_response.tool_calls:
             for tool_call in final_response.tool_calls:
