@@ -22,9 +22,11 @@ export class ChatWebSocket {
         this.onStatus = onStatus;
         this.ws = null;
         this.reconnectAttempts = 0;
+        this._destroyed = false; // set true on explicit disconnect to suppress auto-reconnect
     }
 
     connect() {
+        if (this._destroyed) return;
         this.ws = new WebSocket(`${WS_BASE}/${this.clientId}`);
 
         this.ws.onopen = () => {
@@ -62,6 +64,7 @@ export class ChatWebSocket {
     }
 
     attemptReconnect() {
+        if (this._destroyed) return; // don't reconnect after explicit cleanup
         if (this.reconnectAttempts < 5) {
             this.reconnectAttempts++;
             setTimeout(() => this.connect(), 2000 * this.reconnectAttempts);
@@ -69,6 +72,7 @@ export class ChatWebSocket {
     }
 
     disconnect() {
+        this._destroyed = true; // suppress any pending attemptReconnect calls
         if (this.ws) {
             this.ws.close();
         }
