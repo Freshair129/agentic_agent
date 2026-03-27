@@ -6,6 +6,7 @@ import os
 import sys
 import json
 import asyncio
+
 from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
@@ -137,7 +138,9 @@ async def get_mind_state(session_id: str):
 @app.websocket("/ws/chat/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
     await websocket.accept()
-    orch = manager.get_orchestrator(client_id)
+    loop = asyncio.get_event_loop()
+    # Run heavy synchronous init in thread pool so event loop stays responsive
+    orch = await loop.run_in_executor(None, manager.get_orchestrator, client_id)
     
     try:
         while True:
@@ -153,24 +156,34 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                 "message": "EVA is processing..."
             })
             
-            # 3. Process (Synchronous)
-            result = orch.process_user_input(user_message)
-            
-            # 4. Extract Data (Unified Snapshot)
-            snapshot = result.get("state_snapshot", {})
-            
-            # 5. Send Full State Update
-            await websocket.send_json({
-                "type": "response",
-                "text": result.get("final_response", ""),
-                "state": {
-                    "eva_matrix": snapshot.get("eva_matrix_state", {}),
-                    "physio": snapshot.get("physio_state", {}),
-                    "resonance_index": result.get("resonance_index", 0.5),
-                    "emotion_label": result.get("emotion_label", "Neutral"),
-                    "qualia": snapshot.get("qualia", {})
-                }
-            })
+            # 3. Process (Synchronous — run in executor to avoid blocking event loop)
+            try:
+                result = await loop.run_in_executor(None, orch.process_user_input, user_message)
+                from operation_system.llm_bridge.llm_bridge import LLMBridge
+                result = LLMBridge.deep_clean(result)
+                # 4. Extract Data (Unified Snapshot)
+                snapshot = result.get("state_snapshot", {})
+                
+                # 5. Send Full State Update
+                await websocket.send_json({
+                    "type": "response",
+                    "text": result.get("final_response", ""),
+                    "state": {
+                        "eva_matrix": snapshot.get("eva_matrix_state", {}),
+                        "physio": snapshot.get("physio_state", {}),
+                        "resonance_index": result.get("resonance_index", 0.5),
+                        "emotion_label": result.get("emotion_label", "Neutral"),
+                        "qualia": snapshot.get("qualia", {})
+                    }
+                })
+            except Exception as proc_err:
+                import traceback
+                print(f"[WS] Pipeline error (session {client_id}): {type(proc_err).__name__}: {proc_err}")
+                traceback.print_exc()
+                await websocket.send_json({
+                    "type": "error",
+                    "text": f"[Pipeline error: {type(proc_err).__name__}] {str(proc_err)[:200]}"
+                })
             
     except WebSocketDisconnect:
         print(f"Client #{client_id} disconnected")
@@ -179,3 +192,4 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("API_PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
+

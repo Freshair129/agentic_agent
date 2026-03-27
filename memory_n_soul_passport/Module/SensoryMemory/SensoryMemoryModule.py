@@ -23,7 +23,7 @@ class SensoryMemoryModule(IMemoryRetrieval, IMemoryStorage):
         Records a perception snapshot linked to an episode.
         """
         perception_data["episode_id"] = episode_id
-        self.storage.write_sensory_record(perception_data)
+        self.storage.append_sensory_record(perception_data)
 
     # --- IMemoryRetrieval Implementation ---
 

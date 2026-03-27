@@ -12,8 +12,8 @@ from pathlib import Path
 from operation_system.identity_manager import IdentityManager
 from capabilities.services.slm_bridge.slm_bridge import slm
 from operation_system.llm_bridge.llm_bridge import LLMBridge
-from operation_system.llm_bridge.tools_schema import (
-    SYNC_BIOCOGNITIVE_STATE_TOOL, 
+from operation_system.llm_bridge.llm_bridge import (
+    SYNC_BIOCOGNITIVE_STATE_TOOL,
     PROPOSE_EPISODIC_MEMORY_TOOL
 )
 
@@ -213,7 +213,7 @@ class MasterFlowEngine:
             },
             "psychological_state": matrix_snap,
             "emotion_label": emotion_label,
-            "embodied_sensation": f"Intensity: {qualia_snap.intensity:.2f}, Tone: {emotion_label}",
+            "embodied_sensation": f"Intensity: {qualia_snap.intensity:.2f}, Tone: {emotion_label}" if qualia_snap else f"Tone: {emotion_label}",
             "retrieved_memories": [
                 {"content": m.content[:150] + "...", "emotion": getattr(m, "emotion_label", "N/A")}
                 for m in list(unique_memories)[:3]
@@ -291,7 +291,7 @@ class MasterFlowEngine:
         
         # Write to MSP & Vector DB
         episode_data = LLMBridge.deep_clean(episode_data)
-        self.orch.msp.write_episode(episode_data, persist=self.orch.recording_active)
+        self.orch.msp.write_episode(episode_data)
         
         if self.orch.recording_active and hasattr(self.orch, 'vector_db'):
             self.orch.vector_db.add_memory(text=user_input, metadata={"intent": stimulus.get("intent")}, memory_id=context_id)
@@ -309,3 +309,4 @@ class MasterFlowEngine:
             "resonance_hash": self.orch.bus.generate_state_hash(),
             "resonance_index": final_ri
         }
+

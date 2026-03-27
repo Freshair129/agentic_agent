@@ -66,7 +66,12 @@ class ResonanceBus(IResonanceBus):
 
     def generate_state_hash(self) -> str:
         """Generates a verifiable hash of the current bus state (Proof of Lived Experience)."""
-        state_str = json.dumps(self.history, sort_keys=True)
+        try:
+            from operation_system.llm_bridge.llm_bridge import LLMBridge
+            clean_history = LLMBridge.deep_clean(self.history)
+        except Exception:
+            clean_history = str(self.history)
+        state_str = json.dumps(clean_history, sort_keys=True)
         return hashlib.sha256(state_str.encode()).hexdigest()[:16]
 
 # Global Singleton for the Infrastructure OS

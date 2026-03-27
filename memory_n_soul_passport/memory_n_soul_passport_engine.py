@@ -2285,9 +2285,13 @@ class MSP(IMSPassport):
             "reflex": {
                 "threat_level": get_state("threat_level", 0.0)
             },
-            # Include Physio Vitals (Phase 2 Requirement)
+            # Include Physio State: Vitals + Hormone Vector (ISSUE-001 fix)
             "physio": {
-                 "vitals": physio.get("vitals", {})
+                "vitals": physio.get("vitals", {}),
+                "hormones": {
+                    k: round(v, 6)
+                    for k, v in physio.get("blood", {}).items()
+                }
             }
         }
 
@@ -2296,7 +2300,12 @@ class MSP(IMSPassport):
         if "timestamp" not in episode_data:
             episode_data["timestamp"] = datetime.now().isoformat()
             
-        # Merge snapshot
+        # Merge snapshot (clean protobuf/non-serializable types first)
+        try:
+            from operation_system.llm_bridge.llm_bridge import LLMBridge
+            state_snapshot = LLMBridge.deep_clean(state_snapshot)
+        except Exception:
+            pass
         episode_data["state_snapshot"] = state_snapshot
         
         # 3. Delegate to Module

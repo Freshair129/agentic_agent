@@ -30,7 +30,7 @@ class LLMBridge:
     Supports Dual-Phase One-Inference with Function Calling.
     """
 
-    def __init__(self, model_name: str = "gemini-2.0-flash-lite-preview-02-05", api_key: Optional[str] = None):
+    def __init__(self, model_name: str = "gemini-2.0-flash", api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
         if not self.api_key:
             print("⚠️ [LLM] No API Key found! Set GOOGLE_API_KEY in .env")
@@ -153,6 +153,12 @@ class LLMBridge:
             return [LLMBridge.deep_clean(v) for v in obj]
         if hasattr(obj, 'item'):  # Numpy scalars
             return obj.item()
+        # Protobuf RepeatedComposite / MapComposite and other non-standard iterables
+        try:
+            if hasattr(obj, '__iter__') and not isinstance(obj, (str, bytes)):
+                return [LLMBridge.deep_clean(v) for v in obj]
+        except Exception:
+            pass
         
         # Fallback for complex objects: convert to string/dict if possible
         try:
